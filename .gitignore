@@ -1,0 +1,16 @@
+# Virtual environments
+venv/
+__pycache__/
+
+# Environment files
+.env
+
+# OS files
+.DS_Store
+
+# Editor files
+*.log
+*.swp
+*.swo
+.idea/
+.vscode/
