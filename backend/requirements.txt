@@ -6,3 +6,4 @@ openai
 python-dotenv
 numpy
 psycopg2-binary
+python-multipart

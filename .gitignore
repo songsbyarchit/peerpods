@@ -14,3 +14,6 @@ __pycache__/
 *.swo
 .idea/
 .vscode/
+
+#voice note storage
+backend/voice_notes/

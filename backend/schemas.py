@@ -31,7 +31,9 @@ class Pod(PodBase):
         orm_mode = True
 
 class MessageBase(BaseModel):
-    content: str
+    content: Optional[str] = None
+    media_type: str  # "text" or "voice"
+    voice_path: Optional[str] = None
 
 class MessageCreate(MessageBase):
     pod_id: int
