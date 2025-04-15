@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 const API_URL = "http://localhost:8000";
 
@@ -13,7 +13,10 @@ function Create() {
   const [launchMode, setLaunchMode] = useState("manual");
   const [autoLaunchAt, setAutoLaunchAt] = useState("");
   const [timezone, setTimezone] = useState("UTC");
-
+  useEffect(() => {
+    const detected = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    setTimezone(detected);
+  }, []);  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -126,15 +129,6 @@ function Create() {
             />
         </label>
         )}
-
-        <label>
-        Timezone:
-        <select value={timezone} onChange={(e) => setTimezone(e.target.value)}>
-            <option value="UTC">UTC</option>
-            <option value="Europe/London">Europe/London</option>
-            <option value="America/New_York">America/New_York</option>
-        </select>
-        </label>
 
         <button type="submit">Next: Configure Launch</button>
       </form>

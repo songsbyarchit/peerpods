@@ -35153,6 +35153,10 @@ function Create() {
     const [launchMode, setLaunchMode] = (0, _react.useState)("manual");
     const [autoLaunchAt, setAutoLaunchAt] = (0, _react.useState)("");
     const [timezone, setTimezone] = (0, _react.useState)("UTC");
+    (0, _react.useEffect)(()=>{
+        const detected = Intl.DateTimeFormat().resolvedOptions().timeZone;
+        setTimezone(detected);
+    }, []);
     const handleSubmit = async (e)=>{
         e.preventDefault();
         const token = localStorage.getItem("token");
@@ -35201,7 +35205,7 @@ function Create() {
                 children: "Create a New Pod"
             }, void 0, false, {
                 fileName: "src/Create.jsx",
-                lineNumber: 62,
+                lineNumber: 65,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("form", {
@@ -35219,7 +35223,7 @@ function Create() {
                         required: true
                     }, void 0, false, {
                         fileName: "src/Create.jsx",
-                        lineNumber: 64,
+                        lineNumber: 67,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("textarea", {
@@ -35228,7 +35232,7 @@ function Create() {
                         onChange: (e)=>setDescription(e.target.value)
                     }, void 0, false, {
                         fileName: "src/Create.jsx",
-                        lineNumber: 65,
+                        lineNumber: 68,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("label", {
@@ -35243,7 +35247,7 @@ function Create() {
                                         children: "24h"
                                     }, void 0, false, {
                                         fileName: "src/Create.jsx",
-                                        lineNumber: 70,
+                                        lineNumber: 73,
                                         columnNumber: 13
                                     }, this),
                                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("option", {
@@ -35251,7 +35255,7 @@ function Create() {
                                         children: "7 days"
                                     }, void 0, false, {
                                         fileName: "src/Create.jsx",
-                                        lineNumber: 71,
+                                        lineNumber: 74,
                                         columnNumber: 13
                                     }, this),
                                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("option", {
@@ -35259,19 +35263,19 @@ function Create() {
                                         children: "30 days"
                                     }, void 0, false, {
                                         fileName: "src/Create.jsx",
-                                        lineNumber: 72,
+                                        lineNumber: 75,
                                         columnNumber: 13
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "src/Create.jsx",
-                                lineNumber: 69,
+                                lineNumber: 72,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "src/Create.jsx",
-                        lineNumber: 67,
+                        lineNumber: 70,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("label", {
@@ -35285,13 +35289,13 @@ function Create() {
                                 onChange: (e)=>setDriftTolerance(Number(e.target.value))
                             }, void 0, false, {
                                 fileName: "src/Create.jsx",
-                                lineNumber: 78,
+                                lineNumber: 81,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "src/Create.jsx",
-                        lineNumber: 76,
+                        lineNumber: 79,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("label", {
@@ -35306,7 +35310,7 @@ function Create() {
                                         children: "Text only"
                                     }, void 0, false, {
                                         fileName: "src/Create.jsx",
-                                        lineNumber: 84,
+                                        lineNumber: 87,
                                         columnNumber: 13
                                     }, this),
                                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("option", {
@@ -35314,7 +35318,7 @@ function Create() {
                                         children: "Voice only"
                                     }, void 0, false, {
                                         fileName: "src/Create.jsx",
-                                        lineNumber: 85,
+                                        lineNumber: 88,
                                         columnNumber: 13
                                     }, this),
                                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("option", {
@@ -35322,19 +35326,19 @@ function Create() {
                                         children: "Both"
                                     }, void 0, false, {
                                         fileName: "src/Create.jsx",
-                                        lineNumber: 86,
+                                        lineNumber: 89,
                                         columnNumber: 13
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "src/Create.jsx",
-                                lineNumber: 83,
+                                lineNumber: 86,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "src/Create.jsx",
-                        lineNumber: 81,
+                        lineNumber: 84,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("label", {
@@ -35349,7 +35353,7 @@ function Create() {
                                         children: "100"
                                     }, void 0, false, {
                                         fileName: "src/Create.jsx",
-                                        lineNumber: 93,
+                                        lineNumber: 96,
                                         columnNumber: 13
                                     }, this),
                                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("option", {
@@ -35357,7 +35361,7 @@ function Create() {
                                         children: "250"
                                     }, void 0, false, {
                                         fileName: "src/Create.jsx",
-                                        lineNumber: 94,
+                                        lineNumber: 97,
                                         columnNumber: 13
                                     }, this),
                                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("option", {
@@ -35365,7 +35369,7 @@ function Create() {
                                         children: "500"
                                     }, void 0, false, {
                                         fileName: "src/Create.jsx",
-                                        lineNumber: 95,
+                                        lineNumber: 98,
                                         columnNumber: 13
                                     }, this),
                                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("option", {
@@ -35373,19 +35377,19 @@ function Create() {
                                         children: "1000"
                                     }, void 0, false, {
                                         fileName: "src/Create.jsx",
-                                        lineNumber: 96,
+                                        lineNumber: 99,
                                         columnNumber: 13
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "src/Create.jsx",
-                                lineNumber: 92,
+                                lineNumber: 95,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "src/Create.jsx",
-                        lineNumber: 90,
+                        lineNumber: 93,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("label", {
@@ -35400,7 +35404,7 @@ function Create() {
                                         children: "3"
                                     }, void 0, false, {
                                         fileName: "src/Create.jsx",
-                                        lineNumber: 103,
+                                        lineNumber: 106,
                                         columnNumber: 13
                                     }, this),
                                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("option", {
@@ -35408,7 +35412,7 @@ function Create() {
                                         children: "5"
                                     }, void 0, false, {
                                         fileName: "src/Create.jsx",
-                                        lineNumber: 104,
+                                        lineNumber: 107,
                                         columnNumber: 13
                                     }, this),
                                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("option", {
@@ -35416,7 +35420,7 @@ function Create() {
                                         children: "10"
                                     }, void 0, false, {
                                         fileName: "src/Create.jsx",
-                                        lineNumber: 105,
+                                        lineNumber: 108,
                                         columnNumber: 13
                                     }, this),
                                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("option", {
@@ -35424,19 +35428,19 @@ function Create() {
                                         children: "20"
                                     }, void 0, false, {
                                         fileName: "src/Create.jsx",
-                                        lineNumber: 106,
+                                        lineNumber: 109,
                                         columnNumber: 13
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "src/Create.jsx",
-                                lineNumber: 102,
+                                lineNumber: 105,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "src/Create.jsx",
-                        lineNumber: 100,
+                        lineNumber: 103,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("label", {
@@ -35451,7 +35455,7 @@ function Create() {
                                         children: "Manual"
                                     }, void 0, false, {
                                         fileName: "src/Create.jsx",
-                                        lineNumber: 113,
+                                        lineNumber: 116,
                                         columnNumber: 13
                                     }, this),
                                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("option", {
@@ -35459,19 +35463,19 @@ function Create() {
                                         children: "Countdown"
                                     }, void 0, false, {
                                         fileName: "src/Create.jsx",
-                                        lineNumber: 114,
+                                        lineNumber: 117,
                                         columnNumber: 13
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "src/Create.jsx",
-                                lineNumber: 112,
+                                lineNumber: 115,
                                 columnNumber: 9
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "src/Create.jsx",
-                        lineNumber: 110,
+                        lineNumber: 113,
                         columnNumber: 9
                     }, this),
                     launchMode === "countdown" && /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("label", {
@@ -35484,56 +35488,13 @@ function Create() {
                                 required: true
                             }, void 0, false, {
                                 fileName: "src/Create.jsx",
-                                lineNumber: 121,
+                                lineNumber: 124,
                                 columnNumber: 13
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "src/Create.jsx",
-                        lineNumber: 119,
-                        columnNumber: 9
-                    }, this),
-                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("label", {
-                        children: [
-                            "Timezone:",
-                            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("select", {
-                                value: timezone,
-                                onChange: (e)=>setTimezone(e.target.value),
-                                children: [
-                                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("option", {
-                                        value: "UTC",
-                                        children: "UTC"
-                                    }, void 0, false, {
-                                        fileName: "src/Create.jsx",
-                                        lineNumber: 133,
-                                        columnNumber: 13
-                                    }, this),
-                                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("option", {
-                                        value: "Europe/London",
-                                        children: "Europe/London"
-                                    }, void 0, false, {
-                                        fileName: "src/Create.jsx",
-                                        lineNumber: 134,
-                                        columnNumber: 13
-                                    }, this),
-                                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("option", {
-                                        value: "America/New_York",
-                                        children: "America/New_York"
-                                    }, void 0, false, {
-                                        fileName: "src/Create.jsx",
-                                        lineNumber: 135,
-                                        columnNumber: 13
-                                    }, this)
-                                ]
-                            }, void 0, true, {
-                                fileName: "src/Create.jsx",
-                                lineNumber: 132,
-                                columnNumber: 9
-                            }, this)
-                        ]
-                    }, void 0, true, {
-                        fileName: "src/Create.jsx",
-                        lineNumber: 130,
+                        lineNumber: 122,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("button", {
@@ -35541,23 +35502,23 @@ function Create() {
                         children: "Next: Configure Launch"
                     }, void 0, false, {
                         fileName: "src/Create.jsx",
-                        lineNumber: 139,
+                        lineNumber: 133,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "src/Create.jsx",
-                lineNumber: 63,
+                lineNumber: 66,
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true, {
         fileName: "src/Create.jsx",
-        lineNumber: 61,
+        lineNumber: 64,
         columnNumber: 5
     }, this);
 }
-_s(Create, "PznEcRY9VC6crjbj1y4o6O6fWB0=");
+_s(Create, "avccqcLtqp41iILIWPFtk3ymn+0=");
 _c = Create;
 exports.default = Create;
 var _c;
