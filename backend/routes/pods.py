@@ -36,3 +36,37 @@ def create_pod(pod_create: schemas.PodCreate, db: Session = Depends(get_db)):
     db.commit()
     db.refresh(new_pod)
     return new_pod
+
+@router.get("/preview")
+def get_pod_previews(db: Session = Depends(get_db)):
+    pods = db.query(models.Pod).all()
+    previews = []
+
+    for pod in pods:
+        user_count = len({msg.user_id for msg in pod.messages})
+        message_count = len(pod.messages)
+        is_view_only = pod.state in ["locked", "launched"]
+        remaining_slots = pod.max_messages_per_day - user_count if not is_view_only else 0
+
+        preview = {
+            "id": pod.id,
+            "title": pod.title,
+            "description": pod.description,
+            "media_type": pod.media_type,
+            "duration_hours": pod.duration_hours,
+            "drift_tolerance": pod.drift_tolerance,
+            "creator": pod.creator.username if pod.creator else "Unknown",
+            "visibility": pod.visibility,
+            "tags": pod.tags,
+            "state": pod.state,
+            "launch_mode": pod.launch_mode,
+            "auto_launch_at": pod.auto_launch_at.isoformat() if pod.auto_launch_at else None,
+            "message_count": message_count,
+            "user_count": user_count,
+            "remaining_slots": remaining_slots,
+            "view_only": is_view_only
+        }
+
+        previews.append(preview)
+
+    return previews

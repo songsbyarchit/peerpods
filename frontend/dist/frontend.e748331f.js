@@ -685,7 +685,7 @@ function App() {
     _s();
     // States for listing
     const [users, setUsers] = (0, _react.useState)([]);
-    const [pods, setPods] = (0, _react.useState)([]);
+    const [podsPreview, setPodsPreview] = (0, _react.useState)([]);
     const [messages, setMessages] = (0, _react.useState)([]);
     const [recommended, setRecommended] = (0, _react.useState)([]);
     // States for creation forms
@@ -711,11 +711,11 @@ function App() {
     };
     const fetchPods = async ()=>{
         try {
-            const res = await fetch(`${API_URL}/pods/`);
+            const res = await fetch(`${API_URL}/pods/preview`);
             const data = await res.json();
-            setPods(data);
+            setPodsPreview(data);
         } catch (err) {
-            console.error("Error fetching pods:", err);
+            console.error("Error fetching pod previews:", err);
         }
     };
     const fetchMessages = async ()=>{
@@ -813,6 +813,17 @@ function App() {
             console.error("Error getting recommended pods:", err);
         }
     };
+    const formatCountdown = (isoTime)=>{
+        if (!isoTime) return null;
+        const now = new Date();
+        const target = new Date(isoTime);
+        const diff = target - now;
+        if (diff <= 0) return "00:00:00";
+        const hours = String(Math.floor(diff / 3600000)).padStart(2, "0");
+        const minutes = String(Math.floor(diff / 60000 % 60)).padStart(2, "0");
+        const seconds = String(Math.floor(diff / 1000 % 60)).padStart(2, "0");
+        return `${hours}:${minutes}:${seconds}`;
+    };
     return /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
         style: {
             maxWidth: 800,
@@ -824,7 +835,7 @@ function App() {
                 children: "PeerPods Frontend"
             }, void 0, false, {
                 fileName: "src/App.jsx",
-                lineNumber: 145,
+                lineNumber: 157,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("section", {
@@ -836,7 +847,7 @@ function App() {
                         children: "Lists"
                     }, void 0, false, {
                         fileName: "src/App.jsx",
-                        lineNumber: 148,
+                        lineNumber: 160,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("button", {
@@ -844,7 +855,7 @@ function App() {
                         children: "Fetch Users"
                     }, void 0, false, {
                         fileName: "src/App.jsx",
-                        lineNumber: 149,
+                        lineNumber: 161,
                         columnNumber: 9
                     }, this),
                     " ",
@@ -853,7 +864,7 @@ function App() {
                         children: "Fetch Pods"
                     }, void 0, false, {
                         fileName: "src/App.jsx",
-                        lineNumber: 150,
+                        lineNumber: 162,
                         columnNumber: 9
                     }, this),
                     " ",
@@ -862,7 +873,7 @@ function App() {
                         children: "Fetch Messages"
                     }, void 0, false, {
                         fileName: "src/App.jsx",
-                        lineNumber: 151,
+                        lineNumber: 163,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
@@ -878,7 +889,7 @@ function App() {
                                         children: "Users"
                                     }, void 0, false, {
                                         fileName: "src/App.jsx",
-                                        lineNumber: 154,
+                                        lineNumber: 166,
                                         columnNumber: 13
                                     }, this),
                                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("ul", {
@@ -893,53 +904,170 @@ function App() {
                                                 ]
                                             }, u.id, true, {
                                                 fileName: "src/App.jsx",
-                                                lineNumber: 157,
+                                                lineNumber: 169,
                                                 columnNumber: 17
                                             }, this))
                                     }, void 0, false, {
                                         fileName: "src/App.jsx",
-                                        lineNumber: 155,
+                                        lineNumber: 167,
                                         columnNumber: 13
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "src/App.jsx",
-                                lineNumber: 153,
+                                lineNumber: 165,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
                                 children: [
                                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("h3", {
-                                        children: "Pods"
+                                        children: "Pods (Preview)"
                                     }, void 0, false, {
                                         fileName: "src/App.jsx",
-                                        lineNumber: 164,
-                                        columnNumber: 13
+                                        lineNumber: 176,
+                                        columnNumber: 11
                                     }, this),
                                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("ul", {
-                                        children: pods.map((p)=>/*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("li", {
+                                        children: podsPreview.map((p)=>/*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("li", {
+                                                style: {
+                                                    marginBottom: "1rem"
+                                                },
                                                 children: [
-                                                    p.id,
-                                                    ". ",
-                                                    p.title,
-                                                    " (Desc: ",
+                                                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("strong", {
+                                                        children: p.title
+                                                    }, void 0, false, {
+                                                        fileName: "src/App.jsx",
+                                                        lineNumber: 180,
+                                                        columnNumber: 17
+                                                    }, this),
+                                                    " \u2014 ",
                                                     p.description,
-                                                    ")"
+                                                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("br", {}, void 0, false, {
+                                                        fileName: "src/App.jsx",
+                                                        lineNumber: 180,
+                                                        columnNumber: 61
+                                                    }, this),
+                                                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("em", {
+                                                        children: "Media:"
+                                                    }, void 0, false, {
+                                                        fileName: "src/App.jsx",
+                                                        lineNumber: 181,
+                                                        columnNumber: 17
+                                                    }, this),
+                                                    " ",
+                                                    p.media_type,
+                                                    " | ",
+                                                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("em", {
+                                                        children: "Duration:"
+                                                    }, void 0, false, {
+                                                        fileName: "src/App.jsx",
+                                                        lineNumber: 181,
+                                                        columnNumber: 50
+                                                    }, this),
+                                                    " ",
+                                                    p.duration_hours,
+                                                    "h | ",
+                                                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("em", {
+                                                        children: "Drift:"
+                                                    }, void 0, false, {
+                                                        fileName: "src/App.jsx",
+                                                        lineNumber: 181,
+                                                        columnNumber: 91
+                                                    }, this),
+                                                    " ",
+                                                    p.drift_tolerance,
+                                                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("br", {}, void 0, false, {
+                                                        fileName: "src/App.jsx",
+                                                        lineNumber: 181,
+                                                        columnNumber: 126
+                                                    }, this),
+                                                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("em", {
+                                                        children: "Creator:"
+                                                    }, void 0, false, {
+                                                        fileName: "src/App.jsx",
+                                                        lineNumber: 182,
+                                                        columnNumber: 17
+                                                    }, this),
+                                                    " ",
+                                                    p.creator,
+                                                    " | ",
+                                                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("em", {
+                                                        children: "Users:"
+                                                    }, void 0, false, {
+                                                        fileName: "src/App.jsx",
+                                                        lineNumber: 182,
+                                                        columnNumber: 49
+                                                    }, this),
+                                                    " ",
+                                                    p.user_count,
+                                                    " | ",
+                                                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("em", {
+                                                        children: "Messages:"
+                                                    }, void 0, false, {
+                                                        fileName: "src/App.jsx",
+                                                        lineNumber: 182,
+                                                        columnNumber: 82
+                                                    }, this),
+                                                    " ",
+                                                    p.message_count,
+                                                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("br", {}, void 0, false, {
+                                                        fileName: "src/App.jsx",
+                                                        lineNumber: 182,
+                                                        columnNumber: 118
+                                                    }, this),
+                                                    p.view_only ? /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("span", {
+                                                        style: {
+                                                            color: "red"
+                                                        },
+                                                        children: "View Only"
+                                                    }, void 0, false, {
+                                                        fileName: "src/App.jsx",
+                                                        lineNumber: 184,
+                                                        columnNumber: 19
+                                                    }, this) : /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _jsxDevRuntime.Fragment), {
+                                                        children: [
+                                                            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("span", {
+                                                                children: [
+                                                                    "Remaining slots: ",
+                                                                    p.remaining_slots
+                                                                ]
+                                                            }, void 0, true, {
+                                                                fileName: "src/App.jsx",
+                                                                lineNumber: 187,
+                                                                columnNumber: 21
+                                                            }, this),
+                                                            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("br", {}, void 0, false, {
+                                                                fileName: "src/App.jsx",
+                                                                lineNumber: 187,
+                                                                columnNumber: 70
+                                                            }, this),
+                                                            p.auto_launch_at && /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("span", {
+                                                                children: [
+                                                                    "Countdown: ",
+                                                                    formatCountdown(p.auto_launch_at)
+                                                                ]
+                                                            }, void 0, true, {
+                                                                fileName: "src/App.jsx",
+                                                                lineNumber: 188,
+                                                                columnNumber: 42
+                                                            }, this)
+                                                        ]
+                                                    }, void 0, true)
                                                 ]
                                             }, p.id, true, {
                                                 fileName: "src/App.jsx",
-                                                lineNumber: 167,
-                                                columnNumber: 17
+                                                lineNumber: 179,
+                                                columnNumber: 15
                                             }, this))
                                     }, void 0, false, {
                                         fileName: "src/App.jsx",
-                                        lineNumber: 165,
-                                        columnNumber: 13
+                                        lineNumber: 177,
+                                        columnNumber: 11
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "src/App.jsx",
-                                lineNumber: 163,
+                                lineNumber: 175,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
@@ -948,7 +1076,7 @@ function App() {
                                         children: "Messages"
                                     }, void 0, false, {
                                         fileName: "src/App.jsx",
-                                        lineNumber: 174,
+                                        lineNumber: 196,
                                         columnNumber: 13
                                     }, this),
                                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("ul", {
@@ -964,30 +1092,30 @@ function App() {
                                                 ]
                                             }, m.id, true, {
                                                 fileName: "src/App.jsx",
-                                                lineNumber: 177,
+                                                lineNumber: 199,
                                                 columnNumber: 17
                                             }, this))
                                     }, void 0, false, {
                                         fileName: "src/App.jsx",
-                                        lineNumber: 175,
+                                        lineNumber: 197,
                                         columnNumber: 13
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "src/App.jsx",
-                                lineNumber: 173,
+                                lineNumber: 195,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "src/App.jsx",
-                        lineNumber: 152,
+                        lineNumber: 164,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "src/App.jsx",
-                lineNumber: 147,
+                lineNumber: 159,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("section", {
@@ -999,7 +1127,7 @@ function App() {
                         children: "Create User"
                     }, void 0, false, {
                         fileName: "src/App.jsx",
-                        lineNumber: 187,
+                        lineNumber: 209,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("form", {
@@ -1017,7 +1145,7 @@ function App() {
                                 required: true
                             }, void 0, false, {
                                 fileName: "src/App.jsx",
-                                lineNumber: 189,
+                                lineNumber: 211,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("input", {
@@ -1027,7 +1155,7 @@ function App() {
                                 onChange: (e)=>setNewBio(e.target.value)
                             }, void 0, false, {
                                 fileName: "src/App.jsx",
-                                lineNumber: 196,
+                                lineNumber: 218,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("button", {
@@ -1035,19 +1163,19 @@ function App() {
                                 children: "Create User"
                             }, void 0, false, {
                                 fileName: "src/App.jsx",
-                                lineNumber: 202,
+                                lineNumber: 224,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "src/App.jsx",
-                        lineNumber: 188,
+                        lineNumber: 210,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "src/App.jsx",
-                lineNumber: 186,
+                lineNumber: 208,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("section", {
@@ -1059,7 +1187,7 @@ function App() {
                         children: "Create Pod"
                     }, void 0, false, {
                         fileName: "src/App.jsx",
-                        lineNumber: 207,
+                        lineNumber: 229,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("form", {
@@ -1077,7 +1205,7 @@ function App() {
                                 required: true
                             }, void 0, false, {
                                 fileName: "src/App.jsx",
-                                lineNumber: 209,
+                                lineNumber: 231,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("input", {
@@ -1087,7 +1215,7 @@ function App() {
                                 onChange: (e)=>setNewPodDesc(e.target.value)
                             }, void 0, false, {
                                 fileName: "src/App.jsx",
-                                lineNumber: 216,
+                                lineNumber: 238,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("input", {
@@ -1097,7 +1225,7 @@ function App() {
                                 onChange: (e)=>setNewPodHours(e.target.value)
                             }, void 0, false, {
                                 fileName: "src/App.jsx",
-                                lineNumber: 222,
+                                lineNumber: 244,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("input", {
@@ -1107,7 +1235,7 @@ function App() {
                                 onChange: (e)=>setNewPodDrift(e.target.value)
                             }, void 0, false, {
                                 fileName: "src/App.jsx",
-                                lineNumber: 228,
+                                lineNumber: 250,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("button", {
@@ -1115,19 +1243,19 @@ function App() {
                                 children: "Create Pod"
                             }, void 0, false, {
                                 fileName: "src/App.jsx",
-                                lineNumber: 234,
+                                lineNumber: 256,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "src/App.jsx",
-                        lineNumber: 208,
+                        lineNumber: 230,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "src/App.jsx",
-                lineNumber: 206,
+                lineNumber: 228,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("section", {
@@ -1139,7 +1267,7 @@ function App() {
                         children: "Create Message"
                     }, void 0, false, {
                         fileName: "src/App.jsx",
-                        lineNumber: 239,
+                        lineNumber: 261,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("form", {
@@ -1157,7 +1285,7 @@ function App() {
                                 required: true
                             }, void 0, false, {
                                 fileName: "src/App.jsx",
-                                lineNumber: 241,
+                                lineNumber: 263,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("input", {
@@ -1168,7 +1296,7 @@ function App() {
                                 required: true
                             }, void 0, false, {
                                 fileName: "src/App.jsx",
-                                lineNumber: 248,
+                                lineNumber: 270,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("input", {
@@ -1179,7 +1307,7 @@ function App() {
                                 required: true
                             }, void 0, false, {
                                 fileName: "src/App.jsx",
-                                lineNumber: 255,
+                                lineNumber: 277,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("button", {
@@ -1187,19 +1315,19 @@ function App() {
                                 children: "Create Message"
                             }, void 0, false, {
                                 fileName: "src/App.jsx",
-                                lineNumber: 262,
+                                lineNumber: 284,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "src/App.jsx",
-                        lineNumber: 240,
+                        lineNumber: 262,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "src/App.jsx",
-                lineNumber: 238,
+                lineNumber: 260,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("section", {
@@ -1211,7 +1339,7 @@ function App() {
                         children: "Recommended Pods"
                     }, void 0, false, {
                         fileName: "src/App.jsx",
-                        lineNumber: 267,
+                        lineNumber: 289,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("form", {
@@ -1229,7 +1357,7 @@ function App() {
                                 required: true
                             }, void 0, false, {
                                 fileName: "src/App.jsx",
-                                lineNumber: 269,
+                                lineNumber: 291,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("button", {
@@ -1237,13 +1365,13 @@ function App() {
                                 children: "Get Recommended Pods"
                             }, void 0, false, {
                                 fileName: "src/App.jsx",
-                                lineNumber: 276,
+                                lineNumber: 298,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "src/App.jsx",
-                        lineNumber: 268,
+                        lineNumber: 290,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("ul", {
@@ -1258,33 +1386,33 @@ function App() {
                                 ]
                             }, r.id, true, {
                                 fileName: "src/App.jsx",
-                                lineNumber: 280,
+                                lineNumber: 302,
                                 columnNumber: 13
                             }, this))
                     }, void 0, false, {
                         fileName: "src/App.jsx",
-                        lineNumber: 278,
+                        lineNumber: 300,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "src/App.jsx",
-                lineNumber: 266,
+                lineNumber: 288,
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true, {
         fileName: "src/App.jsx",
-        lineNumber: 144,
+        lineNumber: 156,
         columnNumber: 5
     }, this);
 }
-_s(App, "CFliC2BFe3Nve4gNunaDQXzz9m0=");
+_s(App, "7KCliecyHm7XxB04YigdUng7zUE=");
 _c = App;
 const root = (0, _client.createRoot)(document.getElementById("root"));
 root.render(/*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)(App, {}, void 0, false, {
     fileName: "src/App.jsx",
-    lineNumber: 291,
+    lineNumber: 313,
     columnNumber: 13
 }, undefined));
 var _c;

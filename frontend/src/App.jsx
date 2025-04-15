@@ -6,7 +6,7 @@ const API_URL = "http://localhost:8000";
 function App() {
   // States for listing
   const [users, setUsers] = useState([]);
-  const [pods, setPods] = useState([]);
+  const [podsPreview, setPodsPreview] = useState([]);
   const [messages, setMessages] = useState([]);
   const [recommended, setRecommended] = useState([]);
 
@@ -38,13 +38,13 @@ function App() {
 
   const fetchPods = async () => {
     try {
-      const res = await fetch(`${API_URL}/pods/`);
+      const res = await fetch(`${API_URL}/pods/preview`);
       const data = await res.json();
-      setPods(data);
+      setPodsPreview(data);
     } catch (err) {
-      console.error("Error fetching pods:", err);
+      console.error("Error fetching pod previews:", err);
     }
-  };
+  };  
 
   const fetchMessages = async () => {
     try {
@@ -140,6 +140,18 @@ function App() {
     }
   };
 
+  const formatCountdown = (isoTime) => {
+    if (!isoTime) return null;
+    const now = new Date();
+    const target = new Date(isoTime);
+    const diff = target - now;
+    if (diff <= 0) return "00:00:00";
+    const hours = String(Math.floor(diff / (1000 * 60 * 60))).padStart(2, "0");
+    const minutes = String(Math.floor((diff / (1000 * 60)) % 60)).padStart(2, "0");
+    const seconds = String(Math.floor((diff / 1000) % 60)).padStart(2, "0");
+    return `${hours}:${minutes}:${seconds}`;
+  };  
+
   return (
     <div style={{ maxWidth: 800, margin: "0 auto", fontFamily: "sans-serif" }}>
       <h1>PeerPods Frontend</h1>
@@ -161,14 +173,24 @@ function App() {
             </ul>
           </div>
           <div>
-            <h3>Pods</h3>
-            <ul>
-              {pods.map((p) => (
-                <li key={p.id}>
-                  {p.id}. {p.title} (Desc: {p.description})
-                </li>
-              ))}
-            </ul>
+          <h3>Pods (Preview)</h3>
+          <ul>
+            {podsPreview.map((p) => (
+              <li key={p.id} style={{ marginBottom: "1rem" }}>
+                <strong>{p.title}</strong> — {p.description}<br />
+                <em>Media:</em> {p.media_type} | <em>Duration:</em> {p.duration_hours}h | <em>Drift:</em> {p.drift_tolerance}<br />
+                <em>Creator:</em> {p.creator} | <em>Users:</em> {p.user_count} | <em>Messages:</em> {p.message_count}<br />
+                {p.view_only ? (
+                  <span style={{ color: "red" }}>View Only</span>
+                ) : (
+                  <>
+                    <span>Remaining slots: {p.remaining_slots}</span><br />
+                    {p.auto_launch_at && <span>Countdown: {formatCountdown(p.auto_launch_at)}</span>}
+                  </>
+                )}
+              </li>
+            ))}
+          </ul>
           </div>
           <div>
             <h3>Messages</h3>
