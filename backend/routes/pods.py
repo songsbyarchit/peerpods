@@ -83,3 +83,53 @@ def get_pod_previews(db: Session = Depends(get_db)):
 @router.get("/mine")
 def get_user_pods(db: Session = Depends(get_db), current_user: models.User = Depends(get_current_user)):
     return db.query(models.Pod).filter(models.Pod.creator_id == current_user.id).all()
+
+@router.get("/user")
+def get_user_pods(current_user: models.User = Depends(get_current_user), db: Session = Depends(get_db)):
+    return db.query(models.Pod).filter(models.Pod.creator_id == current_user.id).all()
+
+@router.get("/recommended")
+def get_recommended_pods(current_user: models.User = Depends(get_current_user), db: Session = Depends(get_db)):
+    pods = db.query(models.Pod).filter(models.Pod.state != "locked").all()
+    result = []
+    for pod in pods:
+        user_ids = {msg.user_id for msg in pod.messages}
+        remaining_slots = pod.max_messages_per_day - len(user_ids)
+        if remaining_slots > 0:
+            pod_data = pod.__dict__
+            pod_data["remaining_slots"] = remaining_slots
+            result.append(pod_data)
+    return result
+
+@router.get("/active")
+def get_active_pods(db: Session = Depends(get_db)):
+    pods = db.query(models.Pod).filter(models.Pod.state.in_(["configured", "launched"])).all()
+    result = []
+    for pod in pods:
+        messages = [
+            {
+                "media_type": m.media_type,
+                "content": m.content,
+                "voice_path": m.voice_path,
+            }
+            for m in pod.messages
+        ]
+        result.append({
+            "id": pod.id,
+            "title": pod.title,
+            "messages": messages
+        })
+    return result
+
+@router.get("/stats")
+def get_app_stats(db: Session = Depends(get_db)):
+    messages = db.query(models.Message).all()
+    total_messages = len(messages)
+    total_voice_seconds = sum(
+        pod.max_voice_message_seconds or 0
+        for pod in db.query(models.Pod).filter(models.Pod.media_type.in_(["voice", "both"])).all()
+    )
+    return {
+        "totalMessages": total_messages,
+        "totalVoiceMinutes": round(total_voice_seconds / 60, 2)
+    }
