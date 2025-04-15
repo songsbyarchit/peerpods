@@ -2,7 +2,8 @@ import React, { useState, useEffect } from "react";
 import { createRoot } from "react-dom/client";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import Login from "./Login";
-import Register from "./Register"; 
+import Register from "./Register";
+import Navbar from "./Navbar";
 
 const API_URL = "http://localhost:8000";
 
@@ -180,6 +181,7 @@ function App() {
 
   return (
     <div style={{ maxWidth: 800, margin: "0 auto", fontFamily: "sans-serif" }}>
+      <Navbar currentUser={currentUser} setCurrentUser={setCurrentUser} />  
       {currentUser && (
         <p style={{ fontSize: "0.9rem", color: "gray" }}>
           Logged in as <strong>{currentUser.username}</strong>
