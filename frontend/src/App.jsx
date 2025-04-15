@@ -1,5 +1,8 @@
 import React, { useState } from "react";
 import { createRoot } from "react-dom/client";
+import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+import Login from "./Login";
+import Register from "./Register"; 
 
 const API_URL = "http://localhost:8000";
 
@@ -309,5 +312,4 @@ function App() {
   );
 }
 
-const root = createRoot(document.getElementById("root"));
-root.render(<App />);
+export default App;
