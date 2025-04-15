@@ -35139,25 +35139,425 @@ parcelHelpers.defineInteropFlag(exports);
 var _jsxDevRuntime = require("react/jsx-dev-runtime");
 var _react = require("react");
 var _reactDefault = parcelHelpers.interopDefault(_react);
+var _s = $RefreshSig$();
+const API_URL = "http://localhost:8000";
 function Create() {
+    _s();
+    const [title, setTitle] = (0, _react.useState)("");
+    const [description, setDescription] = (0, _react.useState)("");
+    const [durationHours, setDurationHours] = (0, _react.useState)(24);
+    const [driftTolerance, setDriftTolerance] = (0, _react.useState)(3);
+    const [mediaType, setMediaType] = (0, _react.useState)("text");
+    const [maxChars, setMaxChars] = (0, _react.useState)(500);
+    const [maxMessages, setMaxMessages] = (0, _react.useState)(10);
+    const [launchMode, setLaunchMode] = (0, _react.useState)("manual");
+    const [autoLaunchAt, setAutoLaunchAt] = (0, _react.useState)("");
+    const [timezone, setTimezone] = (0, _react.useState)("UTC");
+    const handleSubmit = async (e)=>{
+        e.preventDefault();
+        const token = localStorage.getItem("token");
+        const payload = {
+            title,
+            description,
+            duration_hours: durationHours,
+            drift_tolerance: driftTolerance,
+            media_type: mediaType,
+            max_chars_per_message: maxChars,
+            max_messages_per_day: maxMessages,
+            launch_mode: launchMode,
+            auto_launch_at: launchMode === "countdown" ? autoLaunchAt : null,
+            timezone
+        };
+        try {
+            const res = await fetch(`${API_URL}/pods/`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`
+                },
+                body: JSON.stringify(payload)
+            });
+            if (!res.ok) {
+                const errData = await res.json();
+                throw new Error(errData.detail || "Failed to create pod.");
+            }
+            const data = await res.json();
+            console.log("Pod created:", data);
+            alert("Pod created!");
+        } catch (err) {
+            console.error("Pod creation failed:", err);
+            alert("Error creating pod.");
+        }
+    };
     return /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
         style: {
             padding: "2rem",
-            fontFamily: "sans-serif"
+            fontFamily: "sans-serif",
+            maxWidth: 600,
+            margin: "0 auto"
         },
-        children: /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("h2", {
-            children: "Create Pod Page (coming soon)"
-        }, void 0, false, {
-            fileName: "src/Create.jsx",
-            lineNumber: 6,
-            columnNumber: 7
-        }, this)
-    }, void 0, false, {
+        children: [
+            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("h2", {
+                children: "Create a New Pod"
+            }, void 0, false, {
+                fileName: "src/Create.jsx",
+                lineNumber: 62,
+                columnNumber: 7
+            }, this),
+            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("form", {
+                onSubmit: handleSubmit,
+                style: {
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: "1rem"
+                },
+                children: [
+                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("input", {
+                        placeholder: "Title",
+                        value: title,
+                        onChange: (e)=>setTitle(e.target.value),
+                        required: true
+                    }, void 0, false, {
+                        fileName: "src/Create.jsx",
+                        lineNumber: 64,
+                        columnNumber: 9
+                    }, this),
+                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("textarea", {
+                        placeholder: "Description",
+                        value: description,
+                        onChange: (e)=>setDescription(e.target.value)
+                    }, void 0, false, {
+                        fileName: "src/Create.jsx",
+                        lineNumber: 65,
+                        columnNumber: 9
+                    }, this),
+                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("label", {
+                        children: [
+                            "Duration (hours):",
+                            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("select", {
+                                value: durationHours,
+                                onChange: (e)=>setDurationHours(Number(e.target.value)),
+                                children: [
+                                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("option", {
+                                        value: 24,
+                                        children: "24h"
+                                    }, void 0, false, {
+                                        fileName: "src/Create.jsx",
+                                        lineNumber: 70,
+                                        columnNumber: 13
+                                    }, this),
+                                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("option", {
+                                        value: 168,
+                                        children: "7 days"
+                                    }, void 0, false, {
+                                        fileName: "src/Create.jsx",
+                                        lineNumber: 71,
+                                        columnNumber: 13
+                                    }, this),
+                                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("option", {
+                                        value: 720,
+                                        children: "30 days"
+                                    }, void 0, false, {
+                                        fileName: "src/Create.jsx",
+                                        lineNumber: 72,
+                                        columnNumber: 13
+                                    }, this)
+                                ]
+                            }, void 0, true, {
+                                fileName: "src/Create.jsx",
+                                lineNumber: 69,
+                                columnNumber: 11
+                            }, this)
+                        ]
+                    }, void 0, true, {
+                        fileName: "src/Create.jsx",
+                        lineNumber: 67,
+                        columnNumber: 9
+                    }, this),
+                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("label", {
+                        children: [
+                            "Drift Tolerance:",
+                            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("input", {
+                                type: "range",
+                                min: "1",
+                                max: "5",
+                                value: driftTolerance,
+                                onChange: (e)=>setDriftTolerance(Number(e.target.value))
+                            }, void 0, false, {
+                                fileName: "src/Create.jsx",
+                                lineNumber: 78,
+                                columnNumber: 11
+                            }, this)
+                        ]
+                    }, void 0, true, {
+                        fileName: "src/Create.jsx",
+                        lineNumber: 76,
+                        columnNumber: 9
+                    }, this),
+                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("label", {
+                        children: [
+                            "Media Type:",
+                            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("select", {
+                                value: mediaType,
+                                onChange: (e)=>setMediaType(e.target.value),
+                                children: [
+                                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("option", {
+                                        value: "text",
+                                        children: "Text only"
+                                    }, void 0, false, {
+                                        fileName: "src/Create.jsx",
+                                        lineNumber: 84,
+                                        columnNumber: 13
+                                    }, this),
+                                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("option", {
+                                        value: "voice",
+                                        children: "Voice only"
+                                    }, void 0, false, {
+                                        fileName: "src/Create.jsx",
+                                        lineNumber: 85,
+                                        columnNumber: 13
+                                    }, this),
+                                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("option", {
+                                        value: "both",
+                                        children: "Both"
+                                    }, void 0, false, {
+                                        fileName: "src/Create.jsx",
+                                        lineNumber: 86,
+                                        columnNumber: 13
+                                    }, this)
+                                ]
+                            }, void 0, true, {
+                                fileName: "src/Create.jsx",
+                                lineNumber: 83,
+                                columnNumber: 11
+                            }, this)
+                        ]
+                    }, void 0, true, {
+                        fileName: "src/Create.jsx",
+                        lineNumber: 81,
+                        columnNumber: 9
+                    }, this),
+                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("label", {
+                        children: [
+                            "Max characters per message:",
+                            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("select", {
+                                value: maxChars,
+                                onChange: (e)=>setMaxChars(Number(e.target.value)),
+                                children: [
+                                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("option", {
+                                        value: 100,
+                                        children: "100"
+                                    }, void 0, false, {
+                                        fileName: "src/Create.jsx",
+                                        lineNumber: 93,
+                                        columnNumber: 13
+                                    }, this),
+                                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("option", {
+                                        value: 250,
+                                        children: "250"
+                                    }, void 0, false, {
+                                        fileName: "src/Create.jsx",
+                                        lineNumber: 94,
+                                        columnNumber: 13
+                                    }, this),
+                                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("option", {
+                                        value: 500,
+                                        children: "500"
+                                    }, void 0, false, {
+                                        fileName: "src/Create.jsx",
+                                        lineNumber: 95,
+                                        columnNumber: 13
+                                    }, this),
+                                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("option", {
+                                        value: 1000,
+                                        children: "1000"
+                                    }, void 0, false, {
+                                        fileName: "src/Create.jsx",
+                                        lineNumber: 96,
+                                        columnNumber: 13
+                                    }, this)
+                                ]
+                            }, void 0, true, {
+                                fileName: "src/Create.jsx",
+                                lineNumber: 92,
+                                columnNumber: 11
+                            }, this)
+                        ]
+                    }, void 0, true, {
+                        fileName: "src/Create.jsx",
+                        lineNumber: 90,
+                        columnNumber: 9
+                    }, this),
+                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("label", {
+                        children: [
+                            "Max messages per day:",
+                            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("select", {
+                                value: maxMessages,
+                                onChange: (e)=>setMaxMessages(Number(e.target.value)),
+                                children: [
+                                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("option", {
+                                        value: 3,
+                                        children: "3"
+                                    }, void 0, false, {
+                                        fileName: "src/Create.jsx",
+                                        lineNumber: 103,
+                                        columnNumber: 13
+                                    }, this),
+                                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("option", {
+                                        value: 5,
+                                        children: "5"
+                                    }, void 0, false, {
+                                        fileName: "src/Create.jsx",
+                                        lineNumber: 104,
+                                        columnNumber: 13
+                                    }, this),
+                                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("option", {
+                                        value: 10,
+                                        children: "10"
+                                    }, void 0, false, {
+                                        fileName: "src/Create.jsx",
+                                        lineNumber: 105,
+                                        columnNumber: 13
+                                    }, this),
+                                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("option", {
+                                        value: 20,
+                                        children: "20"
+                                    }, void 0, false, {
+                                        fileName: "src/Create.jsx",
+                                        lineNumber: 106,
+                                        columnNumber: 13
+                                    }, this)
+                                ]
+                            }, void 0, true, {
+                                fileName: "src/Create.jsx",
+                                lineNumber: 102,
+                                columnNumber: 11
+                            }, this)
+                        ]
+                    }, void 0, true, {
+                        fileName: "src/Create.jsx",
+                        lineNumber: 100,
+                        columnNumber: 9
+                    }, this),
+                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("label", {
+                        children: [
+                            "Launch Mode:",
+                            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("select", {
+                                value: launchMode,
+                                onChange: (e)=>setLaunchMode(e.target.value),
+                                children: [
+                                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("option", {
+                                        value: "manual",
+                                        children: "Manual"
+                                    }, void 0, false, {
+                                        fileName: "src/Create.jsx",
+                                        lineNumber: 113,
+                                        columnNumber: 13
+                                    }, this),
+                                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("option", {
+                                        value: "countdown",
+                                        children: "Countdown"
+                                    }, void 0, false, {
+                                        fileName: "src/Create.jsx",
+                                        lineNumber: 114,
+                                        columnNumber: 13
+                                    }, this)
+                                ]
+                            }, void 0, true, {
+                                fileName: "src/Create.jsx",
+                                lineNumber: 112,
+                                columnNumber: 9
+                            }, this)
+                        ]
+                    }, void 0, true, {
+                        fileName: "src/Create.jsx",
+                        lineNumber: 110,
+                        columnNumber: 9
+                    }, this),
+                    launchMode === "countdown" && /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("label", {
+                        children: [
+                            "Auto Launch At (ISO format):",
+                            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("input", {
+                                type: "datetime-local",
+                                value: autoLaunchAt,
+                                onChange: (e)=>setAutoLaunchAt(e.target.value),
+                                required: true
+                            }, void 0, false, {
+                                fileName: "src/Create.jsx",
+                                lineNumber: 121,
+                                columnNumber: 13
+                            }, this)
+                        ]
+                    }, void 0, true, {
+                        fileName: "src/Create.jsx",
+                        lineNumber: 119,
+                        columnNumber: 9
+                    }, this),
+                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("label", {
+                        children: [
+                            "Timezone:",
+                            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("select", {
+                                value: timezone,
+                                onChange: (e)=>setTimezone(e.target.value),
+                                children: [
+                                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("option", {
+                                        value: "UTC",
+                                        children: "UTC"
+                                    }, void 0, false, {
+                                        fileName: "src/Create.jsx",
+                                        lineNumber: 133,
+                                        columnNumber: 13
+                                    }, this),
+                                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("option", {
+                                        value: "Europe/London",
+                                        children: "Europe/London"
+                                    }, void 0, false, {
+                                        fileName: "src/Create.jsx",
+                                        lineNumber: 134,
+                                        columnNumber: 13
+                                    }, this),
+                                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("option", {
+                                        value: "America/New_York",
+                                        children: "America/New_York"
+                                    }, void 0, false, {
+                                        fileName: "src/Create.jsx",
+                                        lineNumber: 135,
+                                        columnNumber: 13
+                                    }, this)
+                                ]
+                            }, void 0, true, {
+                                fileName: "src/Create.jsx",
+                                lineNumber: 132,
+                                columnNumber: 9
+                            }, this)
+                        ]
+                    }, void 0, true, {
+                        fileName: "src/Create.jsx",
+                        lineNumber: 130,
+                        columnNumber: 9
+                    }, this),
+                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("button", {
+                        type: "submit",
+                        children: "Next: Configure Launch"
+                    }, void 0, false, {
+                        fileName: "src/Create.jsx",
+                        lineNumber: 139,
+                        columnNumber: 9
+                    }, this)
+                ]
+            }, void 0, true, {
+                fileName: "src/Create.jsx",
+                lineNumber: 63,
+                columnNumber: 7
+            }, this)
+        ]
+    }, void 0, true, {
         fileName: "src/Create.jsx",
-        lineNumber: 5,
+        lineNumber: 61,
         columnNumber: 5
     }, this);
 }
+_s(Create, "PznEcRY9VC6crjbj1y4o6O6fWB0=");
 _c = Create;
 exports.default = Create;
 var _c;
