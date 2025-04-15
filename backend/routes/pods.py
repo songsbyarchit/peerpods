@@ -30,6 +30,14 @@ def create_pod(pod_create: schemas.PodCreate, db: Session = Depends(get_db)):
         description=pod_create.description,
         duration_hours=pod_create.duration_hours,
         drift_tolerance=pod_create.drift_tolerance,
+        media_type=pod_create.media_type,
+        max_chars_per_message=pod_create.max_chars_per_message,
+        max_messages_per_day=pod_create.max_messages_per_day,
+        max_voice_message_seconds=pod_create.max_voice_message_seconds,
+        launch_mode=pod_create.launch_mode,
+        auto_launch_at=pod_create.auto_launch_at,
+        timezone=pod_create.timezone,
+        visibility="unlisted",  # optional — remove if schema sends it
         creator_id=creator.id
     )
     db.add(new_pod)

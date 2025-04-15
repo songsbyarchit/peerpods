@@ -1,5 +1,7 @@
 from pydantic import BaseModel
 from typing import Optional, List
+import datetime
+from typing import Optional
 
 class UserBase(BaseModel):
     username: str
@@ -14,16 +16,22 @@ class User(UserBase):
     class Config:
         orm_mode = True
 
-class PodBase(BaseModel):
+class PodCreate(BaseModel):
     title: str
     description: Optional[str] = None
     duration_hours: int
     drift_tolerance: int
+    media_type: str
+    max_chars_per_message: int
+    max_messages_per_day: int
+    max_voice_message_seconds: Optional[int] = None
+    launch_mode: str
+    auto_launch_at: Optional[datetime.datetime] = None
+    timezone: str
+    visibility: Optional[str] = "unlisted"
+    tags: Optional[str] = None
 
-class PodCreate(PodBase):
-    pass
-
-class Pod(PodBase):
+class Pod(PodCreate):
     id: int
     creator_id: int
 

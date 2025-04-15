@@ -24,6 +24,8 @@ function Create() {
   
     const token = localStorage.getItem("token");
   
+    console.log("Selected mediaType:", mediaType);
+
     const payload = {
       title,
       description,
@@ -97,7 +99,7 @@ function Create() {
           <select value={mediaType} onChange={(e) => setMediaType(e.target.value)}>
             <option value="text">Text only</option>
             <option value="voice">Voice only</option>
-            <option value="both">Both</option>
+            <option value="both">Both text and voice</option>
           </select>
         </label>
 
@@ -147,10 +149,11 @@ function Create() {
         <label>
             Auto Launch At (ISO format):
             <input
-            type="datetime-local"
-            value={autoLaunchAt}
-            onChange={(e) => setAutoLaunchAt(e.target.value)}
-            required
+                type="datetime-local"
+                value={autoLaunchAt}
+                onChange={(e) => setAutoLaunchAt(e.target.value)}
+                min={new Date().toISOString().slice(0, 16)}
+                required
             />
         </label>
         )}
