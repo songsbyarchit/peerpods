@@ -2,6 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException, Form
 from sqlalchemy.orm import Session
 from backend import models
 from backend.database import SessionLocal
+from backend.dependencies.jwt import get_current_user
 from backend.auth import verify_password, hash_password
 from jose import jwt
 import os
@@ -47,3 +48,11 @@ def register(username: str = Form(...), password: str = Form(...), bio: str = Fo
 
     token = create_access_token({"sub": new_user.username})
     return {"access_token": token, "token_type": "bearer"}
+
+@router.get("/me")
+def get_me(current_user: models.User = Depends(get_current_user)):
+    return {
+        "id": current_user.id,
+        "username": current_user.username,
+        "bio": current_user.bio,
+    }
