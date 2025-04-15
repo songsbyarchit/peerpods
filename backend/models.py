@@ -11,6 +11,7 @@ class User(Base):
     username = Column(String(50), unique=True, nullable=False)
     hashed_password = Column(String, nullable=False)
     bio = Column(Text, nullable=True)
+    is_admin = Column(Integer, default=0)  # 1 = admin, 0 = regular user
     created_at = Column(DateTime, default=datetime.datetime.utcnow)
 
     messages = relationship("Message", back_populates="user")

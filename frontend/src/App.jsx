@@ -44,7 +44,7 @@ function App() {
           if (!res.ok) throw new Error("Invalid token");
           return res.json();
         })
-        .then((data) => setCurrentUser(data))
+        .then((data) => setCurrentUser({ ...data }))
         .catch((err) => {
           console.error("Auth check failed", err);
           localStorage.removeItem("token");
@@ -182,12 +182,15 @@ function App() {
   return (
     <div style={{ maxWidth: 800, margin: "0 auto", fontFamily: "sans-serif" }}>
       <Navbar currentUser={currentUser} setCurrentUser={setCurrentUser} />  
-      {currentUser && (
-        <p style={{ fontSize: "0.9rem", color: "gray" }}>
-          Logged in as <strong>{currentUser.username}</strong>
-        </p>
-      )}
-      <h1>PeerPods Frontend</h1>  
+      {currentUser?.is_admin && (
+        <>
+          {currentUser && (
+            <p style={{ fontSize: "0.9rem", color: "gray" }}>
+              Logged in as <strong>{currentUser.username}</strong>
+            </p>
+          )}
+          <h1>PeerPods Frontend</h1>
+
 
       <section style={{ marginBottom: "2rem" }}>
         <h2>Lists</h2>
@@ -337,9 +340,11 @@ function App() {
             </li>
           ))}
         </ul>
-      </section>
-    </div>
-  );
+        </section>
+    </>
+  )}
+</div>
+);
 }
 
 export default App;

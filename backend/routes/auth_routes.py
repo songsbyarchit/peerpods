@@ -55,4 +55,5 @@ def get_me(current_user: models.User = Depends(get_current_user)):
         "id": current_user.id,
         "username": current_user.username,
         "bio": current_user.bio,
+        "is_admin": current_user.is_admin,
     }
