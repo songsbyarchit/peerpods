@@ -4,6 +4,8 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import App from "./src/App";
 import Login from "./src/Login";
 import Register from "./src/Register";
+import Dashboard from "./src/Dashboard";
+import Create from "./src/Create";
 
 const root = createRoot(document.getElementById("root"));
 root.render(
@@ -12,6 +14,8 @@ root.render(
       <Route path="/" element={<App />} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
+      <Route path="/dashboard" element={<Dashboard />} />
+      <Route path="/create" element={<Create />} />
     </Routes>
   </Router>
 );

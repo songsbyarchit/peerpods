@@ -686,6 +686,10 @@ var _login = require("./src/Login");
 var _loginDefault = parcelHelpers.interopDefault(_login);
 var _register = require("./src/Register");
 var _registerDefault = parcelHelpers.interopDefault(_register);
+var _dashboard = require("./src/Dashboard");
+var _dashboardDefault = parcelHelpers.interopDefault(_dashboard);
+var _create = require("./src/Create");
+var _createDefault = parcelHelpers.interopDefault(_create);
 const root = (0, _client.createRoot)(document.getElementById("root"));
 root.render(/*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _reactRouterDom.BrowserRouter), {
     children: /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _reactRouterDom.Routes), {
@@ -694,47 +698,71 @@ root.render(/*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _reactRouterDom.Browser
                 path: "/",
                 element: /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _appDefault.default), {}, void 0, false, {
                     fileName: "index.jsx",
-                    lineNumber: 12,
+                    lineNumber: 14,
                     columnNumber: 32
                 }, void 0)
             }, void 0, false, {
                 fileName: "index.jsx",
-                lineNumber: 12,
+                lineNumber: 14,
                 columnNumber: 7
             }, undefined),
             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _reactRouterDom.Route), {
                 path: "/login",
                 element: /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _loginDefault.default), {}, void 0, false, {
                     fileName: "index.jsx",
-                    lineNumber: 13,
+                    lineNumber: 15,
                     columnNumber: 37
                 }, void 0)
             }, void 0, false, {
                 fileName: "index.jsx",
-                lineNumber: 13,
+                lineNumber: 15,
                 columnNumber: 7
             }, undefined),
             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _reactRouterDom.Route), {
                 path: "/register",
                 element: /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _registerDefault.default), {}, void 0, false, {
                     fileName: "index.jsx",
-                    lineNumber: 14,
+                    lineNumber: 16,
                     columnNumber: 40
                 }, void 0)
             }, void 0, false, {
                 fileName: "index.jsx",
-                lineNumber: 14,
+                lineNumber: 16,
+                columnNumber: 7
+            }, undefined),
+            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _reactRouterDom.Route), {
+                path: "/dashboard",
+                element: /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _dashboardDefault.default), {}, void 0, false, {
+                    fileName: "index.jsx",
+                    lineNumber: 17,
+                    columnNumber: 41
+                }, void 0)
+            }, void 0, false, {
+                fileName: "index.jsx",
+                lineNumber: 17,
+                columnNumber: 7
+            }, undefined),
+            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _reactRouterDom.Route), {
+                path: "/create",
+                element: /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _createDefault.default), {}, void 0, false, {
+                    fileName: "index.jsx",
+                    lineNumber: 18,
+                    columnNumber: 38
+                }, void 0)
+            }, void 0, false, {
+                fileName: "index.jsx",
+                lineNumber: 18,
                 columnNumber: 7
             }, undefined)
         ]
     }, void 0, true, {
         fileName: "index.jsx",
-        lineNumber: 11,
+        lineNumber: 13,
         columnNumber: 5
     }, undefined)
 }, void 0, false, {
     fileName: "index.jsx",
-    lineNumber: 10,
+    lineNumber: 12,
     columnNumber: 3
 }, undefined));
 
@@ -743,7 +771,7 @@ root.render(/*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _reactRouterDom.Browser
   globalThis.$RefreshReg$ = prevRefreshReg;
   globalThis.$RefreshSig$ = prevRefreshSig;
 }
-},{"react/jsx-dev-runtime":"dVPUn","react":"jMk1U","react-dom/client":"hrvwu","react-router-dom":"61z4w","@parcel/transformer-js/src/esmodule-helpers.js":"jnFvT","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"7h6Pi","./src/App":"f8V2Q","./src/Login":"a6Rks","./src/Register":"gnA7u"}],"dVPUn":[function(require,module,exports,__globalThis) {
+},{"react/jsx-dev-runtime":"dVPUn","react":"jMk1U","react-dom/client":"hrvwu","react-router-dom":"61z4w","@parcel/transformer-js/src/esmodule-helpers.js":"jnFvT","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"7h6Pi","./src/App":"f8V2Q","./src/Login":"a6Rks","./src/Register":"gnA7u","./src/Dashboard":"4oiLa","./src/Create":"ku2fq"}],"dVPUn":[function(require,module,exports,__globalThis) {
 'use strict';
 module.exports = require("ee51401569654d91");
 
@@ -34630,7 +34658,7 @@ $RefreshReg$(_c, "App");
   globalThis.$RefreshReg$ = prevRefreshReg;
   globalThis.$RefreshSig$ = prevRefreshSig;
 }
-},{"react/jsx-dev-runtime":"dVPUn","react":"jMk1U","react-dom/client":"hrvwu","react-router-dom":"61z4w","./Login":"a6Rks","./Register":"gnA7u","@parcel/transformer-js/src/esmodule-helpers.js":"jnFvT","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"7h6Pi","./Navbar":"1NZhh"}],"a6Rks":[function(require,module,exports,__globalThis) {
+},{"react/jsx-dev-runtime":"dVPUn","react":"jMk1U","react-dom/client":"hrvwu","react-router-dom":"61z4w","./Login":"a6Rks","./Register":"gnA7u","./Navbar":"1NZhh","@parcel/transformer-js/src/esmodule-helpers.js":"jnFvT","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"7h6Pi"}],"a6Rks":[function(require,module,exports,__globalThis) {
 var $parcel$ReactRefreshHelpers$898c = require("@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js");
 $parcel$ReactRefreshHelpers$898c.init();
 var prevRefreshReg = globalThis.$RefreshReg$;
@@ -35050,6 +35078,90 @@ $RefreshReg$(_c, "Navbar");
   globalThis.$RefreshReg$ = prevRefreshReg;
   globalThis.$RefreshSig$ = prevRefreshSig;
 }
-},{"react/jsx-dev-runtime":"dVPUn","react":"jMk1U","react-router-dom":"61z4w","@parcel/transformer-js/src/esmodule-helpers.js":"jnFvT","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"7h6Pi"}]},["2Ekdp","aiwHB"], "aiwHB", "parcelRequire10c2", {}, null, null, "http://localhost:5173")
+},{"react/jsx-dev-runtime":"dVPUn","react":"jMk1U","react-router-dom":"61z4w","@parcel/transformer-js/src/esmodule-helpers.js":"jnFvT","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"7h6Pi"}],"4oiLa":[function(require,module,exports,__globalThis) {
+var $parcel$ReactRefreshHelpers$d0f0 = require("@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js");
+$parcel$ReactRefreshHelpers$d0f0.init();
+var prevRefreshReg = globalThis.$RefreshReg$;
+var prevRefreshSig = globalThis.$RefreshSig$;
+$parcel$ReactRefreshHelpers$d0f0.prelude(module);
+
+try {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+var _jsxDevRuntime = require("react/jsx-dev-runtime");
+var _react = require("react");
+var _reactDefault = parcelHelpers.interopDefault(_react);
+function Dashboard() {
+    return /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
+        style: {
+            padding: "2rem",
+            fontFamily: "sans-serif"
+        },
+        children: /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("h2", {
+            children: "User Dashboard (coming soon)"
+        }, void 0, false, {
+            fileName: "src/Dashboard.jsx",
+            lineNumber: 6,
+            columnNumber: 7
+        }, this)
+    }, void 0, false, {
+        fileName: "src/Dashboard.jsx",
+        lineNumber: 5,
+        columnNumber: 5
+    }, this);
+}
+_c = Dashboard;
+exports.default = Dashboard;
+var _c;
+$RefreshReg$(_c, "Dashboard");
+
+  $parcel$ReactRefreshHelpers$d0f0.postlude(module);
+} finally {
+  globalThis.$RefreshReg$ = prevRefreshReg;
+  globalThis.$RefreshSig$ = prevRefreshSig;
+}
+},{"react/jsx-dev-runtime":"dVPUn","react":"jMk1U","@parcel/transformer-js/src/esmodule-helpers.js":"jnFvT","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"7h6Pi"}],"ku2fq":[function(require,module,exports,__globalThis) {
+var $parcel$ReactRefreshHelpers$e2b5 = require("@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js");
+$parcel$ReactRefreshHelpers$e2b5.init();
+var prevRefreshReg = globalThis.$RefreshReg$;
+var prevRefreshSig = globalThis.$RefreshSig$;
+$parcel$ReactRefreshHelpers$e2b5.prelude(module);
+
+try {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+var _jsxDevRuntime = require("react/jsx-dev-runtime");
+var _react = require("react");
+var _reactDefault = parcelHelpers.interopDefault(_react);
+function Create() {
+    return /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
+        style: {
+            padding: "2rem",
+            fontFamily: "sans-serif"
+        },
+        children: /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("h2", {
+            children: "Create Pod Page (coming soon)"
+        }, void 0, false, {
+            fileName: "src/Create.jsx",
+            lineNumber: 6,
+            columnNumber: 7
+        }, this)
+    }, void 0, false, {
+        fileName: "src/Create.jsx",
+        lineNumber: 5,
+        columnNumber: 5
+    }, this);
+}
+_c = Create;
+exports.default = Create;
+var _c;
+$RefreshReg$(_c, "Create");
+
+  $parcel$ReactRefreshHelpers$e2b5.postlude(module);
+} finally {
+  globalThis.$RefreshReg$ = prevRefreshReg;
+  globalThis.$RefreshSig$ = prevRefreshSig;
+}
+},{"react/jsx-dev-runtime":"dVPUn","react":"jMk1U","@parcel/transformer-js/src/esmodule-helpers.js":"jnFvT","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"7h6Pi"}]},["2Ekdp","aiwHB"], "aiwHB", "parcelRequire10c2", {}, null, null, "http://localhost:5173")
 
 //# sourceMappingURL=frontend.2002cba6.js.map
