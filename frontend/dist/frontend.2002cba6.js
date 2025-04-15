@@ -35097,25 +35097,229 @@ parcelHelpers.defineInteropFlag(exports);
 var _jsxDevRuntime = require("react/jsx-dev-runtime");
 var _react = require("react");
 var _reactDefault = parcelHelpers.interopDefault(_react);
+var _s = $RefreshSig$();
 function Dashboard() {
+    _s();
+    const [yourPods, setYourPods] = (0, _react.useState)([]);
+    const [recommended, setRecommended] = (0, _react.useState)([]);
+    const [activePods, setActivePods] = (0, _react.useState)([]);
+    const [stats, setStats] = (0, _react.useState)({
+        totalMessages: 0,
+        totalVoiceMinutes: 0
+    });
+    (0, _react.useEffect)(()=>{
+        const token = localStorage.getItem("token");
+        fetch("/pods/user", {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }).then((res)=>res.json()).then(setYourPods);
+        fetch("/pods/recommended", {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }).then((res)=>res.json()).then((data)=>setRecommended(data.filter((p)=>p.state !== "locked" && p.remaining_slots > 0)));
+        fetch("/pods/active", {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }).then((res)=>res.json()).then(setActivePods);
+        fetch("/stats", {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }).then((res)=>res.json()).then(setStats);
+    }, []);
     return /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
         style: {
             padding: "2rem",
             fontFamily: "sans-serif"
         },
-        children: /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("h2", {
-            children: "User Dashboard (coming soon)"
-        }, void 0, false, {
-            fileName: "src/Dashboard.jsx",
-            lineNumber: 6,
-            columnNumber: 7
-        }, this)
-    }, void 0, false, {
+        children: [
+            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("h2", {
+                children: "Your Pods"
+            }, void 0, false, {
+                fileName: "src/Dashboard.jsx",
+                lineNumber: 31,
+                columnNumber: 9
+            }, this),
+            yourPods.length === 0 ? /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("p", {
+                children: [
+                    "You have no pods. ",
+                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("a", {
+                        href: "/create",
+                        children: "Create one now"
+                    }, void 0, false, {
+                        fileName: "src/Dashboard.jsx",
+                        lineNumber: 33,
+                        columnNumber: 32
+                    }, this),
+                    "."
+                ]
+            }, void 0, true, {
+                fileName: "src/Dashboard.jsx",
+                lineNumber: 33,
+                columnNumber: 11
+            }, this) : /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("ul", {
+                children: yourPods.map((p)=>/*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("li", {
+                        children: [
+                            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("strong", {
+                                children: p.title
+                            }, void 0, false, {
+                                fileName: "src/Dashboard.jsx",
+                                lineNumber: 37,
+                                columnNumber: 30
+                            }, this),
+                            " \u2014 ",
+                            p.state
+                        ]
+                    }, p.id, true, {
+                        fileName: "src/Dashboard.jsx",
+                        lineNumber: 37,
+                        columnNumber: 15
+                    }, this))
+            }, void 0, false, {
+                fileName: "src/Dashboard.jsx",
+                lineNumber: 35,
+                columnNumber: 11
+            }, this),
+            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("h2", {
+                children: "Top 3 Recommended Pods"
+            }, void 0, false, {
+                fileName: "src/Dashboard.jsx",
+                lineNumber: 42,
+                columnNumber: 9
+            }, this),
+            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("ul", {
+                children: recommended.slice(0, 3).map((p)=>/*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("li", {
+                        children: [
+                            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("strong", {
+                                children: p.title
+                            }, void 0, false, {
+                                fileName: "src/Dashboard.jsx",
+                                lineNumber: 46,
+                                columnNumber: 15
+                            }, this),
+                            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("br", {}, void 0, false, {
+                                fileName: "src/Dashboard.jsx",
+                                lineNumber: 46,
+                                columnNumber: 41
+                            }, this),
+                            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("em", {
+                                children: p.description
+                            }, void 0, false, {
+                                fileName: "src/Dashboard.jsx",
+                                lineNumber: 47,
+                                columnNumber: 15
+                            }, this),
+                            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("br", {}, void 0, false, {
+                                fileName: "src/Dashboard.jsx",
+                                lineNumber: 47,
+                                columnNumber: 39
+                            }, this),
+                            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("button", {
+                                onClick: ()=>joinPod(p.id),
+                                children: "Join"
+                            }, void 0, false, {
+                                fileName: "src/Dashboard.jsx",
+                                lineNumber: 48,
+                                columnNumber: 15
+                            }, this)
+                        ]
+                    }, p.id, true, {
+                        fileName: "src/Dashboard.jsx",
+                        lineNumber: 45,
+                        columnNumber: 13
+                    }, this))
+            }, void 0, false, {
+                fileName: "src/Dashboard.jsx",
+                lineNumber: 43,
+                columnNumber: 9
+            }, this),
+            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("h2", {
+                children: "Active Pods (Spectator View)"
+            }, void 0, false, {
+                fileName: "src/Dashboard.jsx",
+                lineNumber: 53,
+                columnNumber: 9
+            }, this),
+            activePods.map((p)=>/*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
+                    style: {
+                        marginBottom: "1rem"
+                    },
+                    children: [
+                        /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("h4", {
+                            children: p.title
+                        }, void 0, false, {
+                            fileName: "src/Dashboard.jsx",
+                            lineNumber: 56,
+                            columnNumber: 13
+                        }, this),
+                        /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("ul", {
+                            children: p.messages.map((m, i)=>/*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("li", {
+                                    children: m.media_type === "text" ? m.content : /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("em", {
+                                        children: [
+                                            "[Voice message: ",
+                                            m.voice_path,
+                                            "]"
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "src/Dashboard.jsx",
+                                        lineNumber: 60,
+                                        columnNumber: 58
+                                    }, this)
+                                }, i, false, {
+                                    fileName: "src/Dashboard.jsx",
+                                    lineNumber: 59,
+                                    columnNumber: 17
+                                }, this))
+                        }, void 0, false, {
+                            fileName: "src/Dashboard.jsx",
+                            lineNumber: 57,
+                            columnNumber: 13
+                        }, this)
+                    ]
+                }, p.id, true, {
+                    fileName: "src/Dashboard.jsx",
+                    lineNumber: 55,
+                    columnNumber: 11
+                }, this)),
+            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("h2", {
+                children: "Overall App Stats"
+            }, void 0, false, {
+                fileName: "src/Dashboard.jsx",
+                lineNumber: 67,
+                columnNumber: 9
+            }, this),
+            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("p", {
+                children: [
+                    "Total Messages Sent: ",
+                    stats.totalMessages
+                ]
+            }, void 0, true, {
+                fileName: "src/Dashboard.jsx",
+                lineNumber: 68,
+                columnNumber: 9
+            }, this),
+            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("p", {
+                children: [
+                    "Total Voice Minutes Shared: ",
+                    stats.totalVoiceMinutes,
+                    " minutes"
+                ]
+            }, void 0, true, {
+                fileName: "src/Dashboard.jsx",
+                lineNumber: 69,
+                columnNumber: 9
+            }, this)
+        ]
+    }, void 0, true, {
         fileName: "src/Dashboard.jsx",
-        lineNumber: 5,
-        columnNumber: 5
+        lineNumber: 30,
+        columnNumber: 7
     }, this);
 }
+_s(Dashboard, "9p1gbdi5o4GKvs7cEi8oabkwDaA=");
 _c = Dashboard;
 exports.default = Dashboard;
 var _c;

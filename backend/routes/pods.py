@@ -4,6 +4,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from backend import models, schemas
 from backend.database import SessionLocal
+from backend.dependencies.jwt import get_current_user
 
 router = APIRouter()
 
@@ -78,3 +79,7 @@ def get_pod_previews(db: Session = Depends(get_db)):
         previews.append(preview)
 
     return previews
+
+@router.get("/mine")
+def get_user_pods(db: Session = Depends(get_db), current_user: models.User = Depends(get_current_user)):
+    return db.query(models.Pod).filter(models.Pod.creator_id == current_user.id).all()
