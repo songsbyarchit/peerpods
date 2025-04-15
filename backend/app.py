@@ -2,11 +2,13 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from backend import models
 from backend.database import engine
-from backend.routes import pods, users, messages
+from backend.routes import pods, users, messages, auth_routes
 
 models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
+
+app.include_router(auth_routes.router, prefix="/auth")
 
 # Allow frontend to talk to backend during dev
 app.add_middleware(

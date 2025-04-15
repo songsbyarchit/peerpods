@@ -3,6 +3,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from backend import models, schemas
+from backend.auth import hash_password
 from backend.database import SessionLocal
 from backend.matching import match_pods_for_user
 
@@ -38,3 +39,19 @@ def get_recommended_pods(user_id: int, db: Session = Depends(get_db)):
     # Use the matching logic
     recommended = match_pods_for_user(user.bio or "", all_pods, top_n=3)
     return recommended
+
+@router.post("/register")
+def register_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
+    existing = db.query(models.User).filter(models.User.username == user.username).first()
+    if existing:
+        raise HTTPException(status_code=400, detail="Username already exists.")
+
+    new_user = models.User(
+        username=user.username,
+        bio=user.bio,
+        hashed_password=hash_password(user.password)
+    )
+    db.add(new_user)
+    db.commit()
+    db.refresh(new_user)
+    return {"id": new_user.id, "username": new_user.username}
