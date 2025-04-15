@@ -11,6 +11,7 @@ function Create() {
   const [maxChars, setMaxChars] = useState(500);
   const [maxMessages, setMaxMessages] = useState(10);
   const [launchMode, setLaunchMode] = useState("manual");
+  const [maxVoiceSeconds, setMaxVoiceSeconds] = useState(60); // new  
   const [autoLaunchAt, setAutoLaunchAt] = useState("");
   const [timezone, setTimezone] = useState("UTC");
   useEffect(() => {
@@ -34,6 +35,7 @@ function Create() {
       launch_mode: launchMode,
       auto_launch_at: launchMode === "countdown" ? autoLaunchAt : null,
       timezone,
+      max_voice_message_seconds: mediaType === "voice" || mediaType === "both" ? maxVoiceSeconds : null,      
     };
   
     try {
@@ -77,8 +79,17 @@ function Create() {
         </label>
 
         <label>
-          Drift Tolerance:
-          <input type="range" min="1" max="5" value={driftTolerance} onChange={(e) => setDriftTolerance(Number(e.target.value))} />
+        Drift Tolerance:
+        <input
+            type="range"
+            min="1"
+            max="5"
+            value={driftTolerance}
+            onChange={(e) => setDriftTolerance(Number(e.target.value))}
+        />
+        <div style={{ fontSize: "0.9rem", color: "#555" }}>
+            Current: {driftTolerance} — {["Strict", "Low", "Medium", "High", "Very High"][driftTolerance - 1]}
+        </div>
         </label>
 
         <label>
@@ -90,15 +101,29 @@ function Create() {
           </select>
         </label>
 
+        {(mediaType === "voice" || mediaType === "both") && (
         <label>
-          Max characters per message:
-          <select value={maxChars} onChange={(e) => setMaxChars(Number(e.target.value))}>
+            Max voice note duration (seconds):
+            <select value={maxVoiceSeconds} onChange={(e) => setMaxVoiceSeconds(Number(e.target.value))}>
+            <option value={30}>30s</option>
+            <option value={60}>1 min</option>
+            <option value={180}>3 mins</option>
+            <option value={300}>5 mins</option>
+            </select>
+        </label>
+        )}
+
+        {(mediaType === "text" || mediaType === "both") && (
+        <label>
+            Max characters per message:
+            <select value={maxChars} onChange={(e) => setMaxChars(Number(e.target.value))}>
             <option value={100}>100</option>
             <option value={250}>250</option>
             <option value={500}>500</option>
             <option value={1000}>1000</option>
-          </select>
+            </select>
         </label>
+        )}
 
         <label>
           Max messages per day:
