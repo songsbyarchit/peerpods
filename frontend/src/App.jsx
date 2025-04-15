@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { createRoot } from "react-dom/client";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import Login from "./Login";
@@ -7,6 +7,8 @@ import Register from "./Register";
 const API_URL = "http://localhost:8000";
 
 function App() {
+  const [currentUser, setCurrentUser] = useState(null); // new
+
   // States for listing
   const [users, setUsers] = useState([]);
   const [podsPreview, setPodsPreview] = useState([]);
@@ -27,6 +29,27 @@ function App() {
   const [newMsgPodId, setNewMsgPodId] = useState("");
 
   const [recommendUserId, setRecommendUserId] = useState("");
+
+  // ⬇️ Add this right here
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      fetch(`${API_URL}/auth/me`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+        .then((res) => {
+          if (!res.ok) throw new Error("Invalid token");
+          return res.json();
+        })
+        .then((data) => setCurrentUser(data))
+        .catch((err) => {
+          console.error("Auth check failed", err);
+          localStorage.removeItem("token");
+        });
+    }
+  }, []);  
 
   // Fetch lists
   const fetchUsers = async () => {
@@ -157,7 +180,12 @@ function App() {
 
   return (
     <div style={{ maxWidth: 800, margin: "0 auto", fontFamily: "sans-serif" }}>
-      <h1>PeerPods Frontend</h1>
+      {currentUser && (
+        <p style={{ fontSize: "0.9rem", color: "gray" }}>
+          Logged in as <strong>{currentUser.username}</strong>
+        </p>
+      )}
+      <h1>PeerPods Frontend</h1>  
 
       <section style={{ marginBottom: "2rem" }}>
         <h2>Lists</h2>
