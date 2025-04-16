@@ -123,13 +123,43 @@ def get_active_pods(db: Session = Depends(get_db)):
 
 @router.get("/stats")
 def get_app_stats(db: Session = Depends(get_db)):
-    messages = db.query(models.Message).all()
-    total_messages = len(messages)
-    total_voice_seconds = sum(
-        pod.max_voice_message_seconds or 0
-        for pod in db.query(models.Pod).filter(models.Pod.media_type.in_(["voice", "both"])).all()
-    )
+    total_messages = db.query(models.Message).count()
+
+    voice_message_count = db.query(models.Message).filter(models.Message.media_type == "voice").count()
+    total_voice_minutes = voice_message_count  # Assuming 1 minute per voice message
+
     return {
         "totalMessages": total_messages,
-        "totalVoiceMinutes": round(total_voice_seconds / 60, 2)
+        "totalVoiceMinutes": total_voice_minutes
+    }
+
+@router.get("/pod/{pod_id}")
+def get_pod_by_id(pod_id: int, db: Session = Depends(get_db)):
+    pod = db.query(models.Pod).filter(models.Pod.id == pod_id).first()
+    if not pod:
+        raise HTTPException(status_code=404, detail="Pod not found")
+
+    messages = [
+        {
+            "media_type": m.media_type,
+            "content": m.content,
+            "voice_path": m.voice_path,
+        }
+        for m in pod.messages
+    ]
+
+    return {
+        "id": pod.id,
+        "title": pod.title,
+        "description": pod.description,
+        "media_type": pod.media_type,
+        "messages": messages,
+        "creator": pod.creator.username if pod.creator else "Unknown",
+        "duration_hours": pod.duration_hours,
+        "drift_tolerance": pod.drift_tolerance,
+        "visibility": pod.visibility,
+        "tags": pod.tags,
+        "state": pod.state,
+        "launch_mode": pod.launch_mode,
+        "auto_launch_at": pod.auto_launch_at.isoformat() if pod.auto_launch_at else None,
     }
