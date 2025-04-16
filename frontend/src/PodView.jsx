@@ -30,10 +30,13 @@ function PodView() {
 
       <h3>Messages</h3>
       <ul>
-        {pod.messages.map((m, i) => (
-          <li key={i}>
-            {m.media_type === "text" ? m.content : <em>[Voice message: {m.voice_path}]</em>}
-          </li>
+      {pod.messages.map((msg, idx) => (
+        <li key={idx}>
+            <strong>{msg.user}:</strong>{" "}
+            {msg.media_type === "text"
+            ? msg.content
+            : <em>[Voice message: {msg.voice_path}]</em>}
+        </li>
         ))}
       </ul>
     </div>

@@ -35228,22 +35228,35 @@ function PodView() {
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("ul", {
-                children: pod.messages.map((m, i)=>/*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("li", {
-                        children: m.media_type === "text" ? m.content : /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("em", {
-                            children: [
-                                "[Voice message: ",
-                                m.voice_path,
-                                "]"
-                            ]
-                        }, void 0, true, {
-                            fileName: "src/PodView.jsx",
-                            lineNumber: 35,
-                            columnNumber: 52
-                        }, this)
-                    }, i, false, {
+                children: pod.messages.map((msg, idx)=>/*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("li", {
+                        children: [
+                            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("strong", {
+                                children: [
+                                    msg.user,
+                                    ":"
+                                ]
+                            }, void 0, true, {
+                                fileName: "src/PodView.jsx",
+                                lineNumber: 35,
+                                columnNumber: 13
+                            }, this),
+                            " ",
+                            msg.media_type === "text" ? msg.content : /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("em", {
+                                children: [
+                                    "[Voice message: ",
+                                    msg.voice_path,
+                                    "]"
+                                ]
+                            }, void 0, true, {
+                                fileName: "src/PodView.jsx",
+                                lineNumber: 38,
+                                columnNumber: 15
+                            }, this)
+                        ]
+                    }, idx, true, {
                         fileName: "src/PodView.jsx",
                         lineNumber: 34,
-                        columnNumber: 11
+                        columnNumber: 9
                     }, this))
             }, void 0, false, {
                 fileName: "src/PodView.jsx",

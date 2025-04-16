@@ -144,6 +144,7 @@ def get_pod_by_id(pod_id: int, db: Session = Depends(get_db)):
             "media_type": m.media_type,
             "content": m.content,
             "voice_path": m.voice_path,
+            "user": m.user.username if m.user else "Unknown"
         }
         for m in pod.messages
     ]
