@@ -51,18 +51,26 @@ function Dashboard() {
         </ul>
   
         <h2>Active Pods (Spectator View)</h2>
-        {activePods.map(p => (
-          <div key={p.id} style={{ marginBottom: "1rem" }}>
-            <h4>{p.title}</h4>
-            <ul>
-              {p.messages.map((m, i) => (
-                <li key={i}>
-                  {m.media_type === "text" ? m.content : <em>[Voice message: {m.voice_path}]</em>}
-                </li>
-              ))}
-            </ul>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: "1rem" }}>
+            {activePods.map((p) => (
+              <a
+                key={p.id}
+                href={`/pod/${p.id}`}
+                style={{
+                  border: "1px solid #ccc",
+                  borderRadius: "10px",
+                  padding: "1rem",
+                  width: "200px",
+                  textDecoration: "none",
+                  color: "black",
+                  backgroundColor: "#f9f9f9",
+                  boxShadow: "0 1px 4px rgba(0,0,0,0.1)"
+                }}
+              >
+                <strong>{p.title}</strong>
+              </a>
+            ))}
           </div>
-        ))}
   
         <h2>Overall App Stats</h2>
         <p>Total Messages Sent: {stats.totalMessages}</p>

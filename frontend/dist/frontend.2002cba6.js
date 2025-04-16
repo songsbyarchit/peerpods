@@ -35344,52 +35344,46 @@ function Dashboard() {
                 lineNumber: 53,
                 columnNumber: 9
             }, this),
-            activePods.map((p)=>/*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
-                    style: {
-                        marginBottom: "1rem"
-                    },
-                    children: [
-                        /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("h4", {
+            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
+                style: {
+                    display: "flex",
+                    flexWrap: "wrap",
+                    gap: "1rem"
+                },
+                children: activePods.map((p)=>/*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("a", {
+                        href: `/pod/${p.id}`,
+                        style: {
+                            border: "1px solid #ccc",
+                            borderRadius: "10px",
+                            padding: "1rem",
+                            width: "200px",
+                            textDecoration: "none",
+                            color: "black",
+                            backgroundColor: "#f9f9f9",
+                            boxShadow: "0 1px 4px rgba(0,0,0,0.1)"
+                        },
+                        children: /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("strong", {
                             children: p.title
                         }, void 0, false, {
                             fileName: "src/Dashboard.jsx",
-                            lineNumber: 56,
-                            columnNumber: 13
-                        }, this),
-                        /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("ul", {
-                            children: p.messages.map((m, i)=>/*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("li", {
-                                    children: m.media_type === "text" ? m.content : /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("em", {
-                                        children: [
-                                            "[Voice message: ",
-                                            m.voice_path,
-                                            "]"
-                                        ]
-                                    }, void 0, true, {
-                                        fileName: "src/Dashboard.jsx",
-                                        lineNumber: 60,
-                                        columnNumber: 58
-                                    }, this)
-                                }, i, false, {
-                                    fileName: "src/Dashboard.jsx",
-                                    lineNumber: 59,
-                                    columnNumber: 17
-                                }, this))
-                        }, void 0, false, {
-                            fileName: "src/Dashboard.jsx",
-                            lineNumber: 57,
-                            columnNumber: 13
+                            lineNumber: 70,
+                            columnNumber: 17
                         }, this)
-                    ]
-                }, p.id, true, {
-                    fileName: "src/Dashboard.jsx",
-                    lineNumber: 55,
-                    columnNumber: 11
-                }, this)),
+                    }, p.id, false, {
+                        fileName: "src/Dashboard.jsx",
+                        lineNumber: 56,
+                        columnNumber: 15
+                    }, this))
+            }, void 0, false, {
+                fileName: "src/Dashboard.jsx",
+                lineNumber: 54,
+                columnNumber: 11
+            }, this),
             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("h2", {
                 children: "Overall App Stats"
             }, void 0, false, {
                 fileName: "src/Dashboard.jsx",
-                lineNumber: 67,
+                lineNumber: 75,
                 columnNumber: 9
             }, this),
             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("p", {
@@ -35399,7 +35393,7 @@ function Dashboard() {
                 ]
             }, void 0, true, {
                 fileName: "src/Dashboard.jsx",
-                lineNumber: 68,
+                lineNumber: 76,
                 columnNumber: 9
             }, this),
             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("p", {
@@ -35410,7 +35404,7 @@ function Dashboard() {
                 ]
             }, void 0, true, {
                 fileName: "src/Dashboard.jsx",
-                lineNumber: 69,
+                lineNumber: 77,
                 columnNumber: 9
             }, this)
         ]
