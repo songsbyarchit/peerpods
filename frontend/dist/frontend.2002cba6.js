@@ -35228,29 +35228,66 @@ function PodView() {
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("ul", {
+                style: {
+                    listStyleType: "none",
+                    paddingLeft: 0
+                },
                 children: pod.messages.map((msg, idx)=>/*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("li", {
+                        style: {
+                            backgroundColor: "#f0f0f0",
+                            borderRadius: "10px",
+                            padding: "0.75rem",
+                            marginBottom: "0.5rem",
+                            maxWidth: "70%",
+                            boxShadow: "0 1px 3px rgba(0, 0, 0, 0.1)"
+                        },
                         children: [
-                            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("strong", {
+                            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
+                                style: {
+                                    fontWeight: "bold",
+                                    marginBottom: "0.25rem"
+                                },
                                 children: [
                                     msg.user,
-                                    ":"
+                                    " ",
+                                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("span", {
+                                        style: {
+                                            fontWeight: "normal",
+                                            color: "#777",
+                                            fontSize: "0.8rem"
+                                        },
+                                        children: [
+                                            "(",
+                                            new Date(msg.timestamp).toLocaleString(),
+                                            ")"
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "src/PodView.jsx",
+                                        lineNumber: 43,
+                                        columnNumber: 24
+                                    }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "src/PodView.jsx",
-                                lineNumber: 35,
+                                lineNumber: 42,
                                 columnNumber: 13
                             }, this),
-                            " ",
-                            msg.media_type === "text" ? msg.content : /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("em", {
-                                children: [
-                                    "[Voice message: ",
-                                    msg.voice_path,
-                                    "]"
-                                ]
-                            }, void 0, true, {
+                            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
+                                children: msg.media_type === "text" ? msg.content : /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("em", {
+                                    children: [
+                                        "[Voice message: ",
+                                        msg.voice_path,
+                                        "]"
+                                    ]
+                                }, void 0, true, {
+                                    fileName: "src/PodView.jsx",
+                                    lineNumber: 50,
+                                    columnNumber: 19
+                                }, this)
+                            }, void 0, false, {
                                 fileName: "src/PodView.jsx",
-                                lineNumber: 38,
-                                columnNumber: 15
+                                lineNumber: 47,
+                                columnNumber: 13
                             }, this)
                         ]
                     }, idx, true, {
