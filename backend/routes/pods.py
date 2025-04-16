@@ -20,9 +20,12 @@ def get_all_pods(db: Session = Depends(get_db)):
     return db.query(models.Pod).all()
 
 @router.post("/")
-def create_pod(pod_create: schemas.PodCreate, db: Session = Depends(get_db)):
-    # For now, let the first user (id=1) be the creator if none specified
-    creator = db.query(models.User).first()
+def create_pod(
+    pod_create: schemas.PodCreate,
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(get_current_user)
+):
+    creator = current_user
     if not creator:
         raise HTTPException(status_code=400, detail="No users in database to assign as creator.")
 

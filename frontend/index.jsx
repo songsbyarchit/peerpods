@@ -12,15 +12,19 @@ import Layout from "./src/Layout";
 const root = createRoot(document.getElementById("root"));
 root.render(
   <Router>
-    <Layout>
-      <Routes>
-        <Route path="/" element={<App />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/create" element={<Create />} />
-        <Route path="/pod/:id" element={<PodView />} />
-      </Routes>
-    </Layout>
+    <Routes>
+      <Route path="*" element={
+        <Layout>
+          <Routes>
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/create" element={<Create />} />
+            <Route path="/pod/:id" element={<PodView />} />
+            <Route path="/" element={<App />} />
+          </Routes>
+        </Layout>
+      } />
+    </Routes>
   </Router>
 );

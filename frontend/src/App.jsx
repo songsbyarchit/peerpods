@@ -186,11 +186,6 @@ function App() {
       </Routes>  
       {currentUser?.is_admin && (
         <>
-          {currentUser && (
-            <p style={{ fontSize: "0.9rem", color: "gray" }}>
-              Logged in as <strong>{currentUser.username}</strong>
-            </p>
-          )}
           <h1>PeerPods Frontend</h1>
 
 
