@@ -7,17 +7,20 @@ import Register from "./src/Register";
 import Dashboard from "./src/Dashboard";
 import Create from "./src/Create";
 import PodView from "./src/PodView";
+import Layout from "./src/Layout";
 
 const root = createRoot(document.getElementById("root"));
 root.render(
   <Router>
-  <Routes>
-    <Route path="/" element={<App />} />
-    <Route path="/login" element={<Login />} />
-    <Route path="/register" element={<Register />} />
-    <Route path="/dashboard" element={<Dashboard />} />
-    <Route path="/create" element={<Create />} />
-    <Route path="/pod/:id" element={<PodView />} />
-  </Routes>
+    <Layout>
+      <Routes>
+        <Route path="/" element={<App />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/create" element={<Create />} />
+        <Route path="/pod/:id" element={<PodView />} />
+      </Routes>
+    </Layout>
   </Router>
 );

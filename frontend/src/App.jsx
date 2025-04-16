@@ -3,7 +3,6 @@ import { createRoot } from "react-dom/client";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import Login from "./Login";
 import Register from "./Register";
-import Navbar from "./Navbar";
 import PodView from "./PodView";
 
 const API_URL = "http://localhost:8000";
@@ -182,7 +181,6 @@ function App() {
 
   return (
     <div style={{ maxWidth: 800, margin: "0 auto", fontFamily: "sans-serif" }}>
-      <Navbar currentUser={currentUser} setCurrentUser={setCurrentUser} />
       <Routes>
         <Route path="/pod/:id" element={<PodView />} />
       </Routes>  
