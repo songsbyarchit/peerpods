@@ -35109,22 +35109,22 @@ function Dashboard() {
     });
     (0, _react.useEffect)(()=>{
         const token = localStorage.getItem("token");
-        fetch("/pods/user", {
+        fetch("http://localhost:8000/pods/user", {
             headers: {
                 Authorization: `Bearer ${token}`
             }
         }).then((res)=>res.json()).then(setYourPods);
-        fetch("/pods/recommended", {
+        fetch("http://localhost:8000/pods/recommended", {
             headers: {
                 Authorization: `Bearer ${token}`
             }
         }).then((res)=>res.json()).then((data)=>setRecommended(data.filter((p)=>p.state !== "locked" && p.remaining_slots > 0)));
-        fetch("/pods/active", {
+        fetch("http://localhost:8000/pods/active", {
             headers: {
                 Authorization: `Bearer ${token}`
             }
         }).then((res)=>res.json()).then(setActivePods);
-        fetch("/stats", {
+        fetch("http://localhost:8000/stats", {
             headers: {
                 Authorization: `Bearer ${token}`
             }
