@@ -30,27 +30,30 @@ function PodView() {
 
       <h3>Messages</h3>
       <ul style={{ listStyleType: "none", paddingLeft: 0 }}>
-      {pod.messages.map((msg, idx) => (
-        <li key={idx} style={{
-            backgroundColor: "#f0f0f0",
-            borderRadius: "10px",
-            padding: "0.75rem",
-            marginBottom: "0.5rem",
-            maxWidth: "70%",
-            boxShadow: "0 1px 3px rgba(0, 0, 0, 0.1)"
-        }}>
-            <div style={{ fontWeight: "bold", marginBottom: "0.25rem" }}>
-            {msg.user} <span style={{ fontWeight: "normal", color: "#777", fontSize: "0.8rem" }}>
-                ({new Date(msg.timestamp).toLocaleString()})
-            </span>
-            </div>
-            <div>
-            {msg.media_type === "text"
-                ? msg.content
-                : <em>[Voice message: {msg.voice_path}]</em>}
-            </div>
-        </li>
-        ))}
+      {pod.messages.map((msg, idx) => {
+        console.log("Message timestamp:", msg.created_at);
+        return (
+            <li key={idx} style={{
+                backgroundColor: "#f0f0f0",
+                borderRadius: "10px",
+                padding: "0.75rem",
+                marginBottom: "0.5rem",
+                maxWidth: "70%",
+                boxShadow: "0 1px 3px rgba(0, 0, 0, 0.1)"
+            }}>
+                <div style={{ fontWeight: "bold", marginBottom: "0.25rem" }}>
+                {msg.user} <span style={{ fontWeight: "normal", color: "#777", fontSize: "0.8rem" }}>
+                    ({new Date(msg.created_at).toLocaleString()})
+                </span>
+                </div>
+                <div>
+                {msg.media_type === "text"
+                    ? msg.content
+                    : <em>[Voice message: {msg.voice_path}]</em>}
+                </div>
+            </li>
+        );
+        })}
       </ul>
     </div>
   );

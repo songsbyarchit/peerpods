@@ -35232,7 +35232,9 @@ function PodView() {
                     listStyleType: "none",
                     paddingLeft: 0
                 },
-                children: pod.messages.map((msg, idx)=>/*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("li", {
+                children: pod.messages.map((msg, idx)=>{
+                    console.log("Message timestamp:", msg.created_at);
+                    return /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("li", {
                         style: {
                             backgroundColor: "#f0f0f0",
                             borderRadius: "10px",
@@ -35258,19 +35260,19 @@ function PodView() {
                                         },
                                         children: [
                                             "(",
-                                            new Date(msg.timestamp).toLocaleString(),
+                                            new Date(msg.created_at).toLocaleString(),
                                             ")"
                                         ]
                                     }, void 0, true, {
                                         fileName: "src/PodView.jsx",
-                                        lineNumber: 43,
-                                        columnNumber: 24
+                                        lineNumber: 45,
+                                        columnNumber: 28
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "src/PodView.jsx",
-                                lineNumber: 42,
-                                columnNumber: 13
+                                lineNumber: 44,
+                                columnNumber: 17
                             }, this),
                             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
                                 children: msg.media_type === "text" ? msg.content : /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("em", {
@@ -35281,20 +35283,21 @@ function PodView() {
                                     ]
                                 }, void 0, true, {
                                     fileName: "src/PodView.jsx",
-                                    lineNumber: 50,
-                                    columnNumber: 19
+                                    lineNumber: 52,
+                                    columnNumber: 23
                                 }, this)
                             }, void 0, false, {
                                 fileName: "src/PodView.jsx",
-                                lineNumber: 47,
-                                columnNumber: 13
+                                lineNumber: 49,
+                                columnNumber: 17
                             }, this)
                         ]
                     }, idx, true, {
                         fileName: "src/PodView.jsx",
-                        lineNumber: 34,
-                        columnNumber: 9
-                    }, this))
+                        lineNumber: 36,
+                        columnNumber: 13
+                    }, this);
+                })
             }, void 0, false, {
                 fileName: "src/PodView.jsx",
                 lineNumber: 32,
