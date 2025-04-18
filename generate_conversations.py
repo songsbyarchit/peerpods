@@ -26,12 +26,13 @@ def pick_random_users(session, min_users=3, max_users=5):
         raise ValueError("Not enough users.")
     return random.sample(users, random.randint(min_users, max_users))
 
-def generate_conversation_messages(user_objs, num_messages):
+def generate_conversation_messages(user_objs, num_messages, topic):
     messages = []
     context = ""
     for i in range(num_messages):
         user = random.choice(user_objs)
-        prompt = f"""This is a deep conversation between users. Previous messages:\n{context}\n\nNow write a reply from {user.username}:"""
+        prompt = f"""Topic: {topic}
+This is a thoughtful group conversation. Below are the previous messages:\n{context}\n\nWrite a reply from {user.username}, contributing to the discussion:"""
         client = openai.OpenAI(api_key=OPENAI_API_KEY)
         response = client.chat.completions.create(
             model="gpt-3.5-turbo",
@@ -44,15 +45,18 @@ def generate_conversation_messages(user_objs, num_messages):
         messages.append((user, msg))
     return messages
 
-def create_pod_with_messages(session):
+def create_pod_with_messages(session, topic):
     users = pick_random_users(session)
-    num_messages = random.randint(5, 15)
-    messages_data = generate_conversation_messages(users, num_messages)
+    min_messages = 8
+    max_messages = 20
+    num_messages = random.randint(min_messages, max_messages)
+
+    messages_data = generate_conversation_messages(users, num_messages, topic)
 
     creator = random.choice(users)
     pod = Pod(
-        title=faker.sentence(nb_words=4),
-        description=faker.paragraph(),
+        title=f"Discussion on: {topic}",
+        description=f"This pod explores the topic: '{topic}' in depth through user conversation.",
         duration_hours=random.choice([24, 168]),
         drift_tolerance=random.randint(1, 5),
         state="launched",
@@ -90,4 +94,22 @@ def create_pod_with_messages(session):
     print(f"✅ Created pod '{pod.title}' with {len(messages_data)} messages.")
 
 if __name__ == "__main__":
-    create_pod_with_messages(session)
+    client = openai.OpenAI(api_key=OPENAI_API_KEY)
+    topic_prompt = """Give me 50 unique, interesting conversation topics for thoughtful group discussions. Return them as a Python list of strings."""
+    
+    response = client.chat.completions.create(
+        model="gpt-3.5-turbo",
+        messages=[{"role": "user", "content": topic_prompt}],
+        temperature=0.7
+    )
+
+    try:
+        topic_text = response.choices[0].message.content.strip()
+        topics = eval(topic_text)
+    except Exception as e:
+        print("❌ Failed to parse topics:", e)
+        topics = [f"Backup topic {i+1}" for i in range(5)]
+
+    for i, topic in enumerate(topics):
+        print(f"🧠 Generating conversation {i+1}/{len(topics)}: {topic}")
+        create_pod_with_messages(session, topic)

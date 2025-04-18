@@ -19,8 +19,16 @@ function Layout({ children }) {
 
   return (
     <>
-      <Navbar currentUser={currentUser} setCurrentUser={setCurrentUser} />
-      <main><Outlet /></main>
+      {currentUser === null && localStorage.getItem("token") ? (
+        <p>Loading...</p>
+      ) : (
+        <>
+          <Navbar currentUser={currentUser} setCurrentUser={setCurrentUser} />
+          <main>
+            <Outlet context={{ currentUser, setCurrentUser }} />
+          </main>
+        </>
+      )}
     </>
   );
 }

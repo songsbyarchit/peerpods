@@ -13,7 +13,7 @@ const root = createRoot(document.getElementById("root"));
 root.render(
   <Router>
     <Routes>
-        <Route path="/*" element={<Layout />}>
+      <Route path="/*" element={<Layout />}>
         <Route index element={<App />} />
         <Route path="login" element={<Login />} />
         <Route path="register" element={<Register />} />

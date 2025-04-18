@@ -702,7 +702,7 @@ root.render(/*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _reactRouterDom.Browser
             element: /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _layoutDefault.default), {}, void 0, false, {
                 fileName: "index.jsx",
                 lineNumber: 16,
-                columnNumber: 35
+                columnNumber: 33
             }, void 0),
             children: [
                 /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _reactRouterDom.Route), {
@@ -781,7 +781,7 @@ root.render(/*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _reactRouterDom.Browser
         }, void 0, true, {
             fileName: "index.jsx",
             lineNumber: 16,
-            columnNumber: 9
+            columnNumber: 7
         }, undefined)
     }, void 0, false, {
         fileName: "index.jsx",
@@ -799,7 +799,7 @@ root.render(/*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _reactRouterDom.Browser
   globalThis.$RefreshReg$ = prevRefreshReg;
   globalThis.$RefreshSig$ = prevRefreshSig;
 }
-},{"react/jsx-dev-runtime":"dVPUn","react":"jMk1U","react-dom/client":"hrvwu","react-router-dom":"61z4w","@parcel/transformer-js/src/esmodule-helpers.js":"jnFvT","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"7h6Pi","./src/App":"f8V2Q","./src/Login":"a6Rks","./src/Register":"gnA7u","./src/Dashboard":"4oiLa","./src/Create":"ku2fq","./src/PodView":"1OT0T","./src/Layout":"dTy8J"}],"dVPUn":[function(require,module,exports,__globalThis) {
+},{"react/jsx-dev-runtime":"dVPUn","react":"jMk1U","react-dom/client":"hrvwu","react-router-dom":"61z4w","./src/App":"f8V2Q","./src/Login":"a6Rks","./src/Register":"gnA7u","./src/Dashboard":"4oiLa","./src/Create":"ku2fq","./src/PodView":"1OT0T","./src/Layout":"dTy8J","@parcel/transformer-js/src/esmodule-helpers.js":"jnFvT","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"7h6Pi"}],"dVPUn":[function(require,module,exports,__globalThis) {
 'use strict';
 module.exports = require("ee51401569654d91");
 
@@ -31604,7 +31604,951 @@ exports.export = function(dest, destName, get) {
     });
 };
 
-},{}],"7h6Pi":[function(require,module,exports,__globalThis) {
+},{}],"f8V2Q":[function(require,module,exports,__globalThis) {
+var $parcel$ReactRefreshHelpers$be2d = require("@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js");
+$parcel$ReactRefreshHelpers$be2d.init();
+var prevRefreshReg = globalThis.$RefreshReg$;
+var prevRefreshSig = globalThis.$RefreshSig$;
+$parcel$ReactRefreshHelpers$be2d.prelude(module);
+
+try {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+var _jsxDevRuntime = require("react/jsx-dev-runtime");
+var _react = require("react");
+var _reactDefault = parcelHelpers.interopDefault(_react);
+var _client = require("react-dom/client");
+var _reactRouterDom = require("react-router-dom");
+var _login = require("./Login");
+var _loginDefault = parcelHelpers.interopDefault(_login);
+var _register = require("./Register");
+var _registerDefault = parcelHelpers.interopDefault(_register);
+var _podView = require("./PodView");
+var _podViewDefault = parcelHelpers.interopDefault(_podView);
+var _s = $RefreshSig$();
+const API_URL = "http://localhost:8000";
+function App() {
+    _s();
+    const [currentUser, setCurrentUser] = (0, _react.useState)(null); // new
+    // States for listing
+    const [users, setUsers] = (0, _react.useState)([]);
+    const [podsPreview, setPodsPreview] = (0, _react.useState)([]);
+    const [messages, setMessages] = (0, _react.useState)([]);
+    const [recommended, setRecommended] = (0, _react.useState)([]);
+    // States for creation forms
+    const [newUsername, setNewUsername] = (0, _react.useState)("");
+    const [newBio, setNewBio] = (0, _react.useState)("");
+    const [newPodTitle, setNewPodTitle] = (0, _react.useState)("");
+    const [newPodDesc, setNewPodDesc] = (0, _react.useState)("");
+    const [newPodHours, setNewPodHours] = (0, _react.useState)(24);
+    const [newPodDrift, setNewPodDrift] = (0, _react.useState)(1);
+    const [newMsgContent, setNewMsgContent] = (0, _react.useState)("");
+    const [newMsgUserId, setNewMsgUserId] = (0, _react.useState)("");
+    const [newMsgPodId, setNewMsgPodId] = (0, _react.useState)("");
+    const [recommendUserId, setRecommendUserId] = (0, _react.useState)("");
+    // ⬇️ Add this right here
+    (0, _react.useEffect)(()=>{
+        const token = localStorage.getItem("token");
+        if (token) fetch(`${API_URL}/auth/me`, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }).then((res)=>{
+            if (!res.ok) throw new Error("Invalid token");
+            return res.json();
+        }).then((data)=>setCurrentUser({
+                ...data
+            })).catch((err)=>{
+            console.error("Auth check failed", err);
+            localStorage.removeItem("token");
+        });
+    }, []);
+    // Fetch lists
+    const fetchUsers = async ()=>{
+        try {
+            const res = await fetch(`${API_URL}/users/`);
+            const data = await res.json();
+            setUsers(data);
+        } catch (err) {
+            console.error("Error fetching users:", err);
+        }
+    };
+    const fetchPods = async ()=>{
+        try {
+            const res = await fetch(`${API_URL}/pods/preview`);
+            const data = await res.json();
+            setPodsPreview(data);
+        } catch (err) {
+            console.error("Error fetching pod previews:", err);
+        }
+    };
+    const fetchMessages = async ()=>{
+        try {
+            const res = await fetch(`${API_URL}/messages/`);
+            const data = await res.json();
+            setMessages(data);
+        } catch (err) {
+            console.error("Error fetching messages:", err);
+        }
+    };
+    // Create new user
+    const createUser = async (e)=>{
+        e.preventDefault();
+        try {
+            const res = await fetch(`${API_URL}/users/`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    username: newUsername,
+                    bio: newBio
+                })
+            });
+            const data = await res.json();
+            // Clear form
+            setNewUsername("");
+            setNewBio("");
+            console.log("Created user:", data);
+        } catch (err) {
+            console.error("Error creating user:", err);
+        }
+    };
+    // Create new pod
+    const createPod = async (e)=>{
+        e.preventDefault();
+        try {
+            const res = await fetch(`${API_URL}/pods/`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    title: newPodTitle,
+                    description: newPodDesc,
+                    duration_hours: Number(newPodHours),
+                    drift_tolerance: Number(newPodDrift)
+                })
+            });
+            const data = await res.json();
+            // Clear form
+            setNewPodTitle("");
+            setNewPodDesc("");
+            setNewPodHours(24);
+            setNewPodDrift(1);
+            console.log("Created pod:", data);
+        } catch (err) {
+            console.error("Error creating pod:", err);
+        }
+    };
+    // Create new message
+    const createMessage = async (e)=>{
+        e.preventDefault();
+        try {
+            const res = await fetch(`${API_URL}/messages/`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    user_id: Number(newMsgUserId),
+                    pod_id: Number(newMsgPodId),
+                    content: newMsgContent
+                })
+            });
+            const data = await res.json();
+            // Clear form
+            setNewMsgContent("");
+            setNewMsgUserId("");
+            setNewMsgPodId("");
+            console.log("Created message:", data);
+        } catch (err) {
+            console.error("Error creating message:", err);
+        }
+    };
+    // Get recommended pods
+    const getRecommended = async (e)=>{
+        e.preventDefault();
+        try {
+            const res = await fetch(`${API_URL}/users/${recommendUserId}/recommended`);
+            const data = await res.json();
+            setRecommended(data);
+        } catch (err) {
+            console.error("Error getting recommended pods:", err);
+        }
+    };
+    const formatCountdown = (isoTime)=>{
+        if (!isoTime) return null;
+        const now = new Date();
+        const target = new Date(isoTime);
+        const diff = target - now;
+        if (diff <= 0) return "00:00:00";
+        const hours = String(Math.floor(diff / 3600000)).padStart(2, "0");
+        const minutes = String(Math.floor(diff / 60000 % 60)).padStart(2, "0");
+        const seconds = String(Math.floor(diff / 1000 % 60)).padStart(2, "0");
+        return `${hours}:${minutes}:${seconds}`;
+    };
+    return /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
+        style: {
+            maxWidth: 800,
+            margin: "0 auto",
+            fontFamily: "sans-serif"
+        },
+        children: [
+            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _reactRouterDom.Routes), {
+                children: /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _reactRouterDom.Route), {
+                    path: "/pod/:id",
+                    element: /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _podViewDefault.default), {}, void 0, false, {
+                        fileName: "src/App.jsx",
+                        lineNumber: 185,
+                        columnNumber: 41
+                    }, void 0)
+                }, void 0, false, {
+                    fileName: "src/App.jsx",
+                    lineNumber: 185,
+                    columnNumber: 9
+                }, this)
+            }, void 0, false, {
+                fileName: "src/App.jsx",
+                lineNumber: 184,
+                columnNumber: 7
+            }, this),
+            currentUser?.is_admin && /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _jsxDevRuntime.Fragment), {
+                children: [
+                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("h1", {
+                        children: "PeerPods Frontend"
+                    }, void 0, false, {
+                        fileName: "src/App.jsx",
+                        lineNumber: 189,
+                        columnNumber: 11
+                    }, this),
+                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("section", {
+                        style: {
+                            marginBottom: "2rem"
+                        },
+                        children: [
+                            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("h2", {
+                                children: "Lists"
+                            }, void 0, false, {
+                                fileName: "src/App.jsx",
+                                lineNumber: 193,
+                                columnNumber: 9
+                            }, this),
+                            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("button", {
+                                onClick: fetchUsers,
+                                children: "Fetch Users"
+                            }, void 0, false, {
+                                fileName: "src/App.jsx",
+                                lineNumber: 194,
+                                columnNumber: 9
+                            }, this),
+                            " ",
+                            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("button", {
+                                onClick: fetchPods,
+                                children: "Fetch Pods"
+                            }, void 0, false, {
+                                fileName: "src/App.jsx",
+                                lineNumber: 195,
+                                columnNumber: 9
+                            }, this),
+                            " ",
+                            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("button", {
+                                onClick: fetchMessages,
+                                children: "Fetch Messages"
+                            }, void 0, false, {
+                                fileName: "src/App.jsx",
+                                lineNumber: 196,
+                                columnNumber: 9
+                            }, this),
+                            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
+                                style: {
+                                    display: "flex",
+                                    gap: "1rem",
+                                    marginTop: "1rem"
+                                },
+                                children: [
+                                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
+                                        children: [
+                                            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("h3", {
+                                                children: "Users"
+                                            }, void 0, false, {
+                                                fileName: "src/App.jsx",
+                                                lineNumber: 199,
+                                                columnNumber: 13
+                                            }, this),
+                                            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("ul", {
+                                                children: users.map((u)=>/*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("li", {
+                                                        children: [
+                                                            u.id,
+                                                            ". ",
+                                                            u.username,
+                                                            " (Bio: ",
+                                                            u.bio,
+                                                            ")"
+                                                        ]
+                                                    }, u.id, true, {
+                                                        fileName: "src/App.jsx",
+                                                        lineNumber: 202,
+                                                        columnNumber: 17
+                                                    }, this))
+                                            }, void 0, false, {
+                                                fileName: "src/App.jsx",
+                                                lineNumber: 200,
+                                                columnNumber: 13
+                                            }, this)
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "src/App.jsx",
+                                        lineNumber: 198,
+                                        columnNumber: 11
+                                    }, this),
+                                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
+                                        children: [
+                                            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("h3", {
+                                                children: "Pods (Preview)"
+                                            }, void 0, false, {
+                                                fileName: "src/App.jsx",
+                                                lineNumber: 209,
+                                                columnNumber: 11
+                                            }, this),
+                                            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("ul", {
+                                                children: podsPreview.map((p)=>/*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("li", {
+                                                        style: {
+                                                            marginBottom: "1rem"
+                                                        },
+                                                        children: [
+                                                            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("strong", {
+                                                                children: p.title
+                                                            }, void 0, false, {
+                                                                fileName: "src/App.jsx",
+                                                                lineNumber: 213,
+                                                                columnNumber: 17
+                                                            }, this),
+                                                            " \u2014 ",
+                                                            p.description,
+                                                            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("br", {}, void 0, false, {
+                                                                fileName: "src/App.jsx",
+                                                                lineNumber: 213,
+                                                                columnNumber: 61
+                                                            }, this),
+                                                            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("em", {
+                                                                children: "Media:"
+                                                            }, void 0, false, {
+                                                                fileName: "src/App.jsx",
+                                                                lineNumber: 214,
+                                                                columnNumber: 17
+                                                            }, this),
+                                                            " ",
+                                                            p.media_type,
+                                                            " | ",
+                                                            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("em", {
+                                                                children: "Duration:"
+                                                            }, void 0, false, {
+                                                                fileName: "src/App.jsx",
+                                                                lineNumber: 214,
+                                                                columnNumber: 50
+                                                            }, this),
+                                                            " ",
+                                                            p.duration_hours,
+                                                            "h | ",
+                                                            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("em", {
+                                                                children: "Drift:"
+                                                            }, void 0, false, {
+                                                                fileName: "src/App.jsx",
+                                                                lineNumber: 214,
+                                                                columnNumber: 91
+                                                            }, this),
+                                                            " ",
+                                                            p.drift_tolerance,
+                                                            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("br", {}, void 0, false, {
+                                                                fileName: "src/App.jsx",
+                                                                lineNumber: 214,
+                                                                columnNumber: 126
+                                                            }, this),
+                                                            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("em", {
+                                                                children: "Creator:"
+                                                            }, void 0, false, {
+                                                                fileName: "src/App.jsx",
+                                                                lineNumber: 215,
+                                                                columnNumber: 17
+                                                            }, this),
+                                                            " ",
+                                                            p.creator,
+                                                            " | ",
+                                                            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("em", {
+                                                                children: "Users:"
+                                                            }, void 0, false, {
+                                                                fileName: "src/App.jsx",
+                                                                lineNumber: 215,
+                                                                columnNumber: 49
+                                                            }, this),
+                                                            " ",
+                                                            p.user_count,
+                                                            " | ",
+                                                            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("em", {
+                                                                children: "Messages:"
+                                                            }, void 0, false, {
+                                                                fileName: "src/App.jsx",
+                                                                lineNumber: 215,
+                                                                columnNumber: 82
+                                                            }, this),
+                                                            " ",
+                                                            p.message_count,
+                                                            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("br", {}, void 0, false, {
+                                                                fileName: "src/App.jsx",
+                                                                lineNumber: 215,
+                                                                columnNumber: 118
+                                                            }, this),
+                                                            p.view_only ? /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("span", {
+                                                                style: {
+                                                                    color: "red"
+                                                                },
+                                                                children: "View Only"
+                                                            }, void 0, false, {
+                                                                fileName: "src/App.jsx",
+                                                                lineNumber: 217,
+                                                                columnNumber: 19
+                                                            }, this) : /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _jsxDevRuntime.Fragment), {
+                                                                children: [
+                                                                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("span", {
+                                                                        children: [
+                                                                            "Remaining slots: ",
+                                                                            p.remaining_slots
+                                                                        ]
+                                                                    }, void 0, true, {
+                                                                        fileName: "src/App.jsx",
+                                                                        lineNumber: 220,
+                                                                        columnNumber: 21
+                                                                    }, this),
+                                                                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("br", {}, void 0, false, {
+                                                                        fileName: "src/App.jsx",
+                                                                        lineNumber: 220,
+                                                                        columnNumber: 70
+                                                                    }, this),
+                                                                    p.auto_launch_at && /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("span", {
+                                                                        children: [
+                                                                            "Countdown: ",
+                                                                            formatCountdown(p.auto_launch_at)
+                                                                        ]
+                                                                    }, void 0, true, {
+                                                                        fileName: "src/App.jsx",
+                                                                        lineNumber: 221,
+                                                                        columnNumber: 42
+                                                                    }, this)
+                                                                ]
+                                                            }, void 0, true)
+                                                        ]
+                                                    }, p.id, true, {
+                                                        fileName: "src/App.jsx",
+                                                        lineNumber: 212,
+                                                        columnNumber: 15
+                                                    }, this))
+                                            }, void 0, false, {
+                                                fileName: "src/App.jsx",
+                                                lineNumber: 210,
+                                                columnNumber: 11
+                                            }, this)
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "src/App.jsx",
+                                        lineNumber: 208,
+                                        columnNumber: 11
+                                    }, this),
+                                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
+                                        children: [
+                                            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("h3", {
+                                                children: "Messages"
+                                            }, void 0, false, {
+                                                fileName: "src/App.jsx",
+                                                lineNumber: 229,
+                                                columnNumber: 13
+                                            }, this),
+                                            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("ul", {
+                                                children: messages.map((m)=>/*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("li", {
+                                                        children: [
+                                                            m.id,
+                                                            ". Content: ",
+                                                            m.content,
+                                                            ", User: ",
+                                                            m.user_id,
+                                                            ", Pod: ",
+                                                            m.pod_id
+                                                        ]
+                                                    }, m.id, true, {
+                                                        fileName: "src/App.jsx",
+                                                        lineNumber: 232,
+                                                        columnNumber: 17
+                                                    }, this))
+                                            }, void 0, false, {
+                                                fileName: "src/App.jsx",
+                                                lineNumber: 230,
+                                                columnNumber: 13
+                                            }, this)
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "src/App.jsx",
+                                        lineNumber: 228,
+                                        columnNumber: 11
+                                    }, this)
+                                ]
+                            }, void 0, true, {
+                                fileName: "src/App.jsx",
+                                lineNumber: 197,
+                                columnNumber: 9
+                            }, this)
+                        ]
+                    }, void 0, true, {
+                        fileName: "src/App.jsx",
+                        lineNumber: 192,
+                        columnNumber: 7
+                    }, this),
+                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("section", {
+                        style: {
+                            marginBottom: "2rem"
+                        },
+                        children: [
+                            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("h2", {
+                                children: "Create User"
+                            }, void 0, false, {
+                                fileName: "src/App.jsx",
+                                lineNumber: 242,
+                                columnNumber: 9
+                            }, this),
+                            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("form", {
+                                onSubmit: createUser,
+                                style: {
+                                    display: "flex",
+                                    gap: "0.5rem"
+                                },
+                                children: [
+                                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("input", {
+                                        type: "text",
+                                        placeholder: "Username",
+                                        value: newUsername,
+                                        onChange: (e)=>setNewUsername(e.target.value),
+                                        required: true
+                                    }, void 0, false, {
+                                        fileName: "src/App.jsx",
+                                        lineNumber: 244,
+                                        columnNumber: 11
+                                    }, this),
+                                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("input", {
+                                        type: "text",
+                                        placeholder: "Bio",
+                                        value: newBio,
+                                        onChange: (e)=>setNewBio(e.target.value)
+                                    }, void 0, false, {
+                                        fileName: "src/App.jsx",
+                                        lineNumber: 251,
+                                        columnNumber: 11
+                                    }, this),
+                                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("button", {
+                                        type: "submit",
+                                        children: "Create User"
+                                    }, void 0, false, {
+                                        fileName: "src/App.jsx",
+                                        lineNumber: 257,
+                                        columnNumber: 11
+                                    }, this)
+                                ]
+                            }, void 0, true, {
+                                fileName: "src/App.jsx",
+                                lineNumber: 243,
+                                columnNumber: 9
+                            }, this)
+                        ]
+                    }, void 0, true, {
+                        fileName: "src/App.jsx",
+                        lineNumber: 241,
+                        columnNumber: 7
+                    }, this),
+                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("section", {
+                        style: {
+                            marginBottom: "2rem"
+                        },
+                        children: [
+                            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("h2", {
+                                children: "Create Pod"
+                            }, void 0, false, {
+                                fileName: "src/App.jsx",
+                                lineNumber: 262,
+                                columnNumber: 9
+                            }, this),
+                            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("form", {
+                                onSubmit: createPod,
+                                style: {
+                                    display: "flex",
+                                    gap: "0.5rem"
+                                },
+                                children: [
+                                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("input", {
+                                        type: "text",
+                                        placeholder: "Title",
+                                        value: newPodTitle,
+                                        onChange: (e)=>setNewPodTitle(e.target.value),
+                                        required: true
+                                    }, void 0, false, {
+                                        fileName: "src/App.jsx",
+                                        lineNumber: 264,
+                                        columnNumber: 11
+                                    }, this),
+                                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("input", {
+                                        type: "text",
+                                        placeholder: "Description",
+                                        value: newPodDesc,
+                                        onChange: (e)=>setNewPodDesc(e.target.value)
+                                    }, void 0, false, {
+                                        fileName: "src/App.jsx",
+                                        lineNumber: 271,
+                                        columnNumber: 11
+                                    }, this),
+                                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("input", {
+                                        type: "number",
+                                        placeholder: "Duration (hours)",
+                                        value: newPodHours,
+                                        onChange: (e)=>setNewPodHours(e.target.value)
+                                    }, void 0, false, {
+                                        fileName: "src/App.jsx",
+                                        lineNumber: 277,
+                                        columnNumber: 11
+                                    }, this),
+                                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("input", {
+                                        type: "number",
+                                        placeholder: "Drift Tolerance",
+                                        value: newPodDrift,
+                                        onChange: (e)=>setNewPodDrift(e.target.value)
+                                    }, void 0, false, {
+                                        fileName: "src/App.jsx",
+                                        lineNumber: 283,
+                                        columnNumber: 11
+                                    }, this),
+                                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("button", {
+                                        type: "submit",
+                                        children: "Create Pod"
+                                    }, void 0, false, {
+                                        fileName: "src/App.jsx",
+                                        lineNumber: 289,
+                                        columnNumber: 11
+                                    }, this)
+                                ]
+                            }, void 0, true, {
+                                fileName: "src/App.jsx",
+                                lineNumber: 263,
+                                columnNumber: 9
+                            }, this)
+                        ]
+                    }, void 0, true, {
+                        fileName: "src/App.jsx",
+                        lineNumber: 261,
+                        columnNumber: 7
+                    }, this),
+                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("section", {
+                        style: {
+                            marginBottom: "2rem"
+                        },
+                        children: [
+                            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("h2", {
+                                children: "Create Message"
+                            }, void 0, false, {
+                                fileName: "src/App.jsx",
+                                lineNumber: 294,
+                                columnNumber: 9
+                            }, this),
+                            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("form", {
+                                onSubmit: createMessage,
+                                style: {
+                                    display: "flex",
+                                    gap: "0.5rem"
+                                },
+                                children: [
+                                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("input", {
+                                        type: "number",
+                                        placeholder: "User ID",
+                                        value: newMsgUserId,
+                                        onChange: (e)=>setNewMsgUserId(e.target.value),
+                                        required: true
+                                    }, void 0, false, {
+                                        fileName: "src/App.jsx",
+                                        lineNumber: 296,
+                                        columnNumber: 11
+                                    }, this),
+                                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("input", {
+                                        type: "number",
+                                        placeholder: "Pod ID",
+                                        value: newMsgPodId,
+                                        onChange: (e)=>setNewMsgPodId(e.target.value),
+                                        required: true
+                                    }, void 0, false, {
+                                        fileName: "src/App.jsx",
+                                        lineNumber: 303,
+                                        columnNumber: 11
+                                    }, this),
+                                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("input", {
+                                        type: "text",
+                                        placeholder: "Content",
+                                        value: newMsgContent,
+                                        onChange: (e)=>setNewMsgContent(e.target.value),
+                                        required: true
+                                    }, void 0, false, {
+                                        fileName: "src/App.jsx",
+                                        lineNumber: 310,
+                                        columnNumber: 11
+                                    }, this),
+                                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("button", {
+                                        type: "submit",
+                                        children: "Create Message"
+                                    }, void 0, false, {
+                                        fileName: "src/App.jsx",
+                                        lineNumber: 317,
+                                        columnNumber: 11
+                                    }, this)
+                                ]
+                            }, void 0, true, {
+                                fileName: "src/App.jsx",
+                                lineNumber: 295,
+                                columnNumber: 9
+                            }, this)
+                        ]
+                    }, void 0, true, {
+                        fileName: "src/App.jsx",
+                        lineNumber: 293,
+                        columnNumber: 7
+                    }, this),
+                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("section", {
+                        style: {
+                            marginBottom: "2rem"
+                        },
+                        children: [
+                            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("h2", {
+                                children: "Recommended Pods"
+                            }, void 0, false, {
+                                fileName: "src/App.jsx",
+                                lineNumber: 322,
+                                columnNumber: 9
+                            }, this),
+                            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("form", {
+                                onSubmit: getRecommended,
+                                style: {
+                                    display: "flex",
+                                    gap: "0.5rem"
+                                },
+                                children: [
+                                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("input", {
+                                        type: "number",
+                                        placeholder: "User ID",
+                                        value: recommendUserId,
+                                        onChange: (e)=>setRecommendUserId(e.target.value),
+                                        required: true
+                                    }, void 0, false, {
+                                        fileName: "src/App.jsx",
+                                        lineNumber: 324,
+                                        columnNumber: 11
+                                    }, this),
+                                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("button", {
+                                        type: "submit",
+                                        children: "Get Recommended Pods"
+                                    }, void 0, false, {
+                                        fileName: "src/App.jsx",
+                                        lineNumber: 331,
+                                        columnNumber: 11
+                                    }, this)
+                                ]
+                            }, void 0, true, {
+                                fileName: "src/App.jsx",
+                                lineNumber: 323,
+                                columnNumber: 9
+                            }, this),
+                            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("ul", {
+                                children: recommended.map((r)=>/*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("li", {
+                                        children: [
+                                            r.id,
+                                            ". ",
+                                            r.title,
+                                            " (Desc: ",
+                                            r.description,
+                                            ")"
+                                        ]
+                                    }, r.id, true, {
+                                        fileName: "src/App.jsx",
+                                        lineNumber: 335,
+                                        columnNumber: 13
+                                    }, this))
+                            }, void 0, false, {
+                                fileName: "src/App.jsx",
+                                lineNumber: 333,
+                                columnNumber: 9
+                            }, this)
+                        ]
+                    }, void 0, true, {
+                        fileName: "src/App.jsx",
+                        lineNumber: 321,
+                        columnNumber: 7
+                    }, this)
+                ]
+            }, void 0, true)
+        ]
+    }, void 0, true, {
+        fileName: "src/App.jsx",
+        lineNumber: 183,
+        columnNumber: 5
+    }, this);
+}
+_s(App, "jlfjRvoaboDE7qca1d6kLMX7M88=");
+_c = App;
+exports.default = App;
+var _c;
+$RefreshReg$(_c, "App");
+
+  $parcel$ReactRefreshHelpers$be2d.postlude(module);
+} finally {
+  globalThis.$RefreshReg$ = prevRefreshReg;
+  globalThis.$RefreshSig$ = prevRefreshSig;
+}
+},{"react/jsx-dev-runtime":"dVPUn","react":"jMk1U","react-dom/client":"hrvwu","react-router-dom":"61z4w","./Login":"a6Rks","./Register":"gnA7u","./PodView":"1OT0T","@parcel/transformer-js/src/esmodule-helpers.js":"jnFvT","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"7h6Pi"}],"a6Rks":[function(require,module,exports,__globalThis) {
+var $parcel$ReactRefreshHelpers$898c = require("@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js");
+$parcel$ReactRefreshHelpers$898c.init();
+var prevRefreshReg = globalThis.$RefreshReg$;
+var prevRefreshSig = globalThis.$RefreshSig$;
+$parcel$ReactRefreshHelpers$898c.prelude(module);
+
+try {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+var _jsxDevRuntime = require("react/jsx-dev-runtime");
+var _react = require("react");
+var _reactDefault = parcelHelpers.interopDefault(_react);
+var _reactRouterDom = require("react-router-dom");
+var _s = $RefreshSig$();
+const API_URL = "http://localhost:8000";
+function Login() {
+    _s();
+    const [username, setUsername] = (0, _react.useState)("");
+    const [password, setPassword] = (0, _react.useState)("");
+    const [error, setError] = (0, _react.useState)("");
+    const navigate = (0, _reactRouterDom.useNavigate)();
+    const { setCurrentUser } = (0, _reactRouterDom.useOutletContext)();
+    const body = new URLSearchParams({
+        username,
+        password
+    });
+    const handleLogin = async (e)=>{
+        e.preventDefault();
+        setError("");
+        try {
+            const res = await fetch(`${API_URL}/auth/login`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded"
+                },
+                body: new URLSearchParams({
+                    username,
+                    password
+                })
+            });
+            const data = await res.json();
+            if (!res.ok) throw new Error(data.detail || "Login failed");
+            localStorage.setItem("token", data.access_token);
+            setCurrentUser({
+                username: username
+            });
+            navigate("/"); // go to admin view for now
+        } catch (err) {
+            setError(err.message);
+        }
+    };
+    return /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
+        style: {
+            padding: "2rem",
+            fontFamily: "sans-serif",
+            maxWidth: 400,
+            margin: "0 auto"
+        },
+        children: [
+            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("h2", {
+                children: "Login"
+            }, void 0, false, {
+                fileName: "src/Login.jsx",
+                lineNumber: 44,
+                columnNumber: 7
+            }, this),
+            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("form", {
+                onSubmit: handleLogin,
+                style: {
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: "0.5rem"
+                },
+                children: [
+                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("input", {
+                        type: "text",
+                        placeholder: "Username",
+                        value: username,
+                        onChange: (e)=>setUsername(e.target.value),
+                        required: true
+                    }, void 0, false, {
+                        fileName: "src/Login.jsx",
+                        lineNumber: 46,
+                        columnNumber: 9
+                    }, this),
+                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("input", {
+                        type: "password",
+                        placeholder: "Password",
+                        value: password,
+                        onChange: (e)=>setPassword(e.target.value),
+                        required: true
+                    }, void 0, false, {
+                        fileName: "src/Login.jsx",
+                        lineNumber: 53,
+                        columnNumber: 9
+                    }, this),
+                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("button", {
+                        type: "submit",
+                        children: "Log In"
+                    }, void 0, false, {
+                        fileName: "src/Login.jsx",
+                        lineNumber: 60,
+                        columnNumber: 9
+                    }, this)
+                ]
+            }, void 0, true, {
+                fileName: "src/Login.jsx",
+                lineNumber: 45,
+                columnNumber: 7
+            }, this),
+            error && /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("p", {
+                style: {
+                    color: "red"
+                },
+                children: error
+            }, void 0, false, {
+                fileName: "src/Login.jsx",
+                lineNumber: 62,
+                columnNumber: 17
+            }, this)
+        ]
+    }, void 0, true, {
+        fileName: "src/Login.jsx",
+        lineNumber: 43,
+        columnNumber: 5
+    }, this);
+}
+_s(Login, "nrpuKRls0L4/5XRt65bif/lL3RE=", false, function() {
+    return [
+        (0, _reactRouterDom.useNavigate),
+        (0, _reactRouterDom.useOutletContext)
+    ];
+});
+_c = Login;
+exports.default = Login;
+var _c;
+$RefreshReg$(_c, "Login");
+
+  $parcel$ReactRefreshHelpers$898c.postlude(module);
+} finally {
+  globalThis.$RefreshReg$ = prevRefreshReg;
+  globalThis.$RefreshSig$ = prevRefreshSig;
+}
+},{"react/jsx-dev-runtime":"dVPUn","react":"jMk1U","react-router-dom":"61z4w","@parcel/transformer-js/src/esmodule-helpers.js":"jnFvT","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"7h6Pi"}],"7h6Pi":[function(require,module,exports,__globalThis) {
 "use strict";
 var Refresh = require("7422ead32dcc1e6b");
 function debounce(func, delay) {
@@ -33882,942 +34826,7 @@ function $da9882e673ac146b$var$ErrorOverlay() {
     return null;
 }
 
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"jnFvT"}],"f8V2Q":[function(require,module,exports,__globalThis) {
-var $parcel$ReactRefreshHelpers$be2d = require("@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js");
-$parcel$ReactRefreshHelpers$be2d.init();
-var prevRefreshReg = globalThis.$RefreshReg$;
-var prevRefreshSig = globalThis.$RefreshSig$;
-$parcel$ReactRefreshHelpers$be2d.prelude(module);
-
-try {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-var _jsxDevRuntime = require("react/jsx-dev-runtime");
-var _react = require("react");
-var _reactDefault = parcelHelpers.interopDefault(_react);
-var _client = require("react-dom/client");
-var _reactRouterDom = require("react-router-dom");
-var _login = require("./Login");
-var _loginDefault = parcelHelpers.interopDefault(_login);
-var _register = require("./Register");
-var _registerDefault = parcelHelpers.interopDefault(_register);
-var _podView = require("./PodView");
-var _podViewDefault = parcelHelpers.interopDefault(_podView);
-var _s = $RefreshSig$();
-const API_URL = "http://localhost:8000";
-function App() {
-    _s();
-    const [currentUser, setCurrentUser] = (0, _react.useState)(null); // new
-    // States for listing
-    const [users, setUsers] = (0, _react.useState)([]);
-    const [podsPreview, setPodsPreview] = (0, _react.useState)([]);
-    const [messages, setMessages] = (0, _react.useState)([]);
-    const [recommended, setRecommended] = (0, _react.useState)([]);
-    // States for creation forms
-    const [newUsername, setNewUsername] = (0, _react.useState)("");
-    const [newBio, setNewBio] = (0, _react.useState)("");
-    const [newPodTitle, setNewPodTitle] = (0, _react.useState)("");
-    const [newPodDesc, setNewPodDesc] = (0, _react.useState)("");
-    const [newPodHours, setNewPodHours] = (0, _react.useState)(24);
-    const [newPodDrift, setNewPodDrift] = (0, _react.useState)(1);
-    const [newMsgContent, setNewMsgContent] = (0, _react.useState)("");
-    const [newMsgUserId, setNewMsgUserId] = (0, _react.useState)("");
-    const [newMsgPodId, setNewMsgPodId] = (0, _react.useState)("");
-    const [recommendUserId, setRecommendUserId] = (0, _react.useState)("");
-    // ⬇️ Add this right here
-    (0, _react.useEffect)(()=>{
-        const token = localStorage.getItem("token");
-        if (token) fetch(`${API_URL}/auth/me`, {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        }).then((res)=>{
-            if (!res.ok) throw new Error("Invalid token");
-            return res.json();
-        }).then((data)=>setCurrentUser({
-                ...data
-            })).catch((err)=>{
-            console.error("Auth check failed", err);
-            localStorage.removeItem("token");
-        });
-    }, []);
-    // Fetch lists
-    const fetchUsers = async ()=>{
-        try {
-            const res = await fetch(`${API_URL}/users/`);
-            const data = await res.json();
-            setUsers(data);
-        } catch (err) {
-            console.error("Error fetching users:", err);
-        }
-    };
-    const fetchPods = async ()=>{
-        try {
-            const res = await fetch(`${API_URL}/pods/preview`);
-            const data = await res.json();
-            setPodsPreview(data);
-        } catch (err) {
-            console.error("Error fetching pod previews:", err);
-        }
-    };
-    const fetchMessages = async ()=>{
-        try {
-            const res = await fetch(`${API_URL}/messages/`);
-            const data = await res.json();
-            setMessages(data);
-        } catch (err) {
-            console.error("Error fetching messages:", err);
-        }
-    };
-    // Create new user
-    const createUser = async (e)=>{
-        e.preventDefault();
-        try {
-            const res = await fetch(`${API_URL}/users/`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    username: newUsername,
-                    bio: newBio
-                })
-            });
-            const data = await res.json();
-            // Clear form
-            setNewUsername("");
-            setNewBio("");
-            console.log("Created user:", data);
-        } catch (err) {
-            console.error("Error creating user:", err);
-        }
-    };
-    // Create new pod
-    const createPod = async (e)=>{
-        e.preventDefault();
-        try {
-            const res = await fetch(`${API_URL}/pods/`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    title: newPodTitle,
-                    description: newPodDesc,
-                    duration_hours: Number(newPodHours),
-                    drift_tolerance: Number(newPodDrift)
-                })
-            });
-            const data = await res.json();
-            // Clear form
-            setNewPodTitle("");
-            setNewPodDesc("");
-            setNewPodHours(24);
-            setNewPodDrift(1);
-            console.log("Created pod:", data);
-        } catch (err) {
-            console.error("Error creating pod:", err);
-        }
-    };
-    // Create new message
-    const createMessage = async (e)=>{
-        e.preventDefault();
-        try {
-            const res = await fetch(`${API_URL}/messages/`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    user_id: Number(newMsgUserId),
-                    pod_id: Number(newMsgPodId),
-                    content: newMsgContent
-                })
-            });
-            const data = await res.json();
-            // Clear form
-            setNewMsgContent("");
-            setNewMsgUserId("");
-            setNewMsgPodId("");
-            console.log("Created message:", data);
-        } catch (err) {
-            console.error("Error creating message:", err);
-        }
-    };
-    // Get recommended pods
-    const getRecommended = async (e)=>{
-        e.preventDefault();
-        try {
-            const res = await fetch(`${API_URL}/users/${recommendUserId}/recommended`);
-            const data = await res.json();
-            setRecommended(data);
-        } catch (err) {
-            console.error("Error getting recommended pods:", err);
-        }
-    };
-    const formatCountdown = (isoTime)=>{
-        if (!isoTime) return null;
-        const now = new Date();
-        const target = new Date(isoTime);
-        const diff = target - now;
-        if (diff <= 0) return "00:00:00";
-        const hours = String(Math.floor(diff / 3600000)).padStart(2, "0");
-        const minutes = String(Math.floor(diff / 60000 % 60)).padStart(2, "0");
-        const seconds = String(Math.floor(diff / 1000 % 60)).padStart(2, "0");
-        return `${hours}:${minutes}:${seconds}`;
-    };
-    return /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
-        style: {
-            maxWidth: 800,
-            margin: "0 auto",
-            fontFamily: "sans-serif"
-        },
-        children: [
-            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _reactRouterDom.Routes), {
-                children: /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _reactRouterDom.Route), {
-                    path: "/pod/:id",
-                    element: /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _podViewDefault.default), {}, void 0, false, {
-                        fileName: "src/App.jsx",
-                        lineNumber: 185,
-                        columnNumber: 41
-                    }, void 0)
-                }, void 0, false, {
-                    fileName: "src/App.jsx",
-                    lineNumber: 185,
-                    columnNumber: 9
-                }, this)
-            }, void 0, false, {
-                fileName: "src/App.jsx",
-                lineNumber: 184,
-                columnNumber: 7
-            }, this),
-            currentUser?.is_admin && /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _jsxDevRuntime.Fragment), {
-                children: [
-                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("h1", {
-                        children: "PeerPods Frontend"
-                    }, void 0, false, {
-                        fileName: "src/App.jsx",
-                        lineNumber: 189,
-                        columnNumber: 11
-                    }, this),
-                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("section", {
-                        style: {
-                            marginBottom: "2rem"
-                        },
-                        children: [
-                            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("h2", {
-                                children: "Lists"
-                            }, void 0, false, {
-                                fileName: "src/App.jsx",
-                                lineNumber: 193,
-                                columnNumber: 9
-                            }, this),
-                            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("button", {
-                                onClick: fetchUsers,
-                                children: "Fetch Users"
-                            }, void 0, false, {
-                                fileName: "src/App.jsx",
-                                lineNumber: 194,
-                                columnNumber: 9
-                            }, this),
-                            " ",
-                            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("button", {
-                                onClick: fetchPods,
-                                children: "Fetch Pods"
-                            }, void 0, false, {
-                                fileName: "src/App.jsx",
-                                lineNumber: 195,
-                                columnNumber: 9
-                            }, this),
-                            " ",
-                            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("button", {
-                                onClick: fetchMessages,
-                                children: "Fetch Messages"
-                            }, void 0, false, {
-                                fileName: "src/App.jsx",
-                                lineNumber: 196,
-                                columnNumber: 9
-                            }, this),
-                            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
-                                style: {
-                                    display: "flex",
-                                    gap: "1rem",
-                                    marginTop: "1rem"
-                                },
-                                children: [
-                                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
-                                        children: [
-                                            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("h3", {
-                                                children: "Users"
-                                            }, void 0, false, {
-                                                fileName: "src/App.jsx",
-                                                lineNumber: 199,
-                                                columnNumber: 13
-                                            }, this),
-                                            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("ul", {
-                                                children: users.map((u)=>/*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("li", {
-                                                        children: [
-                                                            u.id,
-                                                            ". ",
-                                                            u.username,
-                                                            " (Bio: ",
-                                                            u.bio,
-                                                            ")"
-                                                        ]
-                                                    }, u.id, true, {
-                                                        fileName: "src/App.jsx",
-                                                        lineNumber: 202,
-                                                        columnNumber: 17
-                                                    }, this))
-                                            }, void 0, false, {
-                                                fileName: "src/App.jsx",
-                                                lineNumber: 200,
-                                                columnNumber: 13
-                                            }, this)
-                                        ]
-                                    }, void 0, true, {
-                                        fileName: "src/App.jsx",
-                                        lineNumber: 198,
-                                        columnNumber: 11
-                                    }, this),
-                                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
-                                        children: [
-                                            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("h3", {
-                                                children: "Pods (Preview)"
-                                            }, void 0, false, {
-                                                fileName: "src/App.jsx",
-                                                lineNumber: 209,
-                                                columnNumber: 11
-                                            }, this),
-                                            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("ul", {
-                                                children: podsPreview.map((p)=>/*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("li", {
-                                                        style: {
-                                                            marginBottom: "1rem"
-                                                        },
-                                                        children: [
-                                                            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("strong", {
-                                                                children: p.title
-                                                            }, void 0, false, {
-                                                                fileName: "src/App.jsx",
-                                                                lineNumber: 213,
-                                                                columnNumber: 17
-                                                            }, this),
-                                                            " \u2014 ",
-                                                            p.description,
-                                                            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("br", {}, void 0, false, {
-                                                                fileName: "src/App.jsx",
-                                                                lineNumber: 213,
-                                                                columnNumber: 61
-                                                            }, this),
-                                                            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("em", {
-                                                                children: "Media:"
-                                                            }, void 0, false, {
-                                                                fileName: "src/App.jsx",
-                                                                lineNumber: 214,
-                                                                columnNumber: 17
-                                                            }, this),
-                                                            " ",
-                                                            p.media_type,
-                                                            " | ",
-                                                            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("em", {
-                                                                children: "Duration:"
-                                                            }, void 0, false, {
-                                                                fileName: "src/App.jsx",
-                                                                lineNumber: 214,
-                                                                columnNumber: 50
-                                                            }, this),
-                                                            " ",
-                                                            p.duration_hours,
-                                                            "h | ",
-                                                            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("em", {
-                                                                children: "Drift:"
-                                                            }, void 0, false, {
-                                                                fileName: "src/App.jsx",
-                                                                lineNumber: 214,
-                                                                columnNumber: 91
-                                                            }, this),
-                                                            " ",
-                                                            p.drift_tolerance,
-                                                            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("br", {}, void 0, false, {
-                                                                fileName: "src/App.jsx",
-                                                                lineNumber: 214,
-                                                                columnNumber: 126
-                                                            }, this),
-                                                            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("em", {
-                                                                children: "Creator:"
-                                                            }, void 0, false, {
-                                                                fileName: "src/App.jsx",
-                                                                lineNumber: 215,
-                                                                columnNumber: 17
-                                                            }, this),
-                                                            " ",
-                                                            p.creator,
-                                                            " | ",
-                                                            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("em", {
-                                                                children: "Users:"
-                                                            }, void 0, false, {
-                                                                fileName: "src/App.jsx",
-                                                                lineNumber: 215,
-                                                                columnNumber: 49
-                                                            }, this),
-                                                            " ",
-                                                            p.user_count,
-                                                            " | ",
-                                                            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("em", {
-                                                                children: "Messages:"
-                                                            }, void 0, false, {
-                                                                fileName: "src/App.jsx",
-                                                                lineNumber: 215,
-                                                                columnNumber: 82
-                                                            }, this),
-                                                            " ",
-                                                            p.message_count,
-                                                            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("br", {}, void 0, false, {
-                                                                fileName: "src/App.jsx",
-                                                                lineNumber: 215,
-                                                                columnNumber: 118
-                                                            }, this),
-                                                            p.view_only ? /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("span", {
-                                                                style: {
-                                                                    color: "red"
-                                                                },
-                                                                children: "View Only"
-                                                            }, void 0, false, {
-                                                                fileName: "src/App.jsx",
-                                                                lineNumber: 217,
-                                                                columnNumber: 19
-                                                            }, this) : /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _jsxDevRuntime.Fragment), {
-                                                                children: [
-                                                                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("span", {
-                                                                        children: [
-                                                                            "Remaining slots: ",
-                                                                            p.remaining_slots
-                                                                        ]
-                                                                    }, void 0, true, {
-                                                                        fileName: "src/App.jsx",
-                                                                        lineNumber: 220,
-                                                                        columnNumber: 21
-                                                                    }, this),
-                                                                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("br", {}, void 0, false, {
-                                                                        fileName: "src/App.jsx",
-                                                                        lineNumber: 220,
-                                                                        columnNumber: 70
-                                                                    }, this),
-                                                                    p.auto_launch_at && /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("span", {
-                                                                        children: [
-                                                                            "Countdown: ",
-                                                                            formatCountdown(p.auto_launch_at)
-                                                                        ]
-                                                                    }, void 0, true, {
-                                                                        fileName: "src/App.jsx",
-                                                                        lineNumber: 221,
-                                                                        columnNumber: 42
-                                                                    }, this)
-                                                                ]
-                                                            }, void 0, true)
-                                                        ]
-                                                    }, p.id, true, {
-                                                        fileName: "src/App.jsx",
-                                                        lineNumber: 212,
-                                                        columnNumber: 15
-                                                    }, this))
-                                            }, void 0, false, {
-                                                fileName: "src/App.jsx",
-                                                lineNumber: 210,
-                                                columnNumber: 11
-                                            }, this)
-                                        ]
-                                    }, void 0, true, {
-                                        fileName: "src/App.jsx",
-                                        lineNumber: 208,
-                                        columnNumber: 11
-                                    }, this),
-                                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
-                                        children: [
-                                            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("h3", {
-                                                children: "Messages"
-                                            }, void 0, false, {
-                                                fileName: "src/App.jsx",
-                                                lineNumber: 229,
-                                                columnNumber: 13
-                                            }, this),
-                                            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("ul", {
-                                                children: messages.map((m)=>/*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("li", {
-                                                        children: [
-                                                            m.id,
-                                                            ". Content: ",
-                                                            m.content,
-                                                            ", User: ",
-                                                            m.user_id,
-                                                            ", Pod: ",
-                                                            m.pod_id
-                                                        ]
-                                                    }, m.id, true, {
-                                                        fileName: "src/App.jsx",
-                                                        lineNumber: 232,
-                                                        columnNumber: 17
-                                                    }, this))
-                                            }, void 0, false, {
-                                                fileName: "src/App.jsx",
-                                                lineNumber: 230,
-                                                columnNumber: 13
-                                            }, this)
-                                        ]
-                                    }, void 0, true, {
-                                        fileName: "src/App.jsx",
-                                        lineNumber: 228,
-                                        columnNumber: 11
-                                    }, this)
-                                ]
-                            }, void 0, true, {
-                                fileName: "src/App.jsx",
-                                lineNumber: 197,
-                                columnNumber: 9
-                            }, this)
-                        ]
-                    }, void 0, true, {
-                        fileName: "src/App.jsx",
-                        lineNumber: 192,
-                        columnNumber: 7
-                    }, this),
-                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("section", {
-                        style: {
-                            marginBottom: "2rem"
-                        },
-                        children: [
-                            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("h2", {
-                                children: "Create User"
-                            }, void 0, false, {
-                                fileName: "src/App.jsx",
-                                lineNumber: 242,
-                                columnNumber: 9
-                            }, this),
-                            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("form", {
-                                onSubmit: createUser,
-                                style: {
-                                    display: "flex",
-                                    gap: "0.5rem"
-                                },
-                                children: [
-                                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("input", {
-                                        type: "text",
-                                        placeholder: "Username",
-                                        value: newUsername,
-                                        onChange: (e)=>setNewUsername(e.target.value),
-                                        required: true
-                                    }, void 0, false, {
-                                        fileName: "src/App.jsx",
-                                        lineNumber: 244,
-                                        columnNumber: 11
-                                    }, this),
-                                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("input", {
-                                        type: "text",
-                                        placeholder: "Bio",
-                                        value: newBio,
-                                        onChange: (e)=>setNewBio(e.target.value)
-                                    }, void 0, false, {
-                                        fileName: "src/App.jsx",
-                                        lineNumber: 251,
-                                        columnNumber: 11
-                                    }, this),
-                                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("button", {
-                                        type: "submit",
-                                        children: "Create User"
-                                    }, void 0, false, {
-                                        fileName: "src/App.jsx",
-                                        lineNumber: 257,
-                                        columnNumber: 11
-                                    }, this)
-                                ]
-                            }, void 0, true, {
-                                fileName: "src/App.jsx",
-                                lineNumber: 243,
-                                columnNumber: 9
-                            }, this)
-                        ]
-                    }, void 0, true, {
-                        fileName: "src/App.jsx",
-                        lineNumber: 241,
-                        columnNumber: 7
-                    }, this),
-                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("section", {
-                        style: {
-                            marginBottom: "2rem"
-                        },
-                        children: [
-                            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("h2", {
-                                children: "Create Pod"
-                            }, void 0, false, {
-                                fileName: "src/App.jsx",
-                                lineNumber: 262,
-                                columnNumber: 9
-                            }, this),
-                            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("form", {
-                                onSubmit: createPod,
-                                style: {
-                                    display: "flex",
-                                    gap: "0.5rem"
-                                },
-                                children: [
-                                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("input", {
-                                        type: "text",
-                                        placeholder: "Title",
-                                        value: newPodTitle,
-                                        onChange: (e)=>setNewPodTitle(e.target.value),
-                                        required: true
-                                    }, void 0, false, {
-                                        fileName: "src/App.jsx",
-                                        lineNumber: 264,
-                                        columnNumber: 11
-                                    }, this),
-                                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("input", {
-                                        type: "text",
-                                        placeholder: "Description",
-                                        value: newPodDesc,
-                                        onChange: (e)=>setNewPodDesc(e.target.value)
-                                    }, void 0, false, {
-                                        fileName: "src/App.jsx",
-                                        lineNumber: 271,
-                                        columnNumber: 11
-                                    }, this),
-                                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("input", {
-                                        type: "number",
-                                        placeholder: "Duration (hours)",
-                                        value: newPodHours,
-                                        onChange: (e)=>setNewPodHours(e.target.value)
-                                    }, void 0, false, {
-                                        fileName: "src/App.jsx",
-                                        lineNumber: 277,
-                                        columnNumber: 11
-                                    }, this),
-                                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("input", {
-                                        type: "number",
-                                        placeholder: "Drift Tolerance",
-                                        value: newPodDrift,
-                                        onChange: (e)=>setNewPodDrift(e.target.value)
-                                    }, void 0, false, {
-                                        fileName: "src/App.jsx",
-                                        lineNumber: 283,
-                                        columnNumber: 11
-                                    }, this),
-                                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("button", {
-                                        type: "submit",
-                                        children: "Create Pod"
-                                    }, void 0, false, {
-                                        fileName: "src/App.jsx",
-                                        lineNumber: 289,
-                                        columnNumber: 11
-                                    }, this)
-                                ]
-                            }, void 0, true, {
-                                fileName: "src/App.jsx",
-                                lineNumber: 263,
-                                columnNumber: 9
-                            }, this)
-                        ]
-                    }, void 0, true, {
-                        fileName: "src/App.jsx",
-                        lineNumber: 261,
-                        columnNumber: 7
-                    }, this),
-                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("section", {
-                        style: {
-                            marginBottom: "2rem"
-                        },
-                        children: [
-                            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("h2", {
-                                children: "Create Message"
-                            }, void 0, false, {
-                                fileName: "src/App.jsx",
-                                lineNumber: 294,
-                                columnNumber: 9
-                            }, this),
-                            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("form", {
-                                onSubmit: createMessage,
-                                style: {
-                                    display: "flex",
-                                    gap: "0.5rem"
-                                },
-                                children: [
-                                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("input", {
-                                        type: "number",
-                                        placeholder: "User ID",
-                                        value: newMsgUserId,
-                                        onChange: (e)=>setNewMsgUserId(e.target.value),
-                                        required: true
-                                    }, void 0, false, {
-                                        fileName: "src/App.jsx",
-                                        lineNumber: 296,
-                                        columnNumber: 11
-                                    }, this),
-                                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("input", {
-                                        type: "number",
-                                        placeholder: "Pod ID",
-                                        value: newMsgPodId,
-                                        onChange: (e)=>setNewMsgPodId(e.target.value),
-                                        required: true
-                                    }, void 0, false, {
-                                        fileName: "src/App.jsx",
-                                        lineNumber: 303,
-                                        columnNumber: 11
-                                    }, this),
-                                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("input", {
-                                        type: "text",
-                                        placeholder: "Content",
-                                        value: newMsgContent,
-                                        onChange: (e)=>setNewMsgContent(e.target.value),
-                                        required: true
-                                    }, void 0, false, {
-                                        fileName: "src/App.jsx",
-                                        lineNumber: 310,
-                                        columnNumber: 11
-                                    }, this),
-                                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("button", {
-                                        type: "submit",
-                                        children: "Create Message"
-                                    }, void 0, false, {
-                                        fileName: "src/App.jsx",
-                                        lineNumber: 317,
-                                        columnNumber: 11
-                                    }, this)
-                                ]
-                            }, void 0, true, {
-                                fileName: "src/App.jsx",
-                                lineNumber: 295,
-                                columnNumber: 9
-                            }, this)
-                        ]
-                    }, void 0, true, {
-                        fileName: "src/App.jsx",
-                        lineNumber: 293,
-                        columnNumber: 7
-                    }, this),
-                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("section", {
-                        style: {
-                            marginBottom: "2rem"
-                        },
-                        children: [
-                            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("h2", {
-                                children: "Recommended Pods"
-                            }, void 0, false, {
-                                fileName: "src/App.jsx",
-                                lineNumber: 322,
-                                columnNumber: 9
-                            }, this),
-                            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("form", {
-                                onSubmit: getRecommended,
-                                style: {
-                                    display: "flex",
-                                    gap: "0.5rem"
-                                },
-                                children: [
-                                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("input", {
-                                        type: "number",
-                                        placeholder: "User ID",
-                                        value: recommendUserId,
-                                        onChange: (e)=>setRecommendUserId(e.target.value),
-                                        required: true
-                                    }, void 0, false, {
-                                        fileName: "src/App.jsx",
-                                        lineNumber: 324,
-                                        columnNumber: 11
-                                    }, this),
-                                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("button", {
-                                        type: "submit",
-                                        children: "Get Recommended Pods"
-                                    }, void 0, false, {
-                                        fileName: "src/App.jsx",
-                                        lineNumber: 331,
-                                        columnNumber: 11
-                                    }, this)
-                                ]
-                            }, void 0, true, {
-                                fileName: "src/App.jsx",
-                                lineNumber: 323,
-                                columnNumber: 9
-                            }, this),
-                            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("ul", {
-                                children: recommended.map((r)=>/*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("li", {
-                                        children: [
-                                            r.id,
-                                            ". ",
-                                            r.title,
-                                            " (Desc: ",
-                                            r.description,
-                                            ")"
-                                        ]
-                                    }, r.id, true, {
-                                        fileName: "src/App.jsx",
-                                        lineNumber: 335,
-                                        columnNumber: 13
-                                    }, this))
-                            }, void 0, false, {
-                                fileName: "src/App.jsx",
-                                lineNumber: 333,
-                                columnNumber: 9
-                            }, this)
-                        ]
-                    }, void 0, true, {
-                        fileName: "src/App.jsx",
-                        lineNumber: 321,
-                        columnNumber: 7
-                    }, this)
-                ]
-            }, void 0, true)
-        ]
-    }, void 0, true, {
-        fileName: "src/App.jsx",
-        lineNumber: 183,
-        columnNumber: 5
-    }, this);
-}
-_s(App, "jlfjRvoaboDE7qca1d6kLMX7M88=");
-_c = App;
-exports.default = App;
-var _c;
-$RefreshReg$(_c, "App");
-
-  $parcel$ReactRefreshHelpers$be2d.postlude(module);
-} finally {
-  globalThis.$RefreshReg$ = prevRefreshReg;
-  globalThis.$RefreshSig$ = prevRefreshSig;
-}
-},{"react/jsx-dev-runtime":"dVPUn","react":"jMk1U","react-dom/client":"hrvwu","react-router-dom":"61z4w","./Login":"a6Rks","./Register":"gnA7u","@parcel/transformer-js/src/esmodule-helpers.js":"jnFvT","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"7h6Pi","./PodView":"1OT0T"}],"a6Rks":[function(require,module,exports,__globalThis) {
-var $parcel$ReactRefreshHelpers$898c = require("@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js");
-$parcel$ReactRefreshHelpers$898c.init();
-var prevRefreshReg = globalThis.$RefreshReg$;
-var prevRefreshSig = globalThis.$RefreshSig$;
-$parcel$ReactRefreshHelpers$898c.prelude(module);
-
-try {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-var _jsxDevRuntime = require("react/jsx-dev-runtime");
-var _react = require("react");
-var _reactDefault = parcelHelpers.interopDefault(_react);
-var _reactRouterDom = require("react-router-dom");
-var _s = $RefreshSig$();
-const API_URL = "http://localhost:8000";
-function Login() {
-    _s();
-    const [username, setUsername] = (0, _react.useState)("");
-    const [password, setPassword] = (0, _react.useState)("");
-    const [error, setError] = (0, _react.useState)("");
-    const navigate = (0, _reactRouterDom.useNavigate)();
-    const handleLogin = async (e)=>{
-        e.preventDefault();
-        setError("");
-        try {
-            const res = await fetch(`${API_URL}/auth/login`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/x-www-form-urlencoded"
-                },
-                body: new URLSearchParams({
-                    username,
-                    password
-                })
-            });
-            const data = await res.json();
-            if (!res.ok) throw new Error(data.detail || "Login failed");
-            localStorage.setItem("token", data.access_token);
-            navigate("/"); // go to admin view for now
-        } catch (err) {
-            setError(err.message);
-        }
-    };
-    return /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
-        style: {
-            padding: "2rem",
-            fontFamily: "sans-serif",
-            maxWidth: 400,
-            margin: "0 auto"
-        },
-        children: [
-            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("h2", {
-                children: "Login"
-            }, void 0, false, {
-                fileName: "src/Login.jsx",
-                lineNumber: 38,
-                columnNumber: 7
-            }, this),
-            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("form", {
-                onSubmit: handleLogin,
-                style: {
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: "0.5rem"
-                },
-                children: [
-                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("input", {
-                        type: "text",
-                        placeholder: "Username",
-                        value: username,
-                        onChange: (e)=>setUsername(e.target.value),
-                        required: true
-                    }, void 0, false, {
-                        fileName: "src/Login.jsx",
-                        lineNumber: 40,
-                        columnNumber: 9
-                    }, this),
-                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("input", {
-                        type: "password",
-                        placeholder: "Password",
-                        value: password,
-                        onChange: (e)=>setPassword(e.target.value),
-                        required: true
-                    }, void 0, false, {
-                        fileName: "src/Login.jsx",
-                        lineNumber: 47,
-                        columnNumber: 9
-                    }, this),
-                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("button", {
-                        type: "submit",
-                        children: "Log In"
-                    }, void 0, false, {
-                        fileName: "src/Login.jsx",
-                        lineNumber: 54,
-                        columnNumber: 9
-                    }, this)
-                ]
-            }, void 0, true, {
-                fileName: "src/Login.jsx",
-                lineNumber: 39,
-                columnNumber: 7
-            }, this),
-            error && /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("p", {
-                style: {
-                    color: "red"
-                },
-                children: error
-            }, void 0, false, {
-                fileName: "src/Login.jsx",
-                lineNumber: 56,
-                columnNumber: 17
-            }, this)
-        ]
-    }, void 0, true, {
-        fileName: "src/Login.jsx",
-        lineNumber: 37,
-        columnNumber: 5
-    }, this);
-}
-_s(Login, "8wQ/bzn6fk6ET8DFaTQ4y53Fx+Q=", false, function() {
-    return [
-        (0, _reactRouterDom.useNavigate)
-    ];
-});
-_c = Login;
-exports.default = Login;
-var _c;
-$RefreshReg$(_c, "Login");
-
-  $parcel$ReactRefreshHelpers$898c.postlude(module);
-} finally {
-  globalThis.$RefreshReg$ = prevRefreshReg;
-  globalThis.$RefreshSig$ = prevRefreshSig;
-}
-},{"react/jsx-dev-runtime":"dVPUn","react":"jMk1U","react-router-dom":"61z4w","@parcel/transformer-js/src/esmodule-helpers.js":"jnFvT","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"7h6Pi"}],"gnA7u":[function(require,module,exports,__globalThis) {
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"jnFvT"}],"gnA7u":[function(require,module,exports,__globalThis) {
 var $parcel$ReactRefreshHelpers$0b44 = require("@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js");
 $parcel$ReactRefreshHelpers$0b44.init();
 var prevRefreshReg = globalThis.$RefreshReg$;
@@ -36037,28 +36046,41 @@ function Layout({ children }) {
         }).then((res)=>res.json()).then(setCurrentUser).catch(()=>setCurrentUser(null));
     }, []);
     return /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _jsxDevRuntime.Fragment), {
-        children: [
-            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _navbarDefault.default), {
-                currentUser: currentUser,
-                setCurrentUser: setCurrentUser
-            }, void 0, false, {
-                fileName: "src/Layout.jsx",
-                lineNumber: 22,
-                columnNumber: 7
-            }, this),
-            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("main", {
-                children: /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _reactRouterDom.Outlet), {}, void 0, false, {
+        children: currentUser === null && localStorage.getItem("token") ? /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("p", {
+            children: "Loading..."
+        }, void 0, false, {
+            fileName: "src/Layout.jsx",
+            lineNumber: 23,
+            columnNumber: 9
+        }, this) : /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _jsxDevRuntime.Fragment), {
+            children: [
+                /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _navbarDefault.default), {
+                    currentUser: currentUser,
+                    setCurrentUser: setCurrentUser
+                }, void 0, false, {
                     fileName: "src/Layout.jsx",
-                    lineNumber: 23,
-                    columnNumber: 13
+                    lineNumber: 26,
+                    columnNumber: 11
+                }, this),
+                /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("main", {
+                    children: /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _reactRouterDom.Outlet), {
+                        context: {
+                            currentUser,
+                            setCurrentUser
+                        }
+                    }, void 0, false, {
+                        fileName: "src/Layout.jsx",
+                        lineNumber: 28,
+                        columnNumber: 13
+                    }, this)
+                }, void 0, false, {
+                    fileName: "src/Layout.jsx",
+                    lineNumber: 27,
+                    columnNumber: 11
                 }, this)
-            }, void 0, false, {
-                fileName: "src/Layout.jsx",
-                lineNumber: 23,
-                columnNumber: 7
-            }, this)
-        ]
-    }, void 0, true);
+            ]
+        }, void 0, true)
+    }, void 0, false);
 }
 _s(Layout, "Y5F2pQQk2LZA5WRO2+bvRm5iRuo=");
 _c = Layout;
@@ -36071,7 +36093,7 @@ $RefreshReg$(_c, "Layout");
   globalThis.$RefreshReg$ = prevRefreshReg;
   globalThis.$RefreshSig$ = prevRefreshSig;
 }
-},{"react/jsx-dev-runtime":"dVPUn","react":"jMk1U","./Navbar":"1NZhh","@parcel/transformer-js/src/esmodule-helpers.js":"jnFvT","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"7h6Pi","react-router-dom":"61z4w"}],"1NZhh":[function(require,module,exports,__globalThis) {
+},{"react/jsx-dev-runtime":"dVPUn","react":"jMk1U","./Navbar":"1NZhh","react-router-dom":"61z4w","@parcel/transformer-js/src/esmodule-helpers.js":"jnFvT","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"7h6Pi"}],"1NZhh":[function(require,module,exports,__globalThis) {
 var $parcel$ReactRefreshHelpers$d852 = require("@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js");
 $parcel$ReactRefreshHelpers$d852.init();
 var prevRefreshReg = globalThis.$RefreshReg$;
@@ -36109,7 +36131,7 @@ function Navbar({ currentUser, setCurrentUser }) {
                 children: "Home"
             }, void 0, false, {
                 fileName: "src/Navbar.jsx",
-                lineNumber: 15,
+                lineNumber: 17,
                 columnNumber: 7
             }, this),
             currentUser ? /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _jsxDevRuntime.Fragment), {
@@ -36122,7 +36144,7 @@ function Navbar({ currentUser, setCurrentUser }) {
                         children: "Dashboard"
                     }, void 0, false, {
                         fileName: "src/Navbar.jsx",
-                        lineNumber: 18,
+                        lineNumber: 20,
                         columnNumber: 11
                     }, this),
                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _reactRouterDom.Link), {
@@ -36133,7 +36155,7 @@ function Navbar({ currentUser, setCurrentUser }) {
                         children: "Create"
                     }, void 0, false, {
                         fileName: "src/Navbar.jsx",
-                        lineNumber: 19,
+                        lineNumber: 21,
                         columnNumber: 11
                     }, this),
                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("span", {
@@ -36146,13 +36168,13 @@ function Navbar({ currentUser, setCurrentUser }) {
                                 children: currentUser.username
                             }, void 0, false, {
                                 fileName: "src/Navbar.jsx",
-                                lineNumber: 21,
+                                lineNumber: 23,
                                 columnNumber: 22
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "src/Navbar.jsx",
-                        lineNumber: 20,
+                        lineNumber: 22,
                         columnNumber: 11
                     }, this),
                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("button", {
@@ -36160,7 +36182,7 @@ function Navbar({ currentUser, setCurrentUser }) {
                         children: "Logout"
                     }, void 0, false, {
                         fileName: "src/Navbar.jsx",
-                        lineNumber: 23,
+                        lineNumber: 25,
                         columnNumber: 11
                     }, this)
                 ]
@@ -36174,7 +36196,7 @@ function Navbar({ currentUser, setCurrentUser }) {
                         children: "Login"
                     }, void 0, false, {
                         fileName: "src/Navbar.jsx",
-                        lineNumber: 27,
+                        lineNumber: 29,
                         columnNumber: 11
                     }, this),
                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _reactRouterDom.Link), {
@@ -36182,7 +36204,7 @@ function Navbar({ currentUser, setCurrentUser }) {
                         children: "Register"
                     }, void 0, false, {
                         fileName: "src/Navbar.jsx",
-                        lineNumber: 28,
+                        lineNumber: 30,
                         columnNumber: 11
                     }, this)
                 ]
@@ -36190,7 +36212,7 @@ function Navbar({ currentUser, setCurrentUser }) {
         ]
     }, void 0, true, {
         fileName: "src/Navbar.jsx",
-        lineNumber: 14,
+        lineNumber: 16,
         columnNumber: 5
     }, this);
 }

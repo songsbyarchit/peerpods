@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useOutletContext } from "react-router-dom";
 
 const API_URL = "http://localhost:8000";
 
@@ -8,6 +9,8 @@ function Login() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
+  const { setCurrentUser } = useOutletContext();
+  const body = new URLSearchParams({ username, password });
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -27,6 +30,9 @@ function Login() {
       }
 
       localStorage.setItem("token", data.access_token);
+      setCurrentUser({
+        username: username,
+      });      
       navigate("/"); // go to admin view for now
     } catch (err) {
       setError(err.message);

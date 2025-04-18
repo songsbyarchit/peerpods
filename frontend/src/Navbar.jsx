@@ -1,7 +1,9 @@
 import React from "react";
+import { useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
-function Navbar({ currentUser, setCurrentUser }) {
+function Navbar({ currentUser, setCurrentUser }) {  
+
   const navigate = useNavigate();
 
   const handleLogout = () => {
