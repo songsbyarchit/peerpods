@@ -13,18 +13,14 @@ const root = createRoot(document.getElementById("root"));
 root.render(
   <Router>
     <Routes>
-      <Route path="*" element={
-        <Layout>
-          <Routes>
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/create" element={<Create />} />
-            <Route path="/pod/:id" element={<PodView />} />
-            <Route path="/" element={<App />} />
-          </Routes>
-        </Layout>
-      } />
+        <Route path="/*" element={<Layout />}>
+        <Route index element={<App />} />
+        <Route path="login" element={<Login />} />
+        <Route path="register" element={<Register />} />
+        <Route path="dashboard" element={<Dashboard />} />
+        <Route path="create" element={<Create />} />
+        <Route path="pod/:id" element={<PodView />} />
+      </Route>
     </Routes>
   </Router>
 );

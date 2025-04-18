@@ -698,97 +698,90 @@ const root = (0, _client.createRoot)(document.getElementById("root"));
 root.render(/*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _reactRouterDom.BrowserRouter), {
     children: /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _reactRouterDom.Routes), {
         children: /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _reactRouterDom.Route), {
-            path: "*",
-            element: /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _layoutDefault.default), {
-                children: /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _reactRouterDom.Routes), {
-                    children: [
-                        /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _reactRouterDom.Route), {
-                            path: "/login",
-                            element: /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _loginDefault.default), {}, void 0, false, {
-                                fileName: "index.jsx",
-                                lineNumber: 19,
-                                columnNumber: 43
-                            }, void 0)
-                        }, void 0, false, {
-                            fileName: "index.jsx",
-                            lineNumber: 19,
-                            columnNumber: 13
-                        }, void 0),
-                        /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _reactRouterDom.Route), {
-                            path: "/register",
-                            element: /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _registerDefault.default), {}, void 0, false, {
-                                fileName: "index.jsx",
-                                lineNumber: 20,
-                                columnNumber: 46
-                            }, void 0)
-                        }, void 0, false, {
-                            fileName: "index.jsx",
-                            lineNumber: 20,
-                            columnNumber: 13
-                        }, void 0),
-                        /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _reactRouterDom.Route), {
-                            path: "/dashboard",
-                            element: /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _dashboardDefault.default), {}, void 0, false, {
-                                fileName: "index.jsx",
-                                lineNumber: 21,
-                                columnNumber: 47
-                            }, void 0)
-                        }, void 0, false, {
-                            fileName: "index.jsx",
-                            lineNumber: 21,
-                            columnNumber: 13
-                        }, void 0),
-                        /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _reactRouterDom.Route), {
-                            path: "/create",
-                            element: /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _createDefault.default), {}, void 0, false, {
-                                fileName: "index.jsx",
-                                lineNumber: 22,
-                                columnNumber: 44
-                            }, void 0)
-                        }, void 0, false, {
-                            fileName: "index.jsx",
-                            lineNumber: 22,
-                            columnNumber: 13
-                        }, void 0),
-                        /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _reactRouterDom.Route), {
-                            path: "/pod/:id",
-                            element: /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _podViewDefault.default), {}, void 0, false, {
-                                fileName: "index.jsx",
-                                lineNumber: 23,
-                                columnNumber: 45
-                            }, void 0)
-                        }, void 0, false, {
-                            fileName: "index.jsx",
-                            lineNumber: 23,
-                            columnNumber: 13
-                        }, void 0),
-                        /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _reactRouterDom.Route), {
-                            path: "/",
-                            element: /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _appDefault.default), {}, void 0, false, {
-                                fileName: "index.jsx",
-                                lineNumber: 24,
-                                columnNumber: 38
-                            }, void 0)
-                        }, void 0, false, {
-                            fileName: "index.jsx",
-                            lineNumber: 24,
-                            columnNumber: 13
-                        }, void 0)
-                    ]
-                }, void 0, true, {
+            path: "/*",
+            element: /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _layoutDefault.default), {}, void 0, false, {
+                fileName: "index.jsx",
+                lineNumber: 16,
+                columnNumber: 35
+            }, void 0),
+            children: [
+                /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _reactRouterDom.Route), {
+                    index: true,
+                    element: /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _appDefault.default), {}, void 0, false, {
+                        fileName: "index.jsx",
+                        lineNumber: 17,
+                        columnNumber: 31
+                    }, void 0)
+                }, void 0, false, {
+                    fileName: "index.jsx",
+                    lineNumber: 17,
+                    columnNumber: 9
+                }, undefined),
+                /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _reactRouterDom.Route), {
+                    path: "login",
+                    element: /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _loginDefault.default), {}, void 0, false, {
+                        fileName: "index.jsx",
+                        lineNumber: 18,
+                        columnNumber: 38
+                    }, void 0)
+                }, void 0, false, {
                     fileName: "index.jsx",
                     lineNumber: 18,
-                    columnNumber: 11
-                }, void 0)
-            }, void 0, false, {
-                fileName: "index.jsx",
-                lineNumber: 17,
-                columnNumber: 9
-            }, void 0)
-        }, void 0, false, {
+                    columnNumber: 9
+                }, undefined),
+                /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _reactRouterDom.Route), {
+                    path: "register",
+                    element: /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _registerDefault.default), {}, void 0, false, {
+                        fileName: "index.jsx",
+                        lineNumber: 19,
+                        columnNumber: 41
+                    }, void 0)
+                }, void 0, false, {
+                    fileName: "index.jsx",
+                    lineNumber: 19,
+                    columnNumber: 9
+                }, undefined),
+                /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _reactRouterDom.Route), {
+                    path: "dashboard",
+                    element: /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _dashboardDefault.default), {}, void 0, false, {
+                        fileName: "index.jsx",
+                        lineNumber: 20,
+                        columnNumber: 42
+                    }, void 0)
+                }, void 0, false, {
+                    fileName: "index.jsx",
+                    lineNumber: 20,
+                    columnNumber: 9
+                }, undefined),
+                /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _reactRouterDom.Route), {
+                    path: "create",
+                    element: /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _createDefault.default), {}, void 0, false, {
+                        fileName: "index.jsx",
+                        lineNumber: 21,
+                        columnNumber: 39
+                    }, void 0)
+                }, void 0, false, {
+                    fileName: "index.jsx",
+                    lineNumber: 21,
+                    columnNumber: 9
+                }, undefined),
+                /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _reactRouterDom.Route), {
+                    path: "pod/:id",
+                    element: /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _podViewDefault.default), {}, void 0, false, {
+                        fileName: "index.jsx",
+                        lineNumber: 22,
+                        columnNumber: 40
+                    }, void 0)
+                }, void 0, false, {
+                    fileName: "index.jsx",
+                    lineNumber: 22,
+                    columnNumber: 9
+                }, undefined)
+            ]
+        }, void 0, true, {
             fileName: "index.jsx",
             lineNumber: 16,
-            columnNumber: 7
+            columnNumber: 9
         }, undefined)
     }, void 0, false, {
         fileName: "index.jsx",
@@ -35913,6 +35906,7 @@ var _react = require("react");
 var _reactDefault = parcelHelpers.interopDefault(_react);
 var _navbar = require("./Navbar");
 var _navbarDefault = parcelHelpers.interopDefault(_navbar);
+var _reactRouterDom = require("react-router-dom");
 var _s = $RefreshSig$();
 function Layout({ children }) {
     _s();
@@ -35933,14 +35927,18 @@ function Layout({ children }) {
                 setCurrentUser: setCurrentUser
             }, void 0, false, {
                 fileName: "src/Layout.jsx",
-                lineNumber: 20,
+                lineNumber: 22,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("main", {
-                children: children
+                children: /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _reactRouterDom.Outlet), {}, void 0, false, {
+                    fileName: "src/Layout.jsx",
+                    lineNumber: 23,
+                    columnNumber: 13
+                }, this)
             }, void 0, false, {
                 fileName: "src/Layout.jsx",
-                lineNumber: 21,
+                lineNumber: 23,
                 columnNumber: 7
             }, this)
         ]
@@ -35957,7 +35955,7 @@ $RefreshReg$(_c, "Layout");
   globalThis.$RefreshReg$ = prevRefreshReg;
   globalThis.$RefreshSig$ = prevRefreshSig;
 }
-},{"react/jsx-dev-runtime":"dVPUn","react":"jMk1U","./Navbar":"1NZhh","@parcel/transformer-js/src/esmodule-helpers.js":"jnFvT","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"7h6Pi"}],"1NZhh":[function(require,module,exports,__globalThis) {
+},{"react/jsx-dev-runtime":"dVPUn","react":"jMk1U","./Navbar":"1NZhh","@parcel/transformer-js/src/esmodule-helpers.js":"jnFvT","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"7h6Pi","react-router-dom":"61z4w"}],"1NZhh":[function(require,module,exports,__globalThis) {
 var $parcel$ReactRefreshHelpers$d852 = require("@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js");
 $parcel$ReactRefreshHelpers$d852.init();
 var prevRefreshReg = globalThis.$RefreshReg$;

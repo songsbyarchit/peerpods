@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Navbar from "./Navbar";
+import { Outlet } from "react-router-dom";
 
 function Layout({ children }) {
   const [currentUser, setCurrentUser] = useState(null);
@@ -15,10 +16,11 @@ function Layout({ children }) {
       .catch(() => setCurrentUser(null));
   }, []);
 
+
   return (
     <>
       <Navbar currentUser={currentUser} setCurrentUser={setCurrentUser} />
-      <main>{children}</main>
+      <main><Outlet /></main>
     </>
   );
 }
