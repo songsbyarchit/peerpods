@@ -4,6 +4,7 @@ function Dashboard() {
     const [yourPods, setYourPods] = useState([]);
     const [recommended, setRecommended] = useState([]);
     const [activePods, setActivePods] = useState([]);
+    const [showAllPods, setShowAllPods] = useState(false);    
     const [stats, setStats] = useState({ totalMessages: 0, totalVoiceMinutes: 0 });
   
     useEffect(() => {
@@ -25,6 +26,18 @@ function Dashboard() {
         .then(res => res.json())
         .then(setStats);
     }, []);
+
+    function formatCountdown(isoTime) {
+      if (!isoTime) return "N/A";
+      const now = new Date();
+      const target = new Date(isoTime);
+      const diff = target - now;
+      if (diff <= 0) return "Ended";
+      const hours = String(Math.floor(diff / (1000 * 60 * 60))).padStart(2, "0");
+      const minutes = String(Math.floor((diff / (1000 * 60)) % 60)).padStart(2, "0");
+      const seconds = String(Math.floor((diff / 1000) % 60)).padStart(2, "0");
+      return `${hours}:${minutes}:${seconds}`;
+    }    
   
     return (
       <div style={{ padding: "2rem", fontFamily: "sans-serif" }}>
@@ -52,24 +65,37 @@ function Dashboard() {
   
         <h2>Active Pods (Spectator View)</h2>
           <div style={{ display: "flex", flexWrap: "wrap", gap: "1rem" }}>
-            {activePods.map((p) => (
-              <a
-                key={p.id}
-                href={`/pod/${p.id}`}
-                style={{
-                  border: "1px solid #ccc",
-                  borderRadius: "10px",
-                  padding: "1rem",
-                  width: "200px",
-                  textDecoration: "none",
-                  color: "black",
-                  backgroundColor: "#f9f9f9",
-                  boxShadow: "0 1px 4px rgba(0,0,0,0.1)"
-                }}
-              >
-                <strong>{p.title}</strong>
-              </a>
-            ))}
+            {(showAllPods ? activePods : activePods.slice(0, 10)).map((p) => (
+            <a
+              key={p.id}
+              href={`/pod/${p.id}`}
+              style={{
+                border: "1px solid #ccc",
+                borderRadius: "10px",
+                padding: "1rem",
+                width: "200px",
+                textDecoration: "none",
+                color: "black",
+                backgroundColor: "#f9f9f9",
+                boxShadow: "0 1px 4px rgba(0,0,0,0.1)",
+                position: "relative"
+              }}
+              title={`Users: ${p.messages.map(m => m.user).join(", ")}`}
+            >
+              <strong>{p.title}</strong>
+              <div style={{ fontSize: "0.8rem", marginTop: "0.5rem" }}>
+                <div><em>Status:</em> {p.state || "unknown"}</div>
+                <div><em>Messages:</em> {p.messages.length}</div>
+                <div><em>Users:</em> {new Set(p.messages.map(m => m.user)).size}</div>
+                <div><em>Time left:</em> {formatCountdown(p.auto_launch_at)}</div>
+              </div>
+            </a>
+          ))}
+          {activePods.length > 10 && (
+            <button onClick={() => setShowAllPods(prev => !prev)}>
+              {showAllPods ? "Show Less" : "View More"}
+            </button>
+          )}
           </div>
   
         <h2>Overall App Stats</h2>
