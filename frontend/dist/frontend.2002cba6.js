@@ -34985,11 +34985,18 @@ function PodView() {
     const { id } = (0, _reactRouterDom.useParams)();
     const [pod, setPod] = (0, _react.useState)(null);
     const [error, setError] = (0, _react.useState)(null);
+    const [currentUser, setCurrentUser] = (0, _react.useState)(null);
     (0, _react.useEffect)(()=>{
         fetch(`${API_URL}/pods/pod/${id}`).then((res)=>{
             if (!res.ok) throw new Error("Pod not found");
             return res.json();
         }).then(setPod).catch((err)=>setError(err.message));
+        const token = localStorage.getItem("token");
+        if (token) fetch(`${API_URL}/auth/me`, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }).then((res)=>res.json()).then(setCurrentUser).catch(()=>setCurrentUser(null));
     }, [
         id
     ]);
@@ -35003,14 +35010,14 @@ function PodView() {
         ]
     }, void 0, true, {
         fileName: "src/PodView.jsx",
-        lineNumber: 21,
+        lineNumber: 32,
         columnNumber: 21
     }, this);
     if (!pod) return /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("p", {
         children: "Loading..."
     }, void 0, false, {
         fileName: "src/PodView.jsx",
-        lineNumber: 22,
+        lineNumber: 33,
         columnNumber: 20
     }, this);
     return /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
@@ -35022,14 +35029,14 @@ function PodView() {
                 children: pod.title
             }, void 0, false, {
                 fileName: "src/PodView.jsx",
-                lineNumber: 26,
+                lineNumber: 37,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("p", {
                 children: pod.description
             }, void 0, false, {
                 fileName: "src/PodView.jsx",
-                lineNumber: 27,
+                lineNumber: 38,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("p", {
@@ -35038,7 +35045,7 @@ function PodView() {
                         children: "Media type:"
                     }, void 0, false, {
                         fileName: "src/PodView.jsx",
-                        lineNumber: 28,
+                        lineNumber: 39,
                         columnNumber: 10
                     }, this),
                     " ",
@@ -35046,7 +35053,7 @@ function PodView() {
                 ]
             }, void 0, true, {
                 fileName: "src/PodView.jsx",
-                lineNumber: 28,
+                lineNumber: 39,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("p", {
@@ -35055,7 +35062,7 @@ function PodView() {
                         children: "Creator:"
                     }, void 0, false, {
                         fileName: "src/PodView.jsx",
-                        lineNumber: 29,
+                        lineNumber: 40,
                         columnNumber: 10
                     }, this),
                     " ",
@@ -35063,14 +35070,14 @@ function PodView() {
                 ]
             }, void 0, true, {
                 fileName: "src/PodView.jsx",
-                lineNumber: 29,
+                lineNumber: 40,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("h3", {
                 children: "Messages"
             }, void 0, false, {
                 fileName: "src/PodView.jsx",
-                lineNumber: 31,
+                lineNumber: 42,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("ul", {
@@ -35087,7 +35094,10 @@ function PodView() {
                             padding: "0.75rem",
                             marginBottom: "0.5rem",
                             maxWidth: "70%",
-                            boxShadow: "0 1px 3px rgba(0, 0, 0, 0.1)"
+                            boxShadow: "0 1px 3px rgba(0, 0, 0, 0.1)",
+                            alignSelf: currentUser?.username === msg.user ? "flex-end" : "flex-start",
+                            marginLeft: currentUser?.username === msg.user ? "auto" : "0",
+                            backgroundColor: currentUser?.username === msg.user ? "#d1ffd6" : "#f0f0f0"
                         },
                         children: [
                             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
@@ -35111,13 +35121,13 @@ function PodView() {
                                         ]
                                     }, void 0, true, {
                                         fileName: "src/PodView.jsx",
-                                        lineNumber: 45,
+                                        lineNumber: 59,
                                         columnNumber: 28
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "src/PodView.jsx",
-                                lineNumber: 44,
+                                lineNumber: 58,
                                 columnNumber: 17
                             }, this),
                             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
@@ -35129,34 +35139,34 @@ function PodView() {
                                     ]
                                 }, void 0, true, {
                                     fileName: "src/PodView.jsx",
-                                    lineNumber: 52,
+                                    lineNumber: 66,
                                     columnNumber: 23
                                 }, this)
                             }, void 0, false, {
                                 fileName: "src/PodView.jsx",
-                                lineNumber: 49,
+                                lineNumber: 63,
                                 columnNumber: 17
                             }, this)
                         ]
                     }, idx, true, {
                         fileName: "src/PodView.jsx",
-                        lineNumber: 36,
-                        columnNumber: 13
+                        lineNumber: 47,
+                        columnNumber: 17
                     }, this);
                 })
             }, void 0, false, {
                 fileName: "src/PodView.jsx",
-                lineNumber: 32,
+                lineNumber: 43,
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true, {
         fileName: "src/PodView.jsx",
-        lineNumber: 25,
+        lineNumber: 36,
         columnNumber: 5
     }, this);
 }
-_s(PodView, "b21vdagSmDQgMFqanlZFkz0E6Ps=", false, function() {
+_s(PodView, "f0asFlQeauujBAfTbHuoJ9plpQo=", false, function() {
     return [
         (0, _reactRouterDom.useParams)
     ];

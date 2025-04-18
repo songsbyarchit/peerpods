@@ -7,6 +7,7 @@ function PodView() {
   const { id } = useParams();
   const [pod, setPod] = useState(null);
   const [error, setError] = useState(null);
+  const [currentUser, setCurrentUser] = useState(null);  
 
   useEffect(() => {
     fetch(`${API_URL}/pods/pod/${id}`)
@@ -16,6 +17,16 @@ function PodView() {
       })
       .then(setPod)
       .catch((err) => setError(err.message));
+
+    const token = localStorage.getItem("token");
+    if (token) {
+      fetch(`${API_URL}/auth/me`, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+        .then((res) => res.json())
+        .then(setCurrentUser)
+        .catch(() => setCurrentUser(null));
+    }
   }, [id]);
 
   if (error) return <p style={{ color: "red" }}>Error: {error}</p>;
@@ -33,14 +44,17 @@ function PodView() {
       {pod.messages.map((msg, idx) => {
         console.log("Message timestamp:", msg.created_at);
         return (
-            <li key={idx} style={{
-                backgroundColor: "#f0f0f0",
-                borderRadius: "10px",
-                padding: "0.75rem",
-                marginBottom: "0.5rem",
-                maxWidth: "70%",
-                boxShadow: "0 1px 3px rgba(0, 0, 0, 0.1)"
-            }}>
+                <li key={idx} style={{
+                    backgroundColor: "#f0f0f0",
+                    borderRadius: "10px",
+                    padding: "0.75rem",
+                    marginBottom: "0.5rem",
+                    maxWidth: "70%",
+                    boxShadow: "0 1px 3px rgba(0, 0, 0, 0.1)",
+                    alignSelf: currentUser?.username === msg.user ? "flex-end" : "flex-start",
+                    marginLeft: currentUser?.username === msg.user ? "auto" : "0",
+                    backgroundColor: currentUser?.username === msg.user ? "#d1ffd6" : "#f0f0f0",
+                }}>
                 <div style={{ fontWeight: "bold", marginBottom: "0.25rem" }}>
                 {msg.user} <span style={{ fontWeight: "normal", color: "#777", fontSize: "0.8rem" }}>
                     ({new Date(msg.created_at).toLocaleString()})
