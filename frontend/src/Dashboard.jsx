@@ -23,9 +23,9 @@ function Dashboard() {
     useEffect(() => {
       const token = localStorage.getItem("token");
   
-        fetch("http://localhost:8000/pods/user", { headers: { Authorization: `Bearer ${token}` } })
-        .then(res => res.json())
-        .then(setYourPods);
+      fetch("http://localhost:8000/pods/user-full", { headers: { Authorization: `Bearer ${token}` } })
+      .then(res => res.json())
+      .then(setYourPods);    
   
       fetch("http://localhost:8000/pods/recommended", { headers: { Authorization: `Bearer ${token}` } })
         .then(res => res.json())
@@ -146,11 +146,31 @@ function Dashboard() {
         {yourPods.length === 0 ? (
           <p>You have no pods. <a href="/create">Create one now</a>.</p>
         ) : (
-          <ul>
-            {yourPods.map(p => (
-              <li key={p.id}><strong>{p.title}</strong> — {p.state}</li>
-            ))}
-          </ul>
+        <div style={{ display: "flex", flexWrap: "wrap", gap: "1rem", marginBottom: "1rem" }}>
+          {yourPods.map(p => (
+            <a
+              key={p.id}
+              href={`/pod/${p.id}`}
+              style={{
+                border: "1px solid #ccc",
+                borderRadius: "10px",
+                padding: "1rem",
+                width: "200px",
+                backgroundColor: p.is_creator ? "#e0ffe0" : "#f0f0f0",
+                boxShadow: "0 1px 4px rgba(0,0,0,0.1)",
+                textDecoration: "none",
+                color: "black"
+              }}
+              title={`Role: ${p.is_creator ? "Creator" : "Participant"} | Status: ${p.state}`}
+            >
+              <strong>{p.title}</strong>
+              <div style={{ fontSize: "0.85rem", marginTop: "0.5rem" }}>
+                <div><em>Role:</em> {p.is_creator ? "Creator" : "Participant"}</div>
+                <div><em>Status:</em> {p.state}</div>
+              </div>
+            </a>
+          ))}
+        </div>
         )}
   
         <h2>Top 3 Recommended Pods</h2>

@@ -34997,11 +34997,15 @@ function PodView() {
     const [currentUser, setCurrentUser] = (0, _react.useState)(null);
     const [newMessage, setNewMessage] = (0, _react.useState)("");
     (0, _react.useEffect)(()=>{
-        fetch(`${API_URL}/pods/pod/${id}`).then((res)=>{
+        const token = localStorage.getItem("token");
+        fetch(`${API_URL}/pods/pod/${id}`, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }).then((res)=>{
             if (!res.ok) throw new Error("Pod not found");
             return res.json();
         }).then(setPod).catch((err)=>setError(err.message));
-        const token = localStorage.getItem("token");
         if (token) fetch(`${API_URL}/auth/me`, {
             headers: {
                 Authorization: `Bearer ${token}`
@@ -35020,14 +35024,14 @@ function PodView() {
         ]
     }, void 0, true, {
         fileName: "src/PodView.jsx",
-        lineNumber: 33,
+        lineNumber: 37,
         columnNumber: 21
     }, this);
     if (!pod) return /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("p", {
         children: "Loading..."
     }, void 0, false, {
         fileName: "src/PodView.jsx",
-        lineNumber: 34,
+        lineNumber: 38,
         columnNumber: 20
     }, this);
     function handleSendMessage(e) {
@@ -35063,14 +35067,14 @@ function PodView() {
                 children: pod.title
             }, void 0, false, {
                 fileName: "src/PodView.jsx",
-                lineNumber: 64,
+                lineNumber: 68,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("p", {
                 children: pod.description
             }, void 0, false, {
                 fileName: "src/PodView.jsx",
-                lineNumber: 65,
+                lineNumber: 69,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("p", {
@@ -35079,7 +35083,7 @@ function PodView() {
                         children: "Media type:"
                     }, void 0, false, {
                         fileName: "src/PodView.jsx",
-                        lineNumber: 66,
+                        lineNumber: 70,
                         columnNumber: 10
                     }, this),
                     " ",
@@ -35087,7 +35091,7 @@ function PodView() {
                 ]
             }, void 0, true, {
                 fileName: "src/PodView.jsx",
-                lineNumber: 66,
+                lineNumber: 70,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("p", {
@@ -35096,7 +35100,7 @@ function PodView() {
                         children: "Creator:"
                     }, void 0, false, {
                         fileName: "src/PodView.jsx",
-                        lineNumber: 67,
+                        lineNumber: 71,
                         columnNumber: 10
                     }, this),
                     " ",
@@ -35104,14 +35108,14 @@ function PodView() {
                 ]
             }, void 0, true, {
                 fileName: "src/PodView.jsx",
-                lineNumber: 67,
+                lineNumber: 71,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("h3", {
                 children: "Messages"
             }, void 0, false, {
                 fileName: "src/PodView.jsx",
-                lineNumber: 69,
+                lineNumber: 73,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("ul", {
@@ -35160,13 +35164,13 @@ function PodView() {
                                         ]
                                     }, void 0, true, {
                                         fileName: "src/PodView.jsx",
-                                        lineNumber: 88,
+                                        lineNumber: 92,
                                         columnNumber: 28
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "src/PodView.jsx",
-                                lineNumber: 87,
+                                lineNumber: 91,
                                 columnNumber: 17
                             }, this),
                             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
@@ -35178,27 +35182,27 @@ function PodView() {
                                     ]
                                 }, void 0, true, {
                                     fileName: "src/PodView.jsx",
-                                    lineNumber: 95,
+                                    lineNumber: 99,
                                     columnNumber: 23
                                 }, this)
                             }, void 0, false, {
                                 fileName: "src/PodView.jsx",
-                                lineNumber: 92,
+                                lineNumber: 96,
                                 columnNumber: 17
                             }, this)
                         ]
                     }, idx, true, {
                         fileName: "src/PodView.jsx",
-                        lineNumber: 76,
+                        lineNumber: 80,
                         columnNumber: 17
                     }, this);
                 })
             }, void 0, false, {
                 fileName: "src/PodView.jsx",
-                lineNumber: 70,
+                lineNumber: 74,
                 columnNumber: 7
             }, this),
-            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("form", {
+            pod.can_send && /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("form", {
                 onSubmit: handleSendMessage,
                 style: {
                     position: "fixed",
@@ -35231,8 +35235,8 @@ function PodView() {
                         }
                     }, void 0, false, {
                         fileName: "src/PodView.jsx",
-                        lineNumber: 116,
-                        columnNumber: 5
+                        lineNumber: 121,
+                        columnNumber: 11
                     }, this),
                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("button", {
                         type: "submit",
@@ -35240,19 +35244,19 @@ function PodView() {
                         children: "Send"
                     }, void 0, false, {
                         fileName: "src/PodView.jsx",
-                        lineNumber: 133,
-                        columnNumber: 5
+                        lineNumber: 138,
+                        columnNumber: 11
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "src/PodView.jsx",
-                lineNumber: 101,
-                columnNumber: 7
+                lineNumber: 106,
+                columnNumber: 9
             }, this)
         ]
     }, void 0, true, {
         fileName: "src/PodView.jsx",
-        lineNumber: 63,
+        lineNumber: 67,
         columnNumber: 5
     }, this);
 }
@@ -35309,7 +35313,7 @@ function Dashboard() {
     }, []);
     (0, _react.useEffect)(()=>{
         const token = localStorage.getItem("token");
-        fetch("http://localhost:8000/pods/user", {
+        fetch("http://localhost:8000/pods/user-full", {
             headers: {
                 Authorization: `Bearer ${token}`
             }
@@ -35582,34 +35586,96 @@ function Dashboard() {
                 fileName: "src/Dashboard.jsx",
                 lineNumber: 147,
                 columnNumber: 11
-            }, this) : /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("ul", {
-                children: yourPods.map((p)=>/*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("li", {
+            }, this) : /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
+                style: {
+                    display: "flex",
+                    flexWrap: "wrap",
+                    gap: "1rem",
+                    marginBottom: "1rem"
+                },
+                children: yourPods.map((p)=>/*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("a", {
+                        href: `/pod/${p.id}`,
+                        style: {
+                            border: "1px solid #ccc",
+                            borderRadius: "10px",
+                            padding: "1rem",
+                            width: "200px",
+                            backgroundColor: p.is_creator ? "#e0ffe0" : "#f0f0f0",
+                            boxShadow: "0 1px 4px rgba(0,0,0,0.1)",
+                            textDecoration: "none",
+                            color: "black"
+                        },
+                        title: `Role: ${p.is_creator ? "Creator" : "Participant"} | Status: ${p.state}`,
                         children: [
                             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("strong", {
                                 children: p.title
                             }, void 0, false, {
                                 fileName: "src/Dashboard.jsx",
-                                lineNumber: 151,
-                                columnNumber: 30
+                                lineNumber: 166,
+                                columnNumber: 15
                             }, this),
-                            " \u2014 ",
-                            p.state
+                            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
+                                style: {
+                                    fontSize: "0.85rem",
+                                    marginTop: "0.5rem"
+                                },
+                                children: [
+                                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
+                                        children: [
+                                            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("em", {
+                                                children: "Role:"
+                                            }, void 0, false, {
+                                                fileName: "src/Dashboard.jsx",
+                                                lineNumber: 168,
+                                                columnNumber: 22
+                                            }, this),
+                                            " ",
+                                            p.is_creator ? "Creator" : "Participant"
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "src/Dashboard.jsx",
+                                        lineNumber: 168,
+                                        columnNumber: 17
+                                    }, this),
+                                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
+                                        children: [
+                                            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("em", {
+                                                children: "Status:"
+                                            }, void 0, false, {
+                                                fileName: "src/Dashboard.jsx",
+                                                lineNumber: 169,
+                                                columnNumber: 22
+                                            }, this),
+                                            " ",
+                                            p.state
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "src/Dashboard.jsx",
+                                        lineNumber: 169,
+                                        columnNumber: 17
+                                    }, this)
+                                ]
+                            }, void 0, true, {
+                                fileName: "src/Dashboard.jsx",
+                                lineNumber: 167,
+                                columnNumber: 15
+                            }, this)
                         ]
                     }, p.id, true, {
                         fileName: "src/Dashboard.jsx",
                         lineNumber: 151,
-                        columnNumber: 15
+                        columnNumber: 13
                     }, this))
             }, void 0, false, {
                 fileName: "src/Dashboard.jsx",
                 lineNumber: 149,
-                columnNumber: 11
+                columnNumber: 9
             }, this),
             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("h2", {
                 children: "Top 3 Recommended Pods"
             }, void 0, false, {
                 fileName: "src/Dashboard.jsx",
-                lineNumber: 156,
+                lineNumber: 176,
                 columnNumber: 9
             }, this),
             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("ul", {
@@ -35619,24 +35685,24 @@ function Dashboard() {
                                 children: p.title
                             }, void 0, false, {
                                 fileName: "src/Dashboard.jsx",
-                                lineNumber: 160,
+                                lineNumber: 180,
                                 columnNumber: 15
                             }, this),
                             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("br", {}, void 0, false, {
                                 fileName: "src/Dashboard.jsx",
-                                lineNumber: 160,
+                                lineNumber: 180,
                                 columnNumber: 41
                             }, this),
                             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("em", {
                                 children: p.description
                             }, void 0, false, {
                                 fileName: "src/Dashboard.jsx",
-                                lineNumber: 161,
+                                lineNumber: 181,
                                 columnNumber: 15
                             }, this),
                             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("br", {}, void 0, false, {
                                 fileName: "src/Dashboard.jsx",
-                                lineNumber: 161,
+                                lineNumber: 181,
                                 columnNumber: 39
                             }, this),
                             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("button", {
@@ -35644,25 +35710,25 @@ function Dashboard() {
                                 children: "Join"
                             }, void 0, false, {
                                 fileName: "src/Dashboard.jsx",
-                                lineNumber: 162,
+                                lineNumber: 182,
                                 columnNumber: 15
                             }, this)
                         ]
                     }, p.id, true, {
                         fileName: "src/Dashboard.jsx",
-                        lineNumber: 159,
+                        lineNumber: 179,
                         columnNumber: 13
                     }, this))
             }, void 0, false, {
                 fileName: "src/Dashboard.jsx",
-                lineNumber: 157,
+                lineNumber: 177,
                 columnNumber: 9
             }, this),
             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("h2", {
                 children: "Active Pods (Spectator View)"
             }, void 0, false, {
                 fileName: "src/Dashboard.jsx",
-                lineNumber: 167,
+                lineNumber: 187,
                 columnNumber: 9
             }, this),
             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
@@ -35691,7 +35757,7 @@ function Dashboard() {
                                     children: p.title
                                 }, void 0, false, {
                                     fileName: "src/Dashboard.jsx",
-                                    lineNumber: 186,
+                                    lineNumber: 206,
                                     columnNumber: 15
                                 }, this),
                                 /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
@@ -35706,7 +35772,7 @@ function Dashboard() {
                                                     children: "Creator:"
                                                 }, void 0, false, {
                                                     fileName: "src/Dashboard.jsx",
-                                                    lineNumber: 188,
+                                                    lineNumber: 208,
                                                     columnNumber: 22
                                                 }, this),
                                                 " ",
@@ -35714,7 +35780,7 @@ function Dashboard() {
                                             ]
                                         }, void 0, true, {
                                             fileName: "src/Dashboard.jsx",
-                                            lineNumber: 188,
+                                            lineNumber: 208,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
@@ -35723,7 +35789,7 @@ function Dashboard() {
                                                     children: "Status:"
                                                 }, void 0, false, {
                                                     fileName: "src/Dashboard.jsx",
-                                                    lineNumber: 189,
+                                                    lineNumber: 209,
                                                     columnNumber: 22
                                                 }, this),
                                                 " ",
@@ -35731,7 +35797,7 @@ function Dashboard() {
                                             ]
                                         }, void 0, true, {
                                             fileName: "src/Dashboard.jsx",
-                                            lineNumber: 189,
+                                            lineNumber: 209,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
@@ -35740,7 +35806,7 @@ function Dashboard() {
                                                     children: "Messages:"
                                                 }, void 0, false, {
                                                     fileName: "src/Dashboard.jsx",
-                                                    lineNumber: 190,
+                                                    lineNumber: 210,
                                                     columnNumber: 22
                                                 }, this),
                                                 " ",
@@ -35748,7 +35814,7 @@ function Dashboard() {
                                             ]
                                         }, void 0, true, {
                                             fileName: "src/Dashboard.jsx",
-                                            lineNumber: 190,
+                                            lineNumber: 210,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
@@ -35757,7 +35823,7 @@ function Dashboard() {
                                                     children: "Users:"
                                                 }, void 0, false, {
                                                     fileName: "src/Dashboard.jsx",
-                                                    lineNumber: 191,
+                                                    lineNumber: 211,
                                                     columnNumber: 22
                                                 }, this),
                                                 " ",
@@ -35765,7 +35831,7 @@ function Dashboard() {
                                             ]
                                         }, void 0, true, {
                                             fileName: "src/Dashboard.jsx",
-                                            lineNumber: 191,
+                                            lineNumber: 211,
                                             columnNumber: 17
                                         }, this),
                                         p.state === "scheduled" && /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
@@ -35774,7 +35840,7 @@ function Dashboard() {
                                                     children: "Time left:"
                                                 }, void 0, false, {
                                                     fileName: "src/Dashboard.jsx",
-                                                    lineNumber: 193,
+                                                    lineNumber: 213,
                                                     columnNumber: 24
                                                 }, this),
                                                 " ",
@@ -35782,19 +35848,19 @@ function Dashboard() {
                                             ]
                                         }, void 0, true, {
                                             fileName: "src/Dashboard.jsx",
-                                            lineNumber: 193,
+                                            lineNumber: 213,
                                             columnNumber: 19
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "src/Dashboard.jsx",
-                                    lineNumber: 187,
+                                    lineNumber: 207,
                                     columnNumber: 15
                                 }, this)
                             ]
                         }, p.id, true, {
                             fileName: "src/Dashboard.jsx",
-                            lineNumber: 170,
+                            lineNumber: 190,
                             columnNumber: 13
                         }, this)),
                     activePods.length > tilesPerRow && /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
@@ -35807,7 +35873,7 @@ function Dashboard() {
                                 children: "Show More Pods"
                             }, void 0, false, {
                                 fileName: "src/Dashboard.jsx",
-                                lineNumber: 201,
+                                lineNumber: 221,
                                 columnNumber: 17
                             }, this),
                             visibleRows > 1 && /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("button", {
@@ -35818,26 +35884,26 @@ function Dashboard() {
                                 children: "Show Less"
                             }, void 0, false, {
                                 fileName: "src/Dashboard.jsx",
-                                lineNumber: 206,
+                                lineNumber: 226,
                                 columnNumber: 17
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "src/Dashboard.jsx",
-                        lineNumber: 199,
+                        lineNumber: 219,
                         columnNumber: 13
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "src/Dashboard.jsx",
-                lineNumber: 168,
+                lineNumber: 188,
                 columnNumber: 11
             }, this),
             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("h2", {
                 children: "Overall App Stats"
             }, void 0, false, {
                 fileName: "src/Dashboard.jsx",
-                lineNumber: 217,
+                lineNumber: 237,
                 columnNumber: 9
             }, this),
             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("p", {
@@ -35847,7 +35913,7 @@ function Dashboard() {
                 ]
             }, void 0, true, {
                 fileName: "src/Dashboard.jsx",
-                lineNumber: 218,
+                lineNumber: 238,
                 columnNumber: 9
             }, this),
             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("p", {
@@ -35858,7 +35924,7 @@ function Dashboard() {
                 ]
             }, void 0, true, {
                 fileName: "src/Dashboard.jsx",
-                lineNumber: 219,
+                lineNumber: 239,
                 columnNumber: 9
             }, this)
         ]

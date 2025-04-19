@@ -1,7 +1,7 @@
 # backend/routes/pods.py
 
 from fastapi import APIRouter, Depends, HTTPException
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, aliased
 from backend import models, schemas
 from backend.database import SessionLocal
 from backend.dependencies.jwt import get_current_user
@@ -125,6 +125,21 @@ def get_user_pods(db: Session = Depends(get_db), current_user: models.User = Dep
 def get_user_pods(current_user: models.User = Depends(get_current_user), db: Session = Depends(get_db)):
     return db.query(models.Pod).filter(models.Pod.creator_id == current_user.id).all()
 
+@router.get("/user-full")
+def get_user_pods_full(current_user: models.User = Depends(get_current_user), db: Session = Depends(get_db)):
+    all_pods = db.query(models.Pod).all()
+    user_pods = []
+    for pod in all_pods:
+        participant_ids = {m.user_id for m in pod.messages}
+        if current_user.id == pod.creator_id or current_user.id in participant_ids:
+            user_pods.append({
+                "id": pod.id,
+                "title": pod.title,
+                "state": pod.state,
+                "is_creator": current_user.id == pod.creator_id
+            })
+    return user_pods
+
 @router.get("/recommended")
 def get_recommended_pods(current_user: models.User = Depends(get_current_user), db: Session = Depends(get_db)):
     pods = db.query(models.Pod).filter(models.Pod.state != "locked").all()
@@ -187,7 +202,11 @@ def get_app_stats(db: Session = Depends(get_db)):
     }
 
 @router.get("/pod/{pod_id}")
-def get_pod_by_id(pod_id: int, db: Session = Depends(get_db)):
+def get_pod_by_id(
+    pod_id: int,
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(get_current_user)
+):
     pod = db.query(models.Pod).filter(models.Pod.id == pod_id).first()
     if not pod:
         raise HTTPException(status_code=404, detail="Pod not found")
@@ -203,6 +222,9 @@ def get_pod_by_id(pod_id: int, db: Session = Depends(get_db)):
         for m in pod.messages
     ]
 
+    participant_ids = {m.user_id for m in pod.messages}
+    can_send = current_user.id == pod.creator_id or current_user.id in participant_ids
+
     return {
         "id": pod.id,
         "title": pod.title,
@@ -217,6 +239,7 @@ def get_pod_by_id(pod_id: int, db: Session = Depends(get_db)):
         "state": pod.state,
         "launch_mode": pod.launch_mode,
         "auto_launch_at": pod.auto_launch_at.isoformat() if pod.auto_launch_at else None,
+        "can_send": can_send
     }
 
 @router.post("/refresh-states")
@@ -248,12 +271,20 @@ def search_pods(
     sort: Optional[str] = None,
     db: Session = Depends(get_db)
 ):
-    base_query = db.query(models.Pod).filter(
-        or_(
-            models.Pod.title.ilike(f"%{query}%"),
-            models.Pod.description.ilike(f"%{query}%")
-        )
-    )
+    MessageUser = aliased(models.User)
+
+    base_query = db.query(models.Pod)\
+        .join(models.User, models.Pod.creator)\
+        .outerjoin(models.Message, models.Message.pod_id == models.Pod.id)\
+        .outerjoin(MessageUser, models.Message.user_id == MessageUser.id)\
+        .filter(
+            or_(
+                models.Pod.title.ilike(f"%{query}%"),
+                models.Pod.description.ilike(f"%{query}%"),
+                models.User.username.ilike(f"%{query}%"),
+                MessageUser.username.ilike(f"%{query}%")
+            )
+        ).distinct()
 
     if state:
         base_query = base_query.filter(models.Pod.state == state)

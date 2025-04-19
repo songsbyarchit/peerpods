@@ -11,15 +11,19 @@ function PodView() {
   const [newMessage, setNewMessage] = useState("");
 
   useEffect(() => {
-    fetch(`${API_URL}/pods/pod/${id}`)
+    const token = localStorage.getItem("token");
+    fetch(`${API_URL}/pods/pod/${id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    })
       .then((res) => {
         if (!res.ok) throw new Error("Pod not found");
         return res.json();
       })
       .then(setPod)
-      .catch((err) => setError(err.message));
-
-    const token = localStorage.getItem("token");
+      .catch((err) => setError(err.message));    
+      
     if (token) {
       fetch(`${API_URL}/auth/me`, {
         headers: { Authorization: `Bearer ${token}` },
@@ -98,40 +102,42 @@ function PodView() {
         );
         })}
       </ul>
-      <form
-    onSubmit={handleSendMessage}
-    style={{
-      position: "fixed",
-      bottom: 0,
-      left: 0,
-      width: "100%",
-      backgroundColor: "#fff",
-      padding: "1rem",
-      display: "flex",
-      justifyContent: "center",
-      borderTop: "1px solid #ccc",
-      zIndex: 1000
-    }}
-  >
-    <textarea
-      value={newMessage}
-      onChange={(e) => setNewMessage(e.target.value)}
-      placeholder="Type your message..."
-      rows={3}
-      style={{
-        width: "70%",
-        padding: "0.5rem",
-        marginRight: "1rem",
-        fontSize: "1rem",
-        resize: "none",
-        minHeight: "4.5rem",
-        maxHeight: "7rem",
-        overflowY: "auto",
-        lineHeight: "1.5rem"
-      }}
-    />
-    <button type="submit" disabled={!newMessage.trim()}>Send</button>
-  </form>
+      {pod.can_send && (
+        <form
+          onSubmit={handleSendMessage}
+          style={{
+            position: "fixed",
+            bottom: 0,
+            left: 0,
+            width: "100%",
+            backgroundColor: "#fff",
+            padding: "1rem",
+            display: "flex",
+            justifyContent: "center",
+            borderTop: "1px solid #ccc",
+            zIndex: 1000
+          }}
+        >
+          <textarea
+            value={newMessage}
+            onChange={(e) => setNewMessage(e.target.value)}
+            placeholder="Type your message..."
+            rows={3}
+            style={{
+              width: "70%",
+              padding: "0.5rem",
+              marginRight: "1rem",
+              fontSize: "1rem",
+              resize: "none",
+              minHeight: "4.5rem",
+              maxHeight: "7rem",
+              overflowY: "auto",
+              lineHeight: "1.5rem"
+            }}
+          />
+          <button type="submit" disabled={!newMessage.trim()}>Send</button>
+        </form>
+      )}
   </div>
   );
 }
