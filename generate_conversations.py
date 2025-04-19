@@ -20,11 +20,11 @@ SessionLocal = sessionmaker(bind=engine)
 session = SessionLocal()
 faker = Faker()
 
-def pick_random_users(session, min_users=3, max_users=5):
+def pick_random_users(session, min_users=4, max_users=8):
     users = session.query(User).all()
     if len(users) < min_users:
-        raise ValueError("Not enough users.")
-    return random.sample(users, random.randint(min_users, max_users))
+        raise ValueError(f"Not enough users in the database. Found: {len(users)}")
+    return random.sample(users, min(max_users, len(users)))
 
 def generate_conversation_messages(user_objs, num_messages, topic):
     messages = []
@@ -59,7 +59,8 @@ def create_pod_with_messages(session, topic):
         description=f"This pod explores the topic: '{topic}' in depth through user conversation.",
         duration_hours=random.choice([24, 168]),
         drift_tolerance=random.randint(1, 5),
-        state="launched",
+        state="active",
+        is_active=True,
         launch_mode="manual",
         timezone="UTC",
         media_type="text",

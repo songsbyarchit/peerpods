@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Text, ForeignKey, DateTime
+from sqlalchemy import Column, Integer, String, Text, ForeignKey, DateTime, Boolean
 from sqlalchemy.orm import relationship, declarative_base
 import datetime
 
@@ -11,7 +11,7 @@ class User(Base):
     username = Column(String(50), unique=True, nullable=False)
     hashed_password = Column(String, nullable=False)
     bio = Column(Text, nullable=True)
-    is_admin = Column(Integer, default=0)  # 1 = admin, 0 = regular user
+    is_admin = Column(Boolean, default=False)
     created_at = Column(DateTime, default=datetime.datetime.utcnow)
 
     messages = relationship("Message", back_populates="user")
@@ -45,6 +45,13 @@ class Pod(Base):
     creator_id = Column(Integer, ForeignKey("users.id"))
     creator = relationship("User", back_populates="created_pods")
     messages = relationship("Message", back_populates="pod")
+
+    @property
+    def is_active(self):
+        if not self.created_at or not self.duration_hours:
+            return False
+        expiry_time = self.created_at + datetime.timedelta(hours=self.duration_hours)
+        return datetime.datetime.utcnow() < expiry_time
 
 class Message(Base):
     __tablename__ = "messages"
