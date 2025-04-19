@@ -89,7 +89,7 @@ function Dashboard() {
                 boxShadow: "0 1px 4px rgba(0,0,0,0.1)",
                 position: "relative"
               }}
-              title={`Users: ${p.messages ? p.messages.map(m => m.user).join(", ") : "No messages yet"}`}
+              title={`Creator: ${p.creator || "Unknown"} | Users: ${p.messages ? p.messages.map(m => m.user).join(", ") : "No messages yet"}`}
               >
               <strong>{p.title}</strong>
               <div style={{ fontSize: "0.8rem", marginTop: "0.5rem" }}>

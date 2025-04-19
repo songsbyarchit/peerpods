@@ -1,4 +1,5 @@
 import os
+import time
 import random
 import datetime
 from sqlalchemy import create_engine
@@ -32,7 +33,10 @@ def pick_random_users(session, min_users=3, max_users=5):
     if len(eligible_users) < min_users:
         raise ValueError("Not enough eligible users with fewer than 3 pods")
 
-    return random.sample(eligible_users, random.randint(min_users, max_users))
+    available = len(eligible_users)
+    if available < min_users:
+        raise ValueError("Not enough eligible users with fewer than 3 pods")
+    return random.sample(eligible_users, min(available, random.randint(min_users, max_users)))
 
 def generate_conversation_messages(user_objs, num_messages, topic):
     messages = []
@@ -47,12 +51,12 @@ def generate_conversation_messages(user_objs, num_messages, topic):
 
         Now write a reply from {user.username}, continuing the discussion:"""
         client = openai.OpenAI(api_key=OPENAI_API_KEY)
+        time.sleep(0.2)
         response = client.chat.completions.create(
             model="gpt-3.5-turbo",
             messages=[{"role": "user", "content": prompt}],
             temperature=0.7
         )
-        msg = response.choices[0].message.content.strip()
         msg = response.choices[0].message.content.strip()
         context += f"{user.username}: {msg}\n"
         messages.append((user, msg))
