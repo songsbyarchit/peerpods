@@ -32,7 +32,7 @@ function Dashboard() {
         .then(res => res.json())
         .then(setYourPods);
     
-      fetch("http://localhost:8000/users/me", { headers: { Authorization: `Bearer ${token}` } })
+      fetch("http://localhost:8000/auth/me", { headers: { Authorization: `Bearer ${token}` } })
         .then(res => res.json())
         .then(data => setBio(data.bio || ""));    
   
@@ -141,8 +141,8 @@ function Dashboard() {
         .then(res => res.json())
         .then(data => setRecommended(data.filter(p => p.state !== "locked" && p.remaining_slots > 0)))
         .catch(err => console.error("Failed to update bio or refresh recommendations:", err));
-    }
-        
+    }    
+
     return (
       <div style={{ padding: "2rem", fontFamily: "sans-serif" }}>
 

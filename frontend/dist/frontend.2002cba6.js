@@ -35323,7 +35323,7 @@ function Dashboard() {
                 Authorization: `Bearer ${token}`
             }
         }).then((res)=>res.json()).then(setYourPods);
-        fetch("http://localhost:8000/users/me", {
+        fetch("http://localhost:8000/auth/me", {
             headers: {
                 Authorization: `Bearer ${token}`
             }
