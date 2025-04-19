@@ -5,6 +5,10 @@ from sqlalchemy.orm import Session
 from backend import models, schemas
 from backend.database import SessionLocal
 from backend.dependencies.jwt import get_current_user
+from sqlalchemy import or_
+from typing import List
+from backend import models
+
 
 router = APIRouter()
 
@@ -235,3 +239,42 @@ def refresh_pod_states(db: Session = Depends(get_db)):
 
     db.commit()
     return {"detail": "Pod states refreshed"}
+
+@router.get("/search")
+def search_pods(query: str, db: Session = Depends(get_db)):
+    pods = db.query(models.Pod).filter(
+        or_(
+            models.Pod.title.ilike(f"%{query}%"),
+            models.Pod.description.ilike(f"%{query}%")
+        )
+    ).all()
+
+    results = []
+    for pod in pods:
+        user_count = len({msg.user_id for msg in pod.messages})
+        message_count = len(pod.messages)
+        is_view_only = pod.state in ["locked", "launched"]
+        remaining_slots = pod.max_messages_per_day - user_count if not is_view_only else 0
+
+        preview = {
+            "id": pod.id,
+            "title": pod.title,
+            "description": pod.description,
+            "media_type": pod.media_type,
+            "duration_hours": pod.duration_hours,
+            "drift_tolerance": pod.drift_tolerance,
+            "creator": pod.creator.username if pod.creator else "Unknown",
+            "visibility": pod.visibility,
+            "tags": pod.tags,
+            "state": pod.state,
+            "launch_mode": pod.launch_mode,
+            "auto_launch_at": pod.auto_launch_at.isoformat() if pod.auto_launch_at else None,
+            "message_count": message_count,
+            "user_count": user_count,
+            "remaining_slots": remaining_slots,
+            "view_only": is_view_only
+        }
+
+        results.append(preview)
+
+    return results

@@ -6,6 +6,8 @@ function Dashboard() {
     const [activePods, setActivePods] = useState([]);
     const [showAllPods, setShowAllPods] = useState(false);    
     const [stats, setStats] = useState({ totalMessages: 0, totalVoiceMinutes: 0 });
+    const [searchQuery, setSearchQuery] = useState("");
+    const [searchResults, setSearchResults] = useState([]);
   
     useEffect(() => {
       fetch("http://localhost:8000/pods/refresh-states", {
@@ -36,6 +38,18 @@ function Dashboard() {
         .then(setStats);
     }, []);
 
+    function handleSearch(e) {
+      e.preventDefault();
+      const token = localStorage.getItem("token");
+    
+      fetch(`http://localhost:8000/pods/search?query=${encodeURIComponent(searchQuery)}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      })
+        .then(res => res.json())
+        .then(data => setSearchResults(data))
+        .catch(err => console.error("Search failed:", err));
+    }    
+
     function formatCountdown(isoTime) {
       if (!isoTime) return "N/A";
       const now = new Date();
@@ -50,6 +64,34 @@ function Dashboard() {
   
     return (
       <div style={{ padding: "2rem", fontFamily: "sans-serif" }}>
+
+        <form onSubmit={handleSearch} style={{ marginBottom: "2rem" }}>
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder="Search pod titles or descriptions..."
+            style={{ padding: "0.5rem", width: "300px" }}
+          />
+          <button type="submit" style={{ marginLeft: "0.5rem" }}>Search</button>
+        </form>
+
+        {searchResults.length > 0 && (
+          <div style={{ marginBottom: "2rem" }}>
+            <h2>Search Results</h2>
+            <ul style={{ listStyleType: "none", paddingLeft: 0 }}>
+              {searchResults.map((pod) => (
+                <li key={pod.id} style={{ marginBottom: "1rem", padding: "1rem", border: "1px solid #ccc", borderRadius: "8px" }}>
+                  <strong>{pod.title}</strong> — {pod.description}
+                  <div style={{ fontSize: "0.9rem", color: "#777" }}>
+                    Media: {pod.media_type} | Duration: {pod.duration_hours}h | Messages: {pod.message_count}
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+
         <h2>Your Pods</h2>
         {yourPods.length === 0 ? (
           <p>You have no pods. <a href="/create">Create one now</a>.</p>
