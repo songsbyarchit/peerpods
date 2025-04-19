@@ -6,9 +6,9 @@ from backend import models, schemas
 from backend.database import SessionLocal
 from backend.dependencies.jwt import get_current_user
 from sqlalchemy import or_
-from typing import List
+from typing import List, Optional
 from backend import models
-
+from datetime import datetime
 
 router = APIRouter()
 
@@ -241,13 +241,33 @@ def refresh_pod_states(db: Session = Depends(get_db)):
     return {"detail": "Pod states refreshed"}
 
 @router.get("/search")
-def search_pods(query: str, db: Session = Depends(get_db)):
-    pods = db.query(models.Pod).filter(
+def search_pods(
+    query: str,
+    state: Optional[str] = None,
+    media: Optional[str] = None,
+    sort: Optional[str] = None,
+    db: Session = Depends(get_db)
+):
+    base_query = db.query(models.Pod).filter(
         or_(
             models.Pod.title.ilike(f"%{query}%"),
             models.Pod.description.ilike(f"%{query}%")
         )
-    ).all()
+    )
+
+    if state:
+        base_query = base_query.filter(models.Pod.state == state)
+    if media:
+        base_query = base_query.filter(models.Pod.media_type == media)
+
+    pods = base_query.all()
+
+    if sort == "messages":
+        pods.sort(key=lambda pod: len(pod.messages), reverse=True)
+    elif sort == "latest":
+        pods.sort(key=lambda pod: max((m.created_at for m in pod.messages), default=datetime.min), reverse=True)
+    elif sort == "duration":
+        pods.sort(key=lambda pod: pod.duration_hours, reverse=True)
 
     results = []
     for pod in pods:

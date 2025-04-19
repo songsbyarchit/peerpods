@@ -4,10 +4,15 @@ function Dashboard() {
     const [yourPods, setYourPods] = useState([]);
     const [recommended, setRecommended] = useState([]);
     const [activePods, setActivePods] = useState([]);
-    const [showAllPods, setShowAllPods] = useState(false);    
+    const [visibleRows, setVisibleRows] = useState(1);
+    const [tilesPerRow, setTilesPerRow] = useState(5);    
     const [stats, setStats] = useState({ totalMessages: 0, totalVoiceMinutes: 0 });
     const [searchQuery, setSearchQuery] = useState("");
     const [searchResults, setSearchResults] = useState([]);
+    const [filterState, setFilterState] = useState("");
+    const [filterMedia, setFilterMedia] = useState("");
+    const [sortOption, setSortOption] = useState("");    
+    const [visibleSearchCount, setVisibleSearchCount] = useState(5);
   
     useEffect(() => {
       fetch("http://localhost:8000/pods/refresh-states", {
@@ -38,13 +43,31 @@ function Dashboard() {
         .then(setStats);
     }, []);
 
+    useEffect(() => {
+      function updateTilesPerRow() {
+        const width = window.innerWidth;
+        const tileWidth = 220; // tile + padding + margin
+        const perRow = Math.floor(width / tileWidth);
+        setTilesPerRow(perRow);
+      }
+    
+      updateTilesPerRow();
+      window.addEventListener("resize", updateTilesPerRow);
+      return () => window.removeEventListener("resize", updateTilesPerRow);
+    }, []);    
+
     function handleSearch(e) {
       e.preventDefault();
       const token = localStorage.getItem("token");
     
-      fetch(`http://localhost:8000/pods/search?query=${encodeURIComponent(searchQuery)}`, {
+      const params = new URLSearchParams({ query: searchQuery });
+      if (filterState) params.append("state", filterState);
+      if (filterMedia) params.append("media", filterMedia);
+      if (sortOption) params.append("sort", sortOption);
+      
+      fetch(`http://localhost:8000/pods/search?${params.toString()}`, {
         headers: { Authorization: `Bearer ${token}` }
-      })
+      })      
         .then(res => res.json())
         .then(data => setSearchResults(data))
         .catch(err => console.error("Search failed:", err));
@@ -65,32 +88,59 @@ function Dashboard() {
     return (
       <div style={{ padding: "2rem", fontFamily: "sans-serif" }}>
 
-        <form onSubmit={handleSearch} style={{ marginBottom: "2rem" }}>
-          <input
-            type="text"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search pod titles or descriptions..."
-            style={{ padding: "0.5rem", width: "300px" }}
-          />
-          <button type="submit" style={{ marginLeft: "0.5rem" }}>Search</button>
-        </form>
+      <form onSubmit={handleSearch} style={{ marginBottom: "2rem" }}>
+        <input
+          type="text"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          placeholder="Search pod titles or descriptions..."
+          style={{ padding: "0.5rem", width: "300px" }}
+        />
+        <select
+          value={sortOption}
+          onChange={(e) => setSortOption(e.target.value)}
+          style={{ marginLeft: "0.5rem", padding: "0.5rem" }}
+        >
+          <option value="">Sort By</option>
+          <option value="messages">Most Messages</option>
+          <option value="latest">Most Recent Message</option>
+          <option value="duration">Longest Duration</option>
+        </select>
+        <button type="submit" style={{ marginLeft: "0.5rem" }}>Search</button>
+      </form>
 
-        {searchResults.length > 0 && (
-          <div style={{ marginBottom: "2rem" }}>
-            <h2>Search Results</h2>
-            <ul style={{ listStyleType: "none", paddingLeft: 0 }}>
-              {searchResults.map((pod) => (
-                <li key={pod.id} style={{ marginBottom: "1rem", padding: "1rem", border: "1px solid #ccc", borderRadius: "8px" }}>
-                  <strong>{pod.title}</strong> — {pod.description}
-                  <div style={{ fontSize: "0.9rem", color: "#777" }}>
-                    Media: {pod.media_type} | Duration: {pod.duration_hours}h | Messages: {pod.message_count}
-                  </div>
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
+      {searchResults.length > 0 && (
+        <div style={{ marginBottom: "2rem" }}>
+          <h2>Search Results</h2>
+          <ul style={{ listStyleType: "none", paddingLeft: 0 }}>
+              {searchResults.slice(0, visibleSearchCount).map((pod) => (
+              <li key={pod.id} style={{ marginBottom: "1rem", padding: "1rem", border: "1px solid #ccc", borderRadius: "8px" }}>
+                <strong>{pod.title}</strong> — {pod.description}
+                <div style={{ fontSize: "0.9rem", color: "#777" }}>
+                  Media: {pod.media_type} | Duration: {pod.duration_hours}h | Messages: {pod.message_count}
+                </div>
+              </li>
+            ))}
+          </ul>
+          {searchResults.length > 5 && (
+            <div style={{ marginTop: "1rem" }}>
+              {visibleSearchCount < searchResults.length && (
+                <button onClick={() => setVisibleSearchCount(prev => prev + 5)}>
+                  Show More Results
+                </button>
+              )}
+              {visibleSearchCount > 5 && (
+                <button
+                  onClick={() => setVisibleSearchCount(5)}
+                  style={{ marginLeft: "0.5rem" }}
+                >
+                  Show Less
+                </button>
+              )}
+            </div>
+          )}
+        </div>
+      )}
 
         <h2>Your Pods</h2>
         {yourPods.length === 0 ? (
@@ -116,7 +166,7 @@ function Dashboard() {
   
         <h2>Active Pods (Spectator View)</h2>
           <div style={{ display: "flex", flexWrap: "wrap", gap: "1rem" }}>
-            {(showAllPods ? activePods : activePods.slice(0, 10)).map((p) => (
+            {activePods.slice(0, visibleRows * tilesPerRow).map((p) => (
             <a
               key={p.id}
               href={`/pod/${p.id}`}
@@ -145,10 +195,22 @@ function Dashboard() {
                 </div>
             </a>
           ))}
-          {activePods.length > 10 && (
-            <button onClick={() => setShowAllPods(prev => !prev)}>
-              {showAllPods ? "Show Less" : "View More"}
-            </button>
+          {activePods.length > tilesPerRow && (
+            <div style={{ marginTop: "1rem" }}>
+              {visibleRows * tilesPerRow < activePods.length && (
+                <button onClick={() => setVisibleRows(prev => prev + 1)}>
+                  Show More Pods
+                </button>
+              )}
+              {visibleRows > 1 && (
+                <button
+                  onClick={() => setVisibleRows(1)}
+                  style={{ marginLeft: "0.5rem" }}
+                >
+                  Show Less
+                </button>
+              )}
+            </div>
           )}
           </div>
   
