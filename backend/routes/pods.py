@@ -20,7 +20,10 @@ def get_db():
         db.close()
 
 @router.get("/")
-def get_all_pods(db: Session = Depends(get_db)):
+def get_all_pods(
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(get_current_user)
+):
     pods = db.query(models.Pod).all()
     result = []
 
@@ -42,6 +45,8 @@ def get_all_pods(db: Session = Depends(get_db)):
             "media_type": pod.media_type,
             "messages": messages,
             "creator": pod.creator.username if pod.creator else "Unknown",
+            "is_creator": current_user.id == pod.creator_id if current_user else False,
+            "is_participant": current_user.id in {m.user_id for m in pod.messages},
             "duration_hours": pod.duration_hours,
             "drift_tolerance": pod.drift_tolerance,
             "visibility": pod.visibility,
@@ -136,7 +141,8 @@ def get_user_pods_full(current_user: models.User = Depends(get_current_user), db
                 "id": pod.id,
                 "title": pod.title,
                 "state": pod.state,
-                "is_creator": current_user.id == pod.creator_id
+                "is_creator": current_user.id == pod.creator_id,
+                "is_participant": current_user.id in participant_ids
             })
     return user_pods
 

@@ -4,7 +4,10 @@ function Dashboard() {
     const [yourPods, setYourPods] = useState([]);
     const [recommended, setRecommended] = useState([]);
     const [activePods, setActivePods] = useState([]);
-    const [visibleRows, setVisibleRows] = useState(1);
+    const [visibleRows, setVisibleRows] = useState(() => {
+      const saved = localStorage.getItem("visibleRows");
+      return saved ? parseInt(saved, 10) : 1;
+    });    
     const [tilesPerRow, setTilesPerRow] = useState(5);    
     const [stats, setStats] = useState({ totalMessages: 0, totalVoiceMinutes: 0 });
     const [searchQuery, setSearchQuery] = useState("");
@@ -13,7 +16,7 @@ function Dashboard() {
     const [filterMedia, setFilterMedia] = useState("");
     const [sortOption, setSortOption] = useState("");    
     const [visibleSearchCount, setVisibleSearchCount] = useState(5);
-  
+
     useEffect(() => {
       fetch("http://localhost:8000/pods/refresh-states", {
         method: "POST"
@@ -55,6 +58,10 @@ function Dashboard() {
       window.addEventListener("resize", updateTilesPerRow);
       return () => window.removeEventListener("resize", updateTilesPerRow);
     }, []);    
+
+    useEffect(() => {
+      localStorage.setItem("visibleRows", visibleRows.toString());
+    }, [visibleRows]);    
 
     function handleSearch(e) {
       e.preventDefault();
@@ -156,7 +163,7 @@ function Dashboard() {
                 borderRadius: "10px",
                 padding: "1rem",
                 width: "200px",
-                backgroundColor: p.is_creator ? "#e0ffe0" : "#f0f0f0",
+                backgroundColor: p.is_creator ? "#c8f7c5" : p.is_participant ? "#dbeafe" : "#f9f9f9",
                 boxShadow: "0 1px 4px rgba(0,0,0,0.1)",
                 textDecoration: "none",
                 color: "black"
@@ -197,7 +204,7 @@ function Dashboard() {
                 width: "200px",
                 textDecoration: "none",
                 color: "black",
-                backgroundColor: "#f9f9f9",
+                backgroundColor: p.is_creator ? "#c8f7c5" : p.is_participant ? "#dbeafe" : "#f9f9f9",
                 boxShadow: "0 1px 4px rgba(0,0,0,0.1)",
                 position: "relative"
               }}
@@ -205,7 +212,10 @@ function Dashboard() {
               >
               <strong>{p.title}</strong>
               <div style={{ fontSize: "0.8rem", marginTop: "0.5rem" }}>
-                <div><em>Creator:</em> {p.creator || "Unknown"}</div>
+                <div>
+                  <em>Creator:</em>{" "}
+                  {p.is_creator ? <strong>You</strong> : p.creator || "Unknown"}
+                </div>
                 <div><em>Status:</em> {p.state || "unknown"}</div>
                 <div><em>Messages:</em> {p.messages ? p.messages.length : 0}</div>
                 <div><em>Users:</em> {p.messages ? new Set(p.messages.map(m => m.user)).size : 0}</div>
