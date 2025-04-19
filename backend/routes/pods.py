@@ -17,7 +17,37 @@ def get_db():
 
 @router.get("/")
 def get_all_pods(db: Session = Depends(get_db)):
-    return db.query(models.Pod).all()
+    pods = db.query(models.Pod).all()
+    result = []
+
+    for pod in pods:
+        messages = [
+            {
+                "media_type": m.media_type,
+                "content": m.content,
+                "voice_path": m.voice_path,
+                "user": m.user.username if m.user else "Unknown"
+            }
+            for m in pod.messages
+        ]
+
+        result.append({
+            "id": pod.id,
+            "title": pod.title,
+            "description": pod.description,
+            "media_type": pod.media_type,
+            "messages": messages,
+            "creator": pod.creator.username if pod.creator else "Unknown",
+            "duration_hours": pod.duration_hours,
+            "drift_tolerance": pod.drift_tolerance,
+            "visibility": pod.visibility,
+            "tags": pod.tags,
+            "state": pod.state,
+            "launch_mode": pod.launch_mode,
+            "auto_launch_at": pod.auto_launch_at.isoformat() if pod.auto_launch_at else None,
+        })
+
+    return result
 
 @router.post("/")
 def create_pod(
@@ -168,3 +198,24 @@ def get_pod_by_id(pod_id: int, db: Session = Depends(get_db)):
         "launch_mode": pod.launch_mode,
         "auto_launch_at": pod.auto_launch_at.isoformat() if pod.auto_launch_at else None,
     }
+
+@router.post("/refresh-states")
+def refresh_pod_states(db: Session = Depends(get_db)):
+    from datetime import datetime, timedelta
+    now = datetime.utcnow()
+    pods = db.query(models.Pod).all()
+
+    for pod in pods:
+        if pod.auto_launch_at:
+            launch_time = pod.auto_launch_at
+            expiry_time = launch_time + timedelta(hours=pod.duration_hours)
+
+            if now < launch_time:
+                pod.state = "scheduled"
+            elif launch_time <= now < expiry_time:
+                pod.state = "active"
+            else:
+                pod.state = "expired"
+
+    db.commit()
+    return {"detail": "Pod states refreshed"}

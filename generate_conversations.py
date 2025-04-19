@@ -7,7 +7,7 @@ from dotenv import load_dotenv
 from faker import Faker
 from openai import OpenAI
 import openai
-
+from backend.routes.pods import refresh_pod_states
 from backend.models import User, Pod, Message  # Use correct import paths
 
 load_dotenv()
@@ -20,11 +20,19 @@ SessionLocal = sessionmaker(bind=engine)
 session = SessionLocal()
 faker = Faker()
 
-def pick_random_users(session, min_users=4, max_users=8):
-    users = session.query(User).all()
-    if len(users) < min_users:
-        raise ValueError(f"Not enough users in the database. Found: {len(users)}")
-    return random.sample(users, min(max_users, len(users)))
+def pick_random_users(session, min_users=3, max_users=5):
+    all_users = session.query(User).all()
+    eligible_users = []
+
+    for user in all_users:
+        pod_count = session.query(Message.pod_id).filter(Message.user_id == user.id).distinct().count()
+        if pod_count < 3:
+            eligible_users.append(user)
+
+    if len(eligible_users) < min_users:
+        raise ValueError("Not enough eligible users with fewer than 3 pods")
+
+    return random.sample(eligible_users, random.randint(min_users, max_users))
 
 def generate_conversation_messages(user_objs, num_messages, topic):
     messages = []
@@ -32,7 +40,12 @@ def generate_conversation_messages(user_objs, num_messages, topic):
     for i in range(num_messages):
         user = random.choice(user_objs)
         prompt = f"""Topic: {topic}
-This is a thoughtful group conversation. Below are the previous messages:\n{context}\n\nWrite a reply from {user.username}, contributing to the discussion:"""
+        This is a thoughtful and natural group conversation. Avoid long essays. Some responses can be short, others more detailed. Minimum 25 words. Maximum 150 words. Be realistic, insightful, and varied in tone.
+
+        Previous messages:
+        {context}
+
+        Now write a reply from {user.username}, continuing the discussion:"""
         client = openai.OpenAI(api_key=OPENAI_API_KEY)
         response = client.chat.completions.create(
             model="gpt-3.5-turbo",
@@ -54,14 +67,17 @@ def create_pod_with_messages(session, topic):
     messages_data = generate_conversation_messages(users, num_messages, topic)
 
     creator = random.choice(users)
+    start_time = faker.date_time_between(start_date="-4h", end_date="+1h")
+    duration = random.choice([24, 168, 720])
+    
     pod = Pod(
         title=f"Discussion on: {topic}",
-        description=f"This pod explores the topic: '{topic}' in depth through user conversation.",
-        duration_hours=random.choice([24, 168]),
+        description=f"This pod explores the topic: '{topic}' through diverse user thoughts.",
+        duration_hours=duration,
         drift_tolerance=random.randint(1, 5),
-        state="active",
-        is_active=True,
-        launch_mode="manual",
+        state="scheduled",  # initial state
+        auto_launch_at=start_time,
+        launch_mode="countdown",
         timezone="UTC",
         media_type="text",
         max_chars_per_message=500,
@@ -70,13 +86,14 @@ def create_pod_with_messages(session, topic):
         visibility="unlisted",
         tags="ai,generated,discussion",
         creator_id=creator.id,
-        created_at=faker.date_time_between(start_date="-3d", end_date="now")
+        created_at=datetime.datetime.utcnow()
     )
+
     session.add(pod)
     session.commit()
     session.refresh(pod)
 
-    start_time = faker.date_time_between(start_date="-3d", end_date="now")
+    start_time = faker.date_time_between(start_date="-2h", end_date="-10m")
     time_increment = datetime.timedelta(minutes=random.randint(1, 10))
 
     for user, content in messages_data:
@@ -93,6 +110,7 @@ def create_pod_with_messages(session, topic):
 
     session.commit()
     print(f"✅ Created pod '{pod.title}' with {len(messages_data)} messages.")
+    refresh_pod_states(session)
 
 if __name__ == "__main__":
     client = openai.OpenAI(api_key=OPENAI_API_KEY)

@@ -8,6 +8,12 @@ function Dashboard() {
     const [stats, setStats] = useState({ totalMessages: 0, totalVoiceMinutes: 0 });
   
     useEffect(() => {
+      fetch("http://localhost:8000/pods/refresh-states", {
+        method: "POST"
+      }).catch(err => console.error("Failed to refresh pod states:", err));
+    }, []);    
+
+    useEffect(() => {
       const token = localStorage.getItem("token");
   
         fetch("http://localhost:8000/pods/user", { headers: { Authorization: `Bearer ${token}` } })
@@ -18,9 +24,12 @@ function Dashboard() {
         .then(res => res.json())
         .then(data => setRecommended(data.filter(p => p.state !== "locked" && p.remaining_slots > 0)));
   
-      fetch("http://localhost:8000/pods/active", { headers: { Authorization: `Bearer ${token}` } })
+        fetch("http://localhost:8000/pods", { headers: { Authorization: `Bearer ${token}` } })
         .then(res => res.json())
-        .then(setActivePods);
+        .then(data => {
+          const activeOnly = data.filter(p => p.state === "active");
+          setActivePods(activeOnly);
+        });      
   
       fetch("http://localhost:8000/stats", { headers: { Authorization: `Bearer ${token}` } })
         .then(res => res.json())
@@ -80,15 +89,16 @@ function Dashboard() {
                 boxShadow: "0 1px 4px rgba(0,0,0,0.1)",
                 position: "relative"
               }}
-              title={`Users: ${p.messages.map(m => m.user).join(", ")}`}
-            >
+              title={`Users: ${p.messages ? p.messages.map(m => m.user).join(", ") : "No messages yet"}`}
+              >
               <strong>{p.title}</strong>
               <div style={{ fontSize: "0.8rem", marginTop: "0.5rem" }}>
+                <div><em>Creator:</em> {p.creator || "Unknown"}</div>
                 <div><em>Status:</em> {p.state || "unknown"}</div>
-                <div><em>Messages:</em> {p.messages.length}</div>
-                <div><em>Users:</em> {new Set(p.messages.map(m => m.user)).size}</div>
-                <div><em>Time left:</em> {formatCountdown(p.auto_launch_at)}</div>
-              </div>
+                <div><em>Messages:</em> {p.messages ? p.messages.length : 0}</div>
+                <div><em>Users:</em> {p.messages ? new Set(p.messages.map(m => m.user)).size : 0}</div>
+                <div><em>Time left:</em> {p.state === "active" ? formatCountdown(p.auto_launch_at) : "N/A"}</div>
+                </div>
             </a>
           ))}
           {activePods.length > 10 && (

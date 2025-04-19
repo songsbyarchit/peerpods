@@ -27,7 +27,7 @@ class Pod(Base):
     duration_hours = Column(Integer, nullable=False)
     drift_tolerance = Column(Integer, default=3)  # 1–5 scale
 
-    state = Column(String, default="created")  # created, configured, locked, launched, expired
+    state = Column(String, default="scheduled")  # scheduled, active, expired
     launch_mode = Column(String, default="manual")  # manual or countdown
     auto_launch_at = Column(DateTime, nullable=True)
     timezone = Column(String, default="UTC")

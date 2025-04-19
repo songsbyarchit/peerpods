@@ -72,26 +72,79 @@ def create_message(
     return new_msg
 
 @router.post("/pods/{pod_id}/messages")
-def send_message(pod_id: int, content: str = Form(...), db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
-    pod = db.query(Pod).filter(Pod.id == pod_id).first()
+def send_message(
+    pod_id: int,
+    content: str = Form(...),
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(get_current_user)
+):
+    pod = db.query(models.Pod).filter(models.Pod.id == pod_id).first()
     if not pod:
         raise HTTPException(status_code=404, detail="Pod not found")
-    if not pod.is_active:
-        raise HTTPException(status_code=403, detail="Cannot send message to an inactive pod")
 
-    # Count distinct pods this user has messaged in
-    joined_pod_ids = db.query(Message.pod_id).filter(Message.user_id == current_user.id).distinct().all()
-    joined_pod_ids = {pid for (pid,) in joined_pod_ids}
+    # Check if pod is active based on time
+    now = datetime.datetime.utcnow()
+    launch = pod.auto_launch_at
+    end = launch + datetime.timedelta(hours=pod.duration_hours) if launch else None
 
-    if pod_id not in joined_pod_ids and len(joined_pod_ids) >= 3:
-        raise HTTPException(status_code=403, detail="You can only join 3 pods")
+    if not (launch and launch <= now < end):
+        raise HTTPException(status_code=403, detail="Pod is not active at this time")
 
-    message = Message(
+    # Get user IDs who already sent messages in this pod
+    participant_ids = {m.user_id for m in pod.messages}
+    if current_user.id not in participant_ids and len(participant_ids) >= pod.max_messages_per_day:
+        raise HTTPException(status_code=403, detail="Pod is full or you are not a participant")
+
+    message = models.Message(
+        content=content,
+        media_type="text",
+        user_id=current_user.id,
+        pod_id=pod.id,
+        created_at=datetime.datetime.utcnow()
+    )
+
+    db.add(message)
+    db.commit()
+    return {"message": "Message sent"}
+
+@router.post("/pods/{pod_id}/send")
+def send_message_to_active_pod(
+    pod_id: int,
+    content: str = Form(...),
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(get_current_user)
+):
+    from datetime import datetime, timedelta
+
+    pod = db.query(models.Pod).filter(models.Pod.id == pod_id).first()
+    if not pod:
+        raise HTTPException(status_code=404, detail="Pod not found")
+
+    if pod.state != "active":
+        raise HTTPException(status_code=403, detail="Pod is not active")
+
+    # Check if user is a participant
+    participant_ids = {msg.user_id for msg in pod.messages}
+    if current_user.id not in participant_ids:
+        raise HTTPException(status_code=403, detail="You are not a participant of this pod")
+
+    # Check daily message limit
+    today_start = datetime.utcnow().replace(hour=0, minute=0, second=0, microsecond=0)
+    user_messages_today = db.query(models.Message).filter(
+        models.Message.pod_id == pod.id,
+        models.Message.user_id == current_user.id,
+        models.Message.created_at >= today_start
+    ).count()
+
+    if user_messages_today >= pod.max_messages_per_day:
+        raise HTTPException(status_code=403, detail="Daily message limit reached for this pod")
+
+    message = models.Message(
         content=content,
         media_type="text",
         user_id=current_user.id,
         pod_id=pod_id,
-        created_at=datetime.datetime.utcnow()
+        created_at=datetime.utcnow()
     )
     db.add(message)
     db.commit()
