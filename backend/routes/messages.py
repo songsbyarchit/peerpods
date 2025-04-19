@@ -8,6 +8,7 @@ import uuid
 from sqlalchemy.orm import Session
 from backend import models, schemas
 from backend.database import SessionLocal
+from datetime import datetime, timezone
 
 router = APIRouter()
 
@@ -100,7 +101,7 @@ def send_message(
         media_type="text",
         user_id=current_user.id,
         pod_id=pod.id,
-        created_at=datetime.datetime.utcnow()
+        created_at=datetime.now(timezone.utc)
     )
 
     db.add(message)
@@ -144,7 +145,7 @@ def send_message_to_active_pod(
         media_type="text",
         user_id=current_user.id,
         pod_id=pod_id,
-        created_at=datetime.utcnow()
+        created_at=datetime.now(timezone.utc)
     )
     db.add(message)
     db.commit()
