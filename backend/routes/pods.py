@@ -197,14 +197,19 @@ def get_active_pods(db: Session = Depends(get_db)):
 
 @router.get("/stats")
 def get_app_stats(db: Session = Depends(get_db)):
-    total_messages = db.query(models.Message).count()
+    total_messages = db.query(models.Message).count() or 0
 
-    voice_message_count = db.query(models.Message).filter(models.Message.media_type == "voice").count()
-    total_voice_minutes = voice_message_count  # Assuming 1 minute per voice message
+    voice_message_count = db.query(models.Message).filter(models.Message.media_type == "voice").count() or 0
+    total_voice_minutes = voice_message_count * 1  # Placeholder: 1 minute per voice message
+
+    pod_count = db.query(models.Pod).count() or 0
+    user_count = db.query(models.User).count() or 0
 
     return {
-        "totalMessages": total_messages,
-        "totalVoiceMinutes": total_voice_minutes
+        "totalMessages": int(total_messages),
+        "totalVoiceMinutes": int(total_voice_minutes),
+        "totalPods": int(pod_count),
+        "totalUsers": int(user_count)
     }
 
 @router.get("/pod/{pod_id}")

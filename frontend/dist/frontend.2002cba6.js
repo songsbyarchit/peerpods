@@ -35334,7 +35334,7 @@ function Dashboard() {
             const activeOnly = data.filter((p)=>p.state === "active");
             setActivePods(activeOnly);
         });
-        fetch("http://localhost:8000/stats", {
+        fetch("http://localhost:8000/pods/stats", {
             headers: {
                 Authorization: `Bearer ${token}`
             }
@@ -35918,7 +35918,7 @@ function Dashboard() {
             }, void 0, false, {
                 fileName: "src/Dashboard.jsx",
                 lineNumber: 247,
-                columnNumber: 9
+                columnNumber: 11
             }, this),
             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("p", {
                 children: [
@@ -35928,7 +35928,7 @@ function Dashboard() {
             }, void 0, true, {
                 fileName: "src/Dashboard.jsx",
                 lineNumber: 248,
-                columnNumber: 9
+                columnNumber: 11
             }, this),
             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("p", {
                 children: [
@@ -35939,7 +35939,27 @@ function Dashboard() {
             }, void 0, true, {
                 fileName: "src/Dashboard.jsx",
                 lineNumber: 249,
-                columnNumber: 9
+                columnNumber: 11
+            }, this),
+            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("p", {
+                children: [
+                    "Total Pods Created: ",
+                    stats.totalPods
+                ]
+            }, void 0, true, {
+                fileName: "src/Dashboard.jsx",
+                lineNumber: 250,
+                columnNumber: 11
+            }, this),
+            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("p", {
+                children: [
+                    "Total Users Registered: ",
+                    stats.totalUsers
+                ]
+            }, void 0, true, {
+                fileName: "src/Dashboard.jsx",
+                lineNumber: 251,
+                columnNumber: 11
             }, this)
         ]
     }, void 0, true, {

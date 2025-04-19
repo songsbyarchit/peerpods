@@ -34,14 +34,14 @@ function Dashboard() {
         .then(res => res.json())
         .then(data => setRecommended(data.filter(p => p.state !== "locked" && p.remaining_slots > 0)));
   
-        fetch("http://localhost:8000/pods", { headers: { Authorization: `Bearer ${token}` } })
+      fetch("http://localhost:8000/pods", { headers: { Authorization: `Bearer ${token}` } })
         .then(res => res.json())
         .then(data => {
           const activeOnly = data.filter(p => p.state === "active");
           setActivePods(activeOnly);
         });      
   
-      fetch("http://localhost:8000/stats", { headers: { Authorization: `Bearer ${token}` } })
+      fetch("http://localhost:8000/pods/stats", { headers: { Authorization: `Bearer ${token}` } })
         .then(res => res.json())
         .then(setStats);
     }, []);
@@ -244,9 +244,11 @@ function Dashboard() {
           )}
           </div>
   
-        <h2>Overall App Stats</h2>
-        <p>Total Messages Sent: {stats.totalMessages}</p>
-        <p>Total Voice Minutes Shared: {stats.totalVoiceMinutes} minutes</p>
+          <h2>Overall App Stats</h2>
+          <p>Total Messages Sent: {stats.totalMessages}</p>
+          <p>Total Voice Minutes Shared: {stats.totalVoiceMinutes} minutes</p>
+          <p>Total Pods Created: {stats.totalPods}</p>
+          <p>Total Users Registered: {stats.totalUsers}</p>
       </div>
     );
   }  
