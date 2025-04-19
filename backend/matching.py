@@ -1,20 +1,24 @@
-import openai
-from openai import OpenAI
 import os
-from dotenv import load_dotenv
 import numpy as np
+from dotenv import load_dotenv
+from openai import OpenAI
 
 load_dotenv()
-openai.api_key = os.getenv("OPENAI_API_KEY")
-
-client = OpenAI()
+client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 def get_embedding(text: str) -> list:
     response = client.embeddings.create(
-        input=[text],
-        model="text-embedding-ada-002"
+        model="text-embedding-3-small",
+        input=[text]
     )
     return response.data[0].embedding
+
+def get_batch_embeddings(texts: list[str]) -> list[list[float]]:
+    response = client.embeddings.create(
+        model="text-embedding-3-small",
+        input=texts
+    )
+    return [r.embedding for r in response.data]
 
 def cosine_similarity(a, b):
     a, b = np.array(a), np.array(b)
@@ -26,10 +30,28 @@ def match_pods_for_user(user_bio: str, pod_list: list, top_n: int = 3) -> list:
 
     user_vec = get_embedding(user_bio)
     scored = []
-    for pod in pod_list:
-        combined = f"{pod.title or ''} {pod.description or ''}"
-        pod_vec = get_embedding(combined)
-        score = cosine_similarity(user_vec, pod_vec)
-        scored.append((pod, score))
-    scored.sort(key=lambda x: x[1], reverse=True)
-    return [pod for pod, _ in scored[:top_n]]
+
+    pod_texts = [f"{pod.title or ''} {pod.description or ''}" for pod in pod_list]
+    pod_vectors = get_batch_embeddings(pod_texts)
+
+    dot_products = np.dot(pod_vectors, user_vec)
+    norms = np.linalg.norm(pod_vectors, axis=1) * np.linalg.norm(user_vec)
+    similarities = dot_products / norms
+
+    pod_vectors_np = np.array(pod_vectors)
+    user_vec_np = np.array(user_vec)
+    dot_products = np.dot(pod_vectors_np, user_vec_np)
+    norms = np.linalg.norm(pod_vectors_np, axis=1) * np.linalg.norm(user_vec_np)
+    similarities = dot_products / norms
+
+    for pod, score in zip(pod_list, similarities):
+        relevance = int((score + 1) * 50)
+        pod.relevance = relevance
+        scored.append(pod)
+
+        print("USER VECTOR:", user_vec[:5])
+        print("RAW SCORE:", score)
+        print("ADJUSTED RELEVANCE:", relevance)
+
+    scored.sort(key=lambda pod: pod.relevance, reverse=True)
+    return scored[:top_n]

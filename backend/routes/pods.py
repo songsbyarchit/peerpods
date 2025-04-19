@@ -9,6 +9,7 @@ from sqlalchemy import or_
 from typing import List, Optional
 from backend import models
 from datetime import datetime
+from backend.matching import match_pods_for_user
 
 router = APIRouter()
 
@@ -157,30 +158,35 @@ def update_bio(bio: str = Form(...), db: Session = Depends(get_db), current_user
 def get_recommended_pods(current_user: models.User = Depends(get_current_user), db: Session = Depends(get_db)):
     pods = db.query(models.Pod).filter(models.Pod.state != "locked").all()
 
-    def tokenize(text):
-        return set(word.lower() for word in text.split() if len(word) > 2)
-
-    user_keywords = tokenize(current_user.bio or "")
-
-    scored_pods = []
+    available = []
     for pod in pods:
         user_ids = {msg.user_id for msg in pod.messages}
         remaining_slots = pod.max_messages_per_day - len(user_ids)
-        if remaining_slots <= 0:
-            continue
+        if remaining_slots > 0:
+            pod.remaining_slots = remaining_slots  # attach for frontend use
+            available.append(pod)
 
-        pod_text = f"{pod.title} {pod.description or ''}"
-        pod_keywords = tokenize(pod_text)
-        overlap = user_keywords.intersection(pod_keywords)
-        score = len(overlap)
+    matched = match_pods_for_user(current_user.bio or "", available)
 
-        pod_data = pod.__dict__.copy()
-        pod_data["remaining_slots"] = remaining_slots
-        pod_data["score"] = score
-        scored_pods.append(pod_data)
-
-    scored_pods.sort(key=lambda p: p["score"], reverse=True)
-    return scored_pods
+    # convert matched pods to dict for response
+    return [
+        {
+            "id": pod.id,
+            "title": pod.title,
+            "description": pod.description,
+            "media_type": pod.media_type,
+            "duration_hours": pod.duration_hours,
+            "drift_tolerance": pod.drift_tolerance,
+            "visibility": pod.visibility,
+            "tags": pod.tags,
+            "state": pod.state,
+            "launch_mode": pod.launch_mode,
+            "auto_launch_at": pod.auto_launch_at.isoformat() if pod.auto_launch_at else None,
+            "remaining_slots": pod.remaining_slots,
+            "relevance": pod.relevance
+        }
+        for pod in matched
+    ]
 
 @router.get("/active")
 def get_active_pods(db: Session = Depends(get_db)):

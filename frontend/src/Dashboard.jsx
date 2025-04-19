@@ -229,14 +229,34 @@ function Dashboard() {
         )}
   
         <h2>Top 3 Recommended Pods</h2>
-        <ul>
-          {recommended.slice(0, 3).map(p => (
-            <li key={p.id}>
-              <strong>{p.title}</strong><br />
-              <em>{p.description}</em><br />
-              <button onClick={() => joinPod(p.id)}>Join</button>
-            </li>
-          ))}
+        <ul style={{ listStyleType: "none", paddingLeft: 0 }}>
+          {recommended.slice(0, 3).map(p => {
+            const relevance = p.relevance || 0;
+            const relevanceColor =
+              relevance >= 85 ? "lightgreen" :
+              relevance >= 65 ? "khaki" :
+              "lightcoral";
+
+            return (
+              <li
+                key={p.id}
+                style={{
+                  marginBottom: "1rem",
+                  border: "1px solid #ccc",
+                  padding: "1rem",
+                  borderRadius: "8px",
+                  backgroundColor: relevanceColor,
+                }}
+              >
+                <strong>{p.title}</strong><br />
+                <em>{p.description}</em><br />
+                <div style={{ marginTop: "0.5rem" }}>
+                  <strong>Relevance:</strong> {relevance}/100
+                </div>
+                <button style={{ marginTop: "0.5rem" }} onClick={() => joinPod(p.id)}>Join</button>
+              </li>
+            );
+          })}
         </ul>
   
         <h2>Active Pods (Spectator View)</h2>
