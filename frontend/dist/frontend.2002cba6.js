@@ -34995,6 +34995,7 @@ function PodView() {
     const [pod, setPod] = (0, _react.useState)(null);
     const [error, setError] = (0, _react.useState)(null);
     const [currentUser, setCurrentUser] = (0, _react.useState)(null);
+    const [newMessage, setNewMessage] = (0, _react.useState)("");
     (0, _react.useEffect)(()=>{
         fetch(`${API_URL}/pods/pod/${id}`).then((res)=>{
             if (!res.ok) throw new Error("Pod not found");
@@ -35019,16 +35020,40 @@ function PodView() {
         ]
     }, void 0, true, {
         fileName: "src/PodView.jsx",
-        lineNumber: 32,
+        lineNumber: 33,
         columnNumber: 21
     }, this);
     if (!pod) return /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("p", {
         children: "Loading..."
     }, void 0, false, {
         fileName: "src/PodView.jsx",
-        lineNumber: 33,
+        lineNumber: 34,
         columnNumber: 20
     }, this);
+    function handleSendMessage(e) {
+        e.preventDefault();
+        const token = localStorage.getItem("token");
+        fetch(`${API_URL}/messages/pods/${id}/send`, {
+            method: "POST",
+            headers: {
+                Authorization: `Bearer ${token}`
+            },
+            body: new URLSearchParams({
+                content: newMessage
+            })
+        }).then((res)=>{
+            if (!res.ok) throw new Error("Failed to send message");
+            return res.json();
+        }).then(()=>{
+            setNewMessage("");
+            // Re-fetch pod messages
+            fetch(`${API_URL}/pods/pod/${id}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            }).then((res)=>res.json()).then(setPod);
+        }).catch((err)=>alert(err.message));
+    }
     return /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
         style: {
             padding: "2rem"
@@ -35038,14 +35063,14 @@ function PodView() {
                 children: pod.title
             }, void 0, false, {
                 fileName: "src/PodView.jsx",
-                lineNumber: 37,
+                lineNumber: 64,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("p", {
                 children: pod.description
             }, void 0, false, {
                 fileName: "src/PodView.jsx",
-                lineNumber: 38,
+                lineNumber: 65,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("p", {
@@ -35054,7 +35079,7 @@ function PodView() {
                         children: "Media type:"
                     }, void 0, false, {
                         fileName: "src/PodView.jsx",
-                        lineNumber: 39,
+                        lineNumber: 66,
                         columnNumber: 10
                     }, this),
                     " ",
@@ -35062,7 +35087,7 @@ function PodView() {
                 ]
             }, void 0, true, {
                 fileName: "src/PodView.jsx",
-                lineNumber: 39,
+                lineNumber: 66,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("p", {
@@ -35071,7 +35096,7 @@ function PodView() {
                         children: "Creator:"
                     }, void 0, false, {
                         fileName: "src/PodView.jsx",
-                        lineNumber: 40,
+                        lineNumber: 67,
                         columnNumber: 10
                     }, this),
                     " ",
@@ -35079,14 +35104,14 @@ function PodView() {
                 ]
             }, void 0, true, {
                 fileName: "src/PodView.jsx",
-                lineNumber: 40,
+                lineNumber: 67,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("h3", {
                 children: "Messages"
             }, void 0, false, {
                 fileName: "src/PodView.jsx",
-                lineNumber: 42,
+                lineNumber: 69,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("ul", {
@@ -35094,7 +35119,9 @@ function PodView() {
                     listStyleType: "none",
                     paddingLeft: 0
                 },
-                children: pod.messages.map((msg, idx)=>{
+                children: [
+                    ...pod.messages
+                ].sort((a, b)=>new Date(a.created_at) - new Date(b.created_at)).map((msg, idx)=>{
                     console.log("Message timestamp:", msg.created_at);
                     return /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("li", {
                         style: {
@@ -35125,18 +35152,20 @@ function PodView() {
                                         },
                                         children: [
                                             "(",
-                                            new Date(msg.created_at).toLocaleString(),
+                                            new Date(msg.created_at).toLocaleString("en-GB", {
+                                                timeZone: "Europe/London"
+                                            }),
                                             ")"
                                         ]
                                     }, void 0, true, {
                                         fileName: "src/PodView.jsx",
-                                        lineNumber: 59,
+                                        lineNumber: 88,
                                         columnNumber: 28
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "src/PodView.jsx",
-                                lineNumber: 58,
+                                lineNumber: 87,
                                 columnNumber: 17
                             }, this),
                             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
@@ -35148,34 +35177,70 @@ function PodView() {
                                     ]
                                 }, void 0, true, {
                                     fileName: "src/PodView.jsx",
-                                    lineNumber: 66,
+                                    lineNumber: 95,
                                     columnNumber: 23
                                 }, this)
                             }, void 0, false, {
                                 fileName: "src/PodView.jsx",
-                                lineNumber: 63,
+                                lineNumber: 92,
                                 columnNumber: 17
                             }, this)
                         ]
                     }, idx, true, {
                         fileName: "src/PodView.jsx",
-                        lineNumber: 47,
+                        lineNumber: 76,
                         columnNumber: 17
                     }, this);
                 })
             }, void 0, false, {
                 fileName: "src/PodView.jsx",
-                lineNumber: 43,
+                lineNumber: 70,
                 columnNumber: 7
+            }, this),
+            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("form", {
+                onSubmit: handleSendMessage,
+                style: {
+                    marginTop: "2rem"
+                },
+                children: [
+                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("input", {
+                        type: "text",
+                        value: newMessage,
+                        onChange: (e)=>setNewMessage(e.target.value),
+                        placeholder: "Type your message...",
+                        style: {
+                            width: "70%",
+                            padding: "0.5rem",
+                            marginRight: "1rem"
+                        }
+                    }, void 0, false, {
+                        fileName: "src/PodView.jsx",
+                        lineNumber: 102,
+                        columnNumber: 5
+                    }, this),
+                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("button", {
+                        type: "submit",
+                        disabled: !newMessage.trim(),
+                        children: "Send"
+                    }, void 0, false, {
+                        fileName: "src/PodView.jsx",
+                        lineNumber: 109,
+                        columnNumber: 5
+                    }, this)
+                ]
+            }, void 0, true, {
+                fileName: "src/PodView.jsx",
+                lineNumber: 101,
+                columnNumber: 3
             }, this)
         ]
     }, void 0, true, {
         fileName: "src/PodView.jsx",
-        lineNumber: 36,
+        lineNumber: 63,
         columnNumber: 5
     }, this);
 }
-_s(PodView, "f0asFlQeauujBAfTbHuoJ9plpQo=", false, function() {
+_s(PodView, "7cgp/kV3o5QVIPi12L7Ro3EIx+g=", false, function() {
     return [
         (0, _reactRouterDom.useParams)
     ];

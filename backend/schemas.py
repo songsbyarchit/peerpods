@@ -47,6 +47,9 @@ class MessageCreate(MessageBase):
     pod_id: int
     user_id: int
 
+class MessageSend(BaseModel):
+    content: str
+
 class Message(MessageBase):
     id: int
     user_id: int

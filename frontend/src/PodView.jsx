@@ -8,6 +8,7 @@ function PodView() {
   const [pod, setPod] = useState(null);
   const [error, setError] = useState(null);
   const [currentUser, setCurrentUser] = useState(null);  
+  const [newMessage, setNewMessage] = useState("");
 
   useEffect(() => {
     fetch(`${API_URL}/pods/pod/${id}`)
@@ -32,6 +33,32 @@ function PodView() {
   if (error) return <p style={{ color: "red" }}>Error: {error}</p>;
   if (!pod) return <p>Loading...</p>;
 
+  function handleSendMessage(e) {
+    e.preventDefault();
+    const token = localStorage.getItem("token");
+    fetch(`${API_URL}/messages/pods/${id}/send`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`
+      },
+      body: new URLSearchParams({ content: newMessage })
+    })
+      .then(res => {
+        if (!res.ok) throw new Error("Failed to send message");
+        return res.json();
+      })
+      .then(() => {
+        setNewMessage("");
+        // Re-fetch pod messages
+        fetch(`${API_URL}/pods/pod/${id}`, {
+          headers: { Authorization: `Bearer ${token}` }
+        })
+          .then(res => res.json())
+          .then(setPod);
+      })
+      .catch(err => alert(err.message));
+  }
+
   return (
     <div style={{ padding: "2rem" }}>
       <h2>{pod.title}</h2>
@@ -41,7 +68,9 @@ function PodView() {
 
       <h3>Messages</h3>
       <ul style={{ listStyleType: "none", paddingLeft: 0 }}>
-      {pod.messages.map((msg, idx) => {
+      {[...pod.messages]
+        .sort((a, b) => new Date(a.created_at) - new Date(b.created_at))
+        .map((msg, idx) => {
         console.log("Message timestamp:", msg.created_at);
         return (
                 <li key={idx} style={{
@@ -57,7 +86,7 @@ function PodView() {
                 }}>
                 <div style={{ fontWeight: "bold", marginBottom: "0.25rem" }}>
                 {msg.user} <span style={{ fontWeight: "normal", color: "#777", fontSize: "0.8rem" }}>
-                    ({new Date(msg.created_at).toLocaleString()})
+                  ({new Date(msg.created_at).toLocaleString("en-GB", { timeZone: "Europe/London" })})
                 </span>
                 </div>
                 <div>
@@ -69,7 +98,17 @@ function PodView() {
         );
         })}
       </ul>
-    </div>
+  <form onSubmit={handleSendMessage} style={{ marginTop: "2rem" }}>
+    <input
+      type="text"
+      value={newMessage}
+      onChange={(e) => setNewMessage(e.target.value)}
+      placeholder="Type your message..."
+      style={{ width: "70%", padding: "0.5rem", marginRight: "1rem" }}
+    />
+    <button type="submit" disabled={!newMessage.trim()}>Send</button>
+  </form>
+  </div>
   );
 }
 

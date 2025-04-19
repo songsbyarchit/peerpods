@@ -1,8 +1,12 @@
 from sqlalchemy import Column, Integer, String, Text, ForeignKey, DateTime, Boolean
 from sqlalchemy.orm import relationship, declarative_base
 import datetime
+from datetime import datetime, timezone
 
 Base = declarative_base()
+
+def utcnow():
+    return datetime.now(timezone.utc)
 
 class User(Base):
     __tablename__ = "users"
@@ -12,7 +16,7 @@ class User(Base):
     hashed_password = Column(String, nullable=False)
     bio = Column(Text, nullable=True)
     is_admin = Column(Boolean, default=False)
-    created_at = Column(DateTime, default=datetime.datetime.utcnow)
+    created_at = Column(DateTime, default=utcnow)
 
     messages = relationship("Message", back_populates="user")
     created_pods = relationship("Pod", back_populates="creator")
@@ -40,7 +44,7 @@ class Pod(Base):
     visibility = Column(String, default="unlisted")  # public, private, unlisted
     tags = Column(String, nullable=True)  # comma-separated values
 
-    created_at = Column(DateTime, default=datetime.datetime.utcnow)
+    created_at = Column(DateTime, default=utcnow)
 
     creator_id = Column(Integer, ForeignKey("users.id"))
     creator = relationship("User", back_populates="created_pods")
@@ -51,7 +55,7 @@ class Pod(Base):
         if not self.created_at or not self.duration_hours:
             return False
         expiry_time = self.created_at + datetime.timedelta(hours=self.duration_hours)
-        return datetime.datetime.utcnow() < expiry_time
+        return datetime.now(timezone.utc) < expiry_time
 
 class Message(Base):
     __tablename__ = "messages"
@@ -61,7 +65,7 @@ class Message(Base):
     voice_path = Column(String, nullable=True)  # local path to the voice file
 
     media_type = Column(String, default="text")  # text or voice
-    created_at = Column(DateTime, default=datetime.datetime.utcnow)
+    created_at = Column(DateTime, default=utcnow)
 
     user_id = Column(Integer, ForeignKey("users.id"))
     pod_id = Column(Integer, ForeignKey("pods.id"))
