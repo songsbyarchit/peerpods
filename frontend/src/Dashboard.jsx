@@ -97,7 +97,9 @@ function Dashboard() {
                 <div><em>Status:</em> {p.state || "unknown"}</div>
                 <div><em>Messages:</em> {p.messages ? p.messages.length : 0}</div>
                 <div><em>Users:</em> {p.messages ? new Set(p.messages.map(m => m.user)).size : 0}</div>
-                <div><em>Time left:</em> {p.state === "active" ? formatCountdown(p.auto_launch_at) : "N/A"}</div>
+                {p.state === "scheduled" && (
+                  <div><em>Time left:</em> {formatCountdown(p.auto_launch_at)}</div>
+                )}
                 </div>
             </a>
           ))}

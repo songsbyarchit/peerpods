@@ -35472,22 +35472,22 @@ function Dashboard() {
                                             lineNumber: 99,
                                             columnNumber: 17
                                         }, this),
-                                        /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
+                                        p.state === "scheduled" && /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
                                             children: [
                                                 /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("em", {
                                                     children: "Time left:"
                                                 }, void 0, false, {
                                                     fileName: "src/Dashboard.jsx",
-                                                    lineNumber: 100,
-                                                    columnNumber: 22
+                                                    lineNumber: 101,
+                                                    columnNumber: 24
                                                 }, this),
                                                 " ",
-                                                p.state === "active" ? formatCountdown(p.auto_launch_at) : "N/A"
+                                                formatCountdown(p.auto_launch_at)
                                             ]
                                         }, void 0, true, {
                                             fileName: "src/Dashboard.jsx",
-                                            lineNumber: 100,
-                                            columnNumber: 17
+                                            lineNumber: 101,
+                                            columnNumber: 19
                                         }, this)
                                     ]
                                 }, void 0, true, {
@@ -35506,7 +35506,7 @@ function Dashboard() {
                         children: showAllPods ? "Show Less" : "View More"
                     }, void 0, false, {
                         fileName: "src/Dashboard.jsx",
-                        lineNumber: 105,
+                        lineNumber: 107,
                         columnNumber: 13
                     }, this)
                 ]
@@ -35519,7 +35519,7 @@ function Dashboard() {
                 children: "Overall App Stats"
             }, void 0, false, {
                 fileName: "src/Dashboard.jsx",
-                lineNumber: 111,
+                lineNumber: 113,
                 columnNumber: 9
             }, this),
             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("p", {
@@ -35529,7 +35529,7 @@ function Dashboard() {
                 ]
             }, void 0, true, {
                 fileName: "src/Dashboard.jsx",
-                lineNumber: 112,
+                lineNumber: 114,
                 columnNumber: 9
             }, this),
             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("p", {
@@ -35540,7 +35540,7 @@ function Dashboard() {
                 ]
             }, void 0, true, {
                 fileName: "src/Dashboard.jsx",
-                lineNumber: 113,
+                lineNumber: 115,
                 columnNumber: 9
             }, this)
         ]
