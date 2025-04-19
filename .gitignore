@@ -18,3 +18,5 @@ __pycache__/
 #voice note storage
 backend/voice_notes/frontend/.parcel-cache/
 frontend/.parcel-cache/
+*.pyc
+__pycache__/
