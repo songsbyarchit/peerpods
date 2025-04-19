@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 function Dashboard() {
     const [yourPods, setYourPods] = useState([]);
     const [recommended, setRecommended] = useState([]);
+    const [loadingRecommended, setLoadingRecommended] = useState(false);    
     const [bio, setBio] = useState("");
     const [bioSaved, setBioSaved] = useState(false);    
     const [activePods, setActivePods] = useState([]);
@@ -37,9 +38,13 @@ function Dashboard() {
         .then(res => res.json())
         .then(data => setBio(data.bio || ""));    
   
-      fetch("http://localhost:8000/pods/recommended", { headers: { Authorization: `Bearer ${token}` } })
-        .then(res => res.json())
-        .then(data => setRecommended(data.filter(p => p.state !== "locked" && p.remaining_slots > 0)));
+        setLoadingRecommended(true);
+        fetch("http://localhost:8000/pods/recommended", { headers: { Authorization: `Bearer ${token}` } })
+          .then(res => res.json())
+          .then(data => {
+            setRecommended(data.filter(p => p.state !== "locked" && p.remaining_slots > 0));
+          })
+          .finally(() => setLoadingRecommended(false));        
   
       fetch("http://localhost:8000/pods", { headers: { Authorization: `Bearer ${token}` } })
         .then(res => res.json())
@@ -109,17 +114,20 @@ function Dashboard() {
         },
         body: JSON.stringify({ bio })
       })
-        .then(res => res.json())
-        .then((data) => {
-          setBio(data.bio || "");
-          setBioSaved(true);
-          return fetch("http://localhost:8000/pods/recommended", {
-            headers: { Authorization: `Bearer ${token}` }
-          });
-        })
-        .then(res => res.json())
-        .then(data => setRecommended(data.filter(p => p.state !== "locked" && p.remaining_slots > 0)))
-        .catch(err => console.error("Failed to update bio or refresh recommendations:", err));
+      .then((data) => {
+        setBio(data.bio || "");
+        setBioSaved(true);
+        setLoadingRecommended(true); // <-- Add this line
+        return fetch("http://localhost:8000/pods/recommended", {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+      })
+      .then(res => res.json())
+      .then(data => {
+        setRecommended(data.filter(p => p.state !== "locked" && p.remaining_slots > 0));
+      })
+      .finally(() => setLoadingRecommended(false)) // <-- And this
+      .catch(err => console.error("Failed to update bio or refresh recommendations:", err));      
     }    
 
     return (
@@ -228,15 +236,18 @@ function Dashboard() {
         </div>
         )}
   
-        <h2>Top 3 Recommended Pods</h2>
-        <ul style={{ listStyleType: "none", paddingLeft: 0 }}>
+          <h2>Top 3 Recommended Pods</h2>
+        {loadingRecommended ? (
+          <p>Loading recommendations...</p>
+        ) : (
+          <ul style={{ listStyleType: "none", paddingLeft: 0 }}>
           {recommended.slice(0, 3).map(p => {
             const relevance = p.relevance || 0;
             const relevanceColor =
               relevance >= 85 ? "lightgreen" :
               relevance >= 65 ? "khaki" :
               "lightcoral";
-
+              
             return (
               <li
                 key={p.id}
@@ -258,6 +269,7 @@ function Dashboard() {
             );
           })}
         </ul>
+        )}
   
         <h2>Active Pods (Spectator View)</h2>
           <div style={{ display: "flex", flexWrap: "wrap", gap: "1rem" }}>
