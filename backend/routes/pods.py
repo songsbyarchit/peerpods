@@ -1,6 +1,6 @@
 # backend/routes/pods.py
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Form
 from sqlalchemy.orm import Session, aliased
 from backend import models, schemas
 from backend.database import SessionLocal
@@ -145,6 +145,13 @@ def get_user_pods_full(current_user: models.User = Depends(get_current_user), db
                 "is_participant": current_user.id in participant_ids
             })
     return user_pods
+
+@router.post("/update-bio")
+def update_bio(bio: str = Form(...), db: Session = Depends(get_db), current_user: models.User = Depends(get_current_user)):
+    current_user.bio = bio
+    db.commit()
+    db.refresh(current_user)
+    return {"message": "Bio updated successfully", "bio": current_user.bio}
 
 @router.get("/recommended")
 def get_recommended_pods(current_user: models.User = Depends(get_current_user), db: Session = Depends(get_db)):

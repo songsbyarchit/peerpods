@@ -3,6 +3,8 @@ import React, { useState, useEffect } from "react";
 function Dashboard() {
     const [yourPods, setYourPods] = useState([]);
     const [recommended, setRecommended] = useState([]);
+    const [bio, setBio] = useState("");
+    const [bioSaved, setBioSaved] = useState(false);    
     const [activePods, setActivePods] = useState([]);
     const [visibleRows, setVisibleRows] = useState(() => {
       const saved = localStorage.getItem("visibleRows");
@@ -25,10 +27,14 @@ function Dashboard() {
 
     useEffect(() => {
       const token = localStorage.getItem("token");
-  
+    
       fetch("http://localhost:8000/pods/user-full", { headers: { Authorization: `Bearer ${token}` } })
-      .then(res => res.json())
-      .then(setYourPods);    
+        .then(res => res.json())
+        .then(setYourPods);
+    
+      fetch("http://localhost:8000/users/me", { headers: { Authorization: `Bearer ${token}` } })
+        .then(res => res.json())
+        .then(data => setBio(data.bio || ""));    
   
       fetch("http://localhost:8000/pods/recommended", { headers: { Authorization: `Bearer ${token}` } })
         .then(res => res.json())
@@ -90,8 +96,53 @@ function Dashboard() {
       const minutes = String(Math.floor((diff / (1000 * 60)) % 60)).padStart(2, "0");
       const seconds = String(Math.floor((diff / 1000) % 60)).padStart(2, "0");
       return `${hours}:${minutes}:${seconds}`;
-    }    
-  
+    }
+    
+    function handleSaveBio() {
+      const token = localStorage.getItem("token");
+      fetch("http://localhost:8000/users/me", {
+        method: "PATCH",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ bio })
+      })
+        .then(res => res.json())
+        .then(() => {
+          setBioSaved(true);
+          return fetch("http://localhost:8000/pods/recommended", {
+            headers: { Authorization: `Bearer ${token}` }
+          });
+        })
+        .then(res => res.json())
+        .then(data => setRecommended(data.filter(p => p.state !== "locked" && p.remaining_slots > 0)))
+        .catch(err => console.error("Failed to update bio or refresh recommendations:", err));
+    }
+    
+    function handleSaveBio() {
+      const token = localStorage.getItem("token");
+      fetch("http://localhost:8000/users/me", {
+        method: "PATCH",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ bio })
+      })
+        .then(res => res.json())
+        .then((data) => {
+          setBio(data.bio || "");
+          setBioSaved(true);
+          return fetch("http://localhost:8000/pods/recommended", {
+            headers: { Authorization: `Bearer ${token}` }
+          });
+        })
+        .then(res => res.json())
+        .then(data => setRecommended(data.filter(p => p.state !== "locked" && p.remaining_slots > 0)))
+        .catch(err => console.error("Failed to update bio or refresh recommendations:", err));
+    }
+        
     return (
       <div style={{ padding: "2rem", fontFamily: "sans-serif" }}>
 
@@ -148,6 +199,24 @@ function Dashboard() {
           )}
         </div>
       )}
+
+        <div style={{ marginBottom: "2rem" }}>
+          <h2>Your Bio</h2>
+          <textarea
+            value={bio}
+            onChange={(e) => {
+              setBio(e.target.value);
+              setBioSaved(false);
+            }}
+            rows={3}
+            style={{ width: "100%", padding: "0.5rem" }}
+            placeholder="Update your bio to improve recommendations..."
+          />
+          <button onClick={handleSaveBio} style={{ marginTop: "0.5rem" }}>
+            Save Bio
+          </button>
+          {bioSaved && <span style={{ marginLeft: "1rem", color: "green" }}>Saved!</span>}
+        </div>
 
         <h2>Your Pods</h2>
         {yourPods.length === 0 ? (
