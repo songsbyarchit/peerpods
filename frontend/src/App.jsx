@@ -181,9 +181,6 @@ function App() {
 
   return (
     <div style={{ maxWidth: 800, margin: "0 auto", fontFamily: "sans-serif" }}>
-      <Routes>
-        <Route path="/pod/:id" element={<PodView />} />
-      </Routes>  
       {currentUser?.is_admin && (
         <>
           <h1>PeerPods Frontend</h1>

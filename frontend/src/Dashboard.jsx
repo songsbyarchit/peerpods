@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 function Dashboard() {
     const [yourPods, setYourPods] = useState([]);
@@ -96,28 +97,6 @@ function Dashboard() {
       const minutes = String(Math.floor((diff / (1000 * 60)) % 60)).padStart(2, "0");
       const seconds = String(Math.floor((diff / 1000) % 60)).padStart(2, "0");
       return `${hours}:${minutes}:${seconds}`;
-    }
-    
-    function handleSaveBio() {
-      const token = localStorage.getItem("token");
-      fetch("http://localhost:8000/users/me", {
-        method: "PATCH",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ bio })
-      })
-        .then(res => res.json())
-        .then(() => {
-          setBioSaved(true);
-          return fetch("http://localhost:8000/pods/recommended", {
-            headers: { Authorization: `Bearer ${token}` }
-          });
-        })
-        .then(res => res.json())
-        .then(data => setRecommended(data.filter(p => p.state !== "locked" && p.remaining_slots > 0)))
-        .catch(err => console.error("Failed to update bio or refresh recommendations:", err));
     }
     
     function handleSaveBio() {
