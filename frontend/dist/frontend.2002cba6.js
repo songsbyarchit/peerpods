@@ -35117,7 +35117,8 @@ function PodView() {
             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("ul", {
                 style: {
                     listStyleType: "none",
-                    paddingLeft: 0
+                    paddingLeft: 0,
+                    paddingBottom: "6rem"
                 },
                 children: [
                     ...pod.messages
@@ -35200,22 +35201,37 @@ function PodView() {
             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("form", {
                 onSubmit: handleSendMessage,
                 style: {
-                    marginTop: "2rem"
+                    position: "fixed",
+                    bottom: 0,
+                    left: 0,
+                    width: "100%",
+                    backgroundColor: "#fff",
+                    padding: "1rem",
+                    display: "flex",
+                    justifyContent: "center",
+                    borderTop: "1px solid #ccc",
+                    zIndex: 1000
                 },
                 children: [
-                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("input", {
-                        type: "text",
+                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("textarea", {
                         value: newMessage,
                         onChange: (e)=>setNewMessage(e.target.value),
                         placeholder: "Type your message...",
+                        rows: 3,
                         style: {
                             width: "70%",
                             padding: "0.5rem",
-                            marginRight: "1rem"
+                            marginRight: "1rem",
+                            fontSize: "1rem",
+                            resize: "none",
+                            minHeight: "4.5rem",
+                            maxHeight: "7rem",
+                            overflowY: "auto",
+                            lineHeight: "1.5rem"
                         }
                     }, void 0, false, {
                         fileName: "src/PodView.jsx",
-                        lineNumber: 102,
+                        lineNumber: 116,
                         columnNumber: 5
                     }, this),
                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("button", {
@@ -35224,14 +35240,14 @@ function PodView() {
                         children: "Send"
                     }, void 0, false, {
                         fileName: "src/PodView.jsx",
-                        lineNumber: 109,
+                        lineNumber: 133,
                         columnNumber: 5
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "src/PodView.jsx",
                 lineNumber: 101,
-                columnNumber: 3
+                columnNumber: 7
             }, this)
         ]
     }, void 0, true, {

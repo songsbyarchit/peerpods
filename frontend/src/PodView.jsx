@@ -67,7 +67,7 @@ function PodView() {
       <p><em>Creator:</em> {pod.creator}</p>
 
       <h3>Messages</h3>
-      <ul style={{ listStyleType: "none", paddingLeft: 0 }}>
+      <ul style={{ listStyleType: "none", paddingLeft: 0, paddingBottom: "6rem" }}>
       {[...pod.messages]
         .sort((a, b) => new Date(a.created_at) - new Date(b.created_at))
         .map((msg, idx) => {
@@ -98,13 +98,37 @@ function PodView() {
         );
         })}
       </ul>
-  <form onSubmit={handleSendMessage} style={{ marginTop: "2rem" }}>
-    <input
-      type="text"
+      <form
+    onSubmit={handleSendMessage}
+    style={{
+      position: "fixed",
+      bottom: 0,
+      left: 0,
+      width: "100%",
+      backgroundColor: "#fff",
+      padding: "1rem",
+      display: "flex",
+      justifyContent: "center",
+      borderTop: "1px solid #ccc",
+      zIndex: 1000
+    }}
+  >
+    <textarea
       value={newMessage}
       onChange={(e) => setNewMessage(e.target.value)}
       placeholder="Type your message..."
-      style={{ width: "70%", padding: "0.5rem", marginRight: "1rem" }}
+      rows={3}
+      style={{
+        width: "70%",
+        padding: "0.5rem",
+        marginRight: "1rem",
+        fontSize: "1rem",
+        resize: "none",
+        minHeight: "4.5rem",
+        maxHeight: "7rem",
+        overflowY: "auto",
+        lineHeight: "1.5rem"
+      }}
     />
     <button type="submit" disabled={!newMessage.trim()}>Send</button>
   </form>

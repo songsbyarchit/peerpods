@@ -124,15 +124,31 @@ def get_user_pods(current_user: models.User = Depends(get_current_user), db: Ses
 @router.get("/recommended")
 def get_recommended_pods(current_user: models.User = Depends(get_current_user), db: Session = Depends(get_db)):
     pods = db.query(models.Pod).filter(models.Pod.state != "locked").all()
-    result = []
+
+    def tokenize(text):
+        return set(word.lower() for word in text.split() if len(word) > 2)
+
+    user_keywords = tokenize(current_user.bio or "")
+
+    scored_pods = []
     for pod in pods:
         user_ids = {msg.user_id for msg in pod.messages}
         remaining_slots = pod.max_messages_per_day - len(user_ids)
-        if remaining_slots > 0:
-            pod_data = pod.__dict__
-            pod_data["remaining_slots"] = remaining_slots
-            result.append(pod_data)
-    return result
+        if remaining_slots <= 0:
+            continue
+
+        pod_text = f"{pod.title} {pod.description or ''}"
+        pod_keywords = tokenize(pod_text)
+        overlap = user_keywords.intersection(pod_keywords)
+        score = len(overlap)
+
+        pod_data = pod.__dict__.copy()
+        pod_data["remaining_slots"] = remaining_slots
+        pod_data["score"] = score
+        scored_pods.append(pod_data)
+
+    scored_pods.sort(key=lambda p: p["score"], reverse=True)
+    return scored_pods
 
 @router.get("/active")
 def get_active_pods(db: Session = Depends(get_db)):
