@@ -184,6 +184,21 @@ function Dashboard() {
           <option value="latest">Most Recent Message</option>
           <option value="duration">Longest Duration</option>
         </select>
+
+        <select
+          value={filterState}
+          onChange={(e) => setFilterState(e.target.value)}
+          style={{ marginLeft: "1rem", padding: "0.5rem" }}
+        >
+          <option value="">All States</option>
+          <option value="active">Active Only</option>
+          <option value="expired">Expired Only</option>
+        </select>
+        <label style={{ marginLeft: "1rem" }}>
+          <input type="checkbox" onChange={e => setSearchResults(r => r.filter(p => !p.is_participant && !p.is_creator))} />
+          Hide Joined Pods
+        </label>
+
         <button type="submit" style={{ marginLeft: "0.5rem" }}>Search</button>
       </form>
 
