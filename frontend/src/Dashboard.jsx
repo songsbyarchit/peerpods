@@ -21,6 +21,7 @@ function Dashboard() {
     const [sortOption, setSortOption] = useState("");    
     const [visibleSearchCount, setVisibleSearchCount] = useState(5);
     const [countdowns, setCountdowns] = useState({});
+    const [expiryCountdowns, setExpiryCountdowns] = useState({});    
 
     useEffect(() => {
       const interval = setInterval(() => {
@@ -29,9 +30,29 @@ function Dashboard() {
           updated[p.id] = formatCountdown(p.auto_launch_at);
         });
         setCountdowns(updated);
+    
+        const expiryUpdated = {};
+        yourPods.forEach(p => {
+          if (p.auto_launch_at && p.duration_hours) {
+            const launch = new Date(p.auto_launch_at);
+            const expires = new Date(launch.getTime() + p.duration_hours * 60 * 60 * 1000);
+            const now = new Date();
+            const diff = expires - now;
+            if (diff > 0) {
+              const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+              const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+              const minutes = Math.floor((diff / (1000 * 60)) % 60);
+              const seconds = Math.floor((diff / 1000) % 60);
+              expiryUpdated[p.id] = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+            } else {
+              expiryUpdated[p.id] = "Expired";
+            }
+          }
+        });
+        setExpiryCountdowns(expiryUpdated);
       }, 1000);
       return () => clearInterval(interval);
-    }, [recommended]);
+    }, [recommended, yourPods]);    
 
     useEffect(() => {
       fetch("http://localhost:8000/pods/refresh-states", {
@@ -242,6 +263,7 @@ function Dashboard() {
               <div style={{ fontSize: "0.85rem", marginTop: "0.5rem" }}>
                 <div><em>Role:</em> {p.is_creator ? "Creator" : "Participant"}</div>
                 <div><em>Status:</em> {p.state}</div>
+                <div><em>Expires in:</em> {expiryCountdowns[p.id] || "Calculating..."}</div>
               </div>
             </a>
           ))}

@@ -143,7 +143,9 @@ def get_user_pods_full(current_user: models.User = Depends(get_current_user), db
                 "title": pod.title,
                 "state": pod.state,
                 "is_creator": current_user.id == pod.creator_id,
-                "is_participant": current_user.id in participant_ids
+                "is_participant": current_user.id in participant_ids,
+                "auto_launch_at": pod.auto_launch_at.isoformat() if pod.auto_launch_at else None,
+                "duration_hours": pod.duration_hours
             })
     return user_pods
 
