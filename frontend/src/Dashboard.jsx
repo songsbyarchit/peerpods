@@ -20,6 +20,18 @@ function Dashboard() {
     const [filterMedia, setFilterMedia] = useState("");
     const [sortOption, setSortOption] = useState("");    
     const [visibleSearchCount, setVisibleSearchCount] = useState(5);
+    const [countdowns, setCountdowns] = useState({});
+
+    useEffect(() => {
+      const interval = setInterval(() => {
+        const updated = {};
+        recommended.forEach(p => {
+          updated[p.id] = formatCountdown(p.auto_launch_at);
+        });
+        setCountdowns(updated);
+      }, 1000);
+      return () => clearInterval(interval);
+    }, [recommended]);
 
     useEffect(() => {
       fetch("http://localhost:8000/pods/refresh-states", {
@@ -93,16 +105,16 @@ function Dashboard() {
     }    
 
     function formatCountdown(isoTime) {
-      if (!isoTime) return "N/A";
-      const now = new Date();
       const target = new Date(isoTime);
+      const now = new Date();
       const diff = target - now;
-      if (diff <= 0) return "Ended";
-      const hours = String(Math.floor(diff / (1000 * 60 * 60))).padStart(2, "0");
-      const minutes = String(Math.floor((diff / (1000 * 60)) % 60)).padStart(2, "0");
-      const seconds = String(Math.floor((diff / 1000) % 60)).padStart(2, "0");
-      return `${hours}:${minutes}:${seconds}`;
-    }
+      if (diff <= 0) return "Started";
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+      const minutes = Math.floor((diff / (1000 * 60)) % 60);
+      const seconds = Math.floor((diff / 1000) % 60);
+      return `${days}d ${hours}h ${minutes}m ${seconds}s`;
+    }         
     
     function handleSaveBio() {
       const token = localStorage.getItem("token");
@@ -237,10 +249,25 @@ function Dashboard() {
         )}
   
           <h2>Top 3 Recommended Pods</h2>
-        {loadingRecommended ? (
-          <p>Loading recommendations...</p>
-        ) : (
-          <ul style={{ listStyleType: "none", paddingLeft: 0 }}>
+          {loadingRecommended ? (
+            <div style={{ margin: "1rem 0", height: "6px", backgroundColor: "#eee", position: "relative", overflow: "hidden", borderRadius: "4px" }}>
+              <div style={{
+                height: "100%",
+                width: "100%",
+                background: "linear-gradient(90deg, #4ade80, #16a34a)",
+                animation: "loadingBar 1.2s infinite linear"
+              }} />
+              <style>
+                {`
+                  @keyframes loadingBar {
+                    0% { transform: translateX(-100%); }
+                    100% { transform: translateX(100%); }
+                  }
+                `}
+              </style>
+            </div>
+          ) : (
+            <ul style={{ listStyleType: "none", paddingLeft: 0 }}>
           {recommended.slice(0, 3).map(p => {
             const relevance = p.relevance || 0;
             const relevanceColor =
@@ -262,7 +289,8 @@ function Dashboard() {
                 <strong>{p.title}</strong><br />
                 <em>{p.description}</em><br />
                 <div style={{ marginTop: "0.5rem" }}>
-                  <strong>Relevance:</strong> {relevance}/100
+                  <strong>Relevance:</strong> {relevance}/100<br />
+                  <strong>Starts in:</strong> {countdowns[p.id] || "Loading..."}
                 </div>
                 <button style={{ marginTop: "0.5rem" }} onClick={() => joinPod(p.id)}>Join</button>
               </li>

@@ -33,11 +33,6 @@ def match_pods_for_user(user_bio: str, pod_list: list, top_n: int = 3) -> list:
 
     pod_texts = [f"{pod.title or ''} {pod.description or ''}" for pod in pod_list]
     pod_vectors = get_batch_embeddings(pod_texts)
-
-    dot_products = np.dot(pod_vectors, user_vec)
-    norms = np.linalg.norm(pod_vectors, axis=1) * np.linalg.norm(user_vec)
-    similarities = dot_products / norms
-
     pod_vectors_np = np.array(pod_vectors)
     user_vec_np = np.array(user_vec)
     dot_products = np.dot(pod_vectors_np, user_vec_np)
@@ -48,10 +43,6 @@ def match_pods_for_user(user_bio: str, pod_list: list, top_n: int = 3) -> list:
         relevance = int((score + 1) * 50)
         pod.relevance = relevance
         scored.append(pod)
-
-        print("USER VECTOR:", user_vec[:5])
-        print("RAW SCORE:", score)
-        print("ADJUSTED RELEVANCE:", relevance)
 
     scored.sort(key=lambda pod: pod.relevance, reverse=True)
     return scored[:top_n]
