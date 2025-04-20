@@ -21,7 +21,8 @@ function Dashboard() {
     const [sortOption, setSortOption] = useState("");    
     const [visibleSearchCount, setVisibleSearchCount] = useState(5);
     const [countdowns, setCountdowns] = useState({});
-    const [expiryCountdowns, setExpiryCountdowns] = useState({});    
+    const [expiryCountdowns, setExpiryCountdowns] = useState({});  
+    const [hideJoined, setHideJoined] = useState(false);  
 
     useEffect(() => {
       const interval = setInterval(() => {
@@ -121,7 +122,13 @@ function Dashboard() {
         headers: { Authorization: `Bearer ${token}` }
       })      
         .then(res => res.json())
-        .then(data => setSearchResults(data))
+        .then(data => {
+          const joinedIds = new Set(yourPods.map(p => p.id));
+          const filtered = hideJoined
+            ? data.filter(p => !joinedIds.has(p.id))
+            : data;
+          setSearchResults(filtered);
+        })            
         .catch(err => console.error("Search failed:", err));
     }    
 
@@ -195,7 +202,11 @@ function Dashboard() {
           <option value="expired">Expired Only</option>
         </select>
         <label style={{ marginLeft: "1rem" }}>
-          <input type="checkbox" onChange={e => setSearchResults(r => r.filter(p => !p.is_participant && !p.is_creator))} />
+          <input
+            type="checkbox"
+            checked={hideJoined}
+            onChange={(e) => setHideJoined(e.target.checked)}
+          />
           Hide Joined Pods
         </label>
 
