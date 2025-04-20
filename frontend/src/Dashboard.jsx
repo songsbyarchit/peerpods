@@ -207,12 +207,38 @@ function Dashboard() {
           <h2>Search Results</h2>
           <ul style={{ listStyleType: "none", paddingLeft: 0 }}>
               {searchResults.slice(0, visibleSearchCount).map((pod) => (
-              <li key={pod.id} style={{ marginBottom: "1rem", padding: "1rem", border: "1px solid #ccc", borderRadius: "8px" }}>
-                <strong>{pod.title}</strong> — {pod.description}
-                <div style={{ fontSize: "0.9rem", color: "#777" }}>
-                  Media: {pod.media_type} | Duration: {pod.duration_hours}h | Messages: {pod.message_count}
-                </div>
-              </li>
+                <li
+                  key={pod.id}
+                  onClick={() => {
+                    if (["active", "expired"].includes(pod.state)) {
+                      window.location.href = `/pod/${pod.id}`;
+                    }
+                  }}
+                  style={{
+                    marginBottom: "1rem",
+                    padding: "1rem",
+                    border: "1px solid #ccc",
+                    borderRadius: "8px",
+                    backgroundColor: pod.state === "expired" ? "#fef2f2" : "#fff",
+                    cursor: ["active", "expired"].includes(pod.state) ? "pointer" : "default"
+                  }}
+                >
+                  <strong>{pod.title}</strong> — {pod.description}
+                  <div style={{ fontSize: "0.9rem", color: "#777" }}>
+                    Media: {pod.media_type} | Duration: {pod.duration_hours}h | Messages: {pod.message_count}
+                  </div>
+                  {pod.state === "scheduled" && (
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        joinPod(pod.id);
+                      }}
+                      style={{ marginTop: "0.5rem" }}
+                    >
+                      Join
+                    </button>
+                  )}
+                </li>
             ))}
           </ul>
           {searchResults.length > 5 && (
