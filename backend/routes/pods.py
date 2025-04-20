@@ -136,6 +136,8 @@ def get_user_pods_full(current_user: models.User = Depends(get_current_user), db
     all_pods = db.query(models.Pod).all()
     user_pods = []
     for pod in all_pods:
+        if pod.state == "expired":
+            continue
         participant_ids = {m.user_id for m in pod.messages}
         if current_user.id == pod.creator_id or current_user.id in participant_ids:
             user_pods.append({
