@@ -159,11 +159,13 @@ def get_recommended_pods(current_user: models.User = Depends(get_current_user), 
     pods = db.query(models.Pod).filter(models.Pod.state != "locked").all()
 
     available = []
+    now = datetime.utcnow()
     for pod in pods:
         user_ids = {msg.user_id for msg in pod.messages}
         remaining_slots = pod.max_messages_per_day - len(user_ids)
-        if remaining_slots > 0:
-            pod.remaining_slots = remaining_slots  # attach for frontend use
+        has_not_started = pod.auto_launch_at and pod.auto_launch_at > now
+        if remaining_slots > 0 and has_not_started:
+            pod.remaining_slots = remaining_slots
             available.append(pod)
 
     matched = match_pods_for_user(current_user.bio or "", available)

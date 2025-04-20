@@ -271,9 +271,9 @@ function Dashboard() {
           {recommended.slice(0, 3).map(p => {
             const relevance = p.relevance || 0;
             const relevanceColor =
-              relevance >= 85 ? "lightgreen" :
-              relevance >= 65 ? "khaki" :
-              "lightcoral";
+            relevance >= 80 ? "lightgreen" :
+            relevance >= 60 ? "khaki" :
+            "lightcoral";          
               
             return (
               <li
