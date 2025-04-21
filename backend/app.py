@@ -9,7 +9,7 @@ models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
 
-app.include_router(auth_routes.router, prefix="/auth")
+app.include_router(auth_routes.router, prefix="/auth", tags=["Auth"])
 
 origins = os.getenv(
     "CORS_ORIGINS",

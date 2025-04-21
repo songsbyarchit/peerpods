@@ -7,6 +7,7 @@ function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false); // ✅ Added  
   const navigate = useNavigate();
   const { setCurrentUser } = useOutletContext();
   const body = new URLSearchParams({ username, password });
@@ -14,9 +15,10 @@ function Login() {
   const handleLogin = async (e) => {
     e.preventDefault();
     setError("");
-
+    setLoading(true); // ✅ Added
+    
     try {
-      const res = await fetch(`${API_URL}/auth/login`, {
+      const res = await fetch(`${API_URL}/auth/login`, {    
         method: "POST",
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
         body: new URLSearchParams({ username, password }),
@@ -35,7 +37,9 @@ function Login() {
       navigate("/"); // go to admin view for now
     } catch (err) {
       setError(err.message);
-    }
+    } finally {
+      setLoading(false); // ✅ Added
+    }    
   };
 
   return (
@@ -58,6 +62,7 @@ function Login() {
         />
         <button type="submit">Log In</button>
       </form>
+      {loading && <p>Checking credentials...</p>} {/* ✅ Added */}
       {error && <p style={{ color: "red" }}>{error}</p>}
     </div>
   );

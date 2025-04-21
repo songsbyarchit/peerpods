@@ -154,17 +154,28 @@ function App() {
     }
   };
 
-  // Get recommended pods
   const getRecommended = async (e) => {
     e.preventDefault();
+    console.log("📥 Getting recommendations for:", recommendUserId);
+    if (!recommendUserId) {
+      console.error("❌ No user ID provided for recommendations");
+      return;
+    }
     try {
       const res = await fetch(`${API_URL}/users/${recommendUserId}/recommended`);
+      console.log("🔗 Fetch URL:", `${API_URL}/users/${recommendUserId}/recommended`);
+      if (!res.ok) {
+        const text = await res.text();
+        console.error("❌ Response not OK:", res.status, text);
+        return;
+      }
       const data = await res.json();
+      console.log("✅ Recommended pods:", data);
       setRecommended(data);
     } catch (err) {
-      console.error("Error getting recommended pods:", err);
+      console.error("💥 Error getting recommended pods:", err);
     }
-  };
+  };  
 
   const formatCountdown = (isoTime) => {
     if (!isoTime) return null;
