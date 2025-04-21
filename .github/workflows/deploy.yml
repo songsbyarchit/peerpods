@@ -1,0 +1,28 @@
+name: Deploy to Render
+
+on:
+  push:
+    branches:
+      - main  # Change to the branch you want to deploy from, e.g., 'main' or 'master'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Build and Push Docker Image
+        run: |
+          docker build -t peerpods-backend .
+          docker tag peerpods-backend registry.render.com/songsbyarchit/peerpods-backend:latest
+          docker push registry.render.com/songsbyarchit/peerpods-backend:latest
+
+      - name: Trigger Render Deploy
+        run: |
+          curl -X POST https://api.render.com/v1/services/srv-d0344gruibrs73bdhi2g/deploys \
+          -H "Authorization: Bearer rnd_M5VhrM2PUtUeYwOSFH4Yx2FkwLmz"
