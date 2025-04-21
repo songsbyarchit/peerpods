@@ -40,7 +40,7 @@ def match_pods_for_user(user_bio: str, pod_list: list, top_n: int = 3) -> list:
     similarities = dot_products / norms
 
     for pod, score in zip(pod_list, similarities):
-        relevance = min(100, int((score + 1) * 1.5 * 50))
+        relevance = min(100, int(60 + (score + 1) * 20))
         pod.relevance = relevance
         scored.append(pod)
 

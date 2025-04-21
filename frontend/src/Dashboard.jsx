@@ -77,9 +77,15 @@ function Dashboard() {
         fetch(`${API_URL}/pods/recommended`, { headers: { Authorization: `Bearer ${token}` } })
           .then(res => res.json())
           .then(data => {
-            setRecommended(data.filter(p => p.state !== "locked" && p.remaining_slots > 0));
+            // Force a clean parse of relevance to avoid stale values
+            const cleaned = data
+              .filter(p => p.state !== "locked" && p.remaining_slots > 0)
+              .map(p => ({
+                ...p,
+                relevance: parseInt(p.relevance) || 0
+              }));
+            setRecommended(cleaned);
           })
-          .finally(() => setLoadingRecommended(false));        
   
       fetch(`${API_URL}/pods`, { headers: { Authorization: `Bearer ${token}` } })
         .then(res => res.json())
