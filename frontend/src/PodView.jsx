@@ -2,8 +2,6 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { API_URL } from "./config";
 
-const API_URL = "${API_URL}";
-
 function PodView() {
   const { id } = useParams();
   const [pod, setPod] = useState(null);

@@ -3,8 +3,6 @@ import { useNavigate } from "react-router-dom";
 import { useOutletContext } from "react-router-dom";
 import { API_URL } from "./config";
 
-const API_URL = "${API_URL}";
-
 function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
