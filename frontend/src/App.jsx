@@ -6,8 +6,6 @@ import Register from "./Register";
 import PodView from "./PodView";
 import { API_URL } from "./config";
 
-const API_URL = "${API_URL}";
-
 function App() {
   const [currentUser, setCurrentUser] = useState(null); // new
 

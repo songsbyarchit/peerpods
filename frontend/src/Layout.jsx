@@ -7,16 +7,28 @@ function Layout({ children }) {
   const [currentUser, setCurrentUser] = useState(null);
 
   useEffect(() => {
+    console.log("🔍 Layout mounted");
+
     const token = localStorage.getItem("token");
+    console.log("🪪 Retrieved token:", token);
     if (!token) return;
-    fetch("${API_URL}/auth/me", {
+
+    console.log("🌐 Making fetch to:", `${API_URL}/auth/me`);
+
+    fetch(`${API_URL}/auth/me`, {
       headers: { Authorization: `Bearer ${token}` }
     })
-      .then(res => res.json())
-      .then(setCurrentUser)
-      .catch(() => setCurrentUser(null));
+      .then(async res => {
+        console.log("📬 Response received:", res.status);
+        const data = await res.json();
+        console.log("📦 Response data:", data);
+        setCurrentUser(data);
+      })
+      .catch(err => {
+        console.error("❌ Fetch failed:", err);
+        setCurrentUser(null);
+      });
   }, []);
-
 
   return (
     <>
