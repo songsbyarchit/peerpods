@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Navbar from "./Navbar";
 import { Outlet } from "react-router-dom";
+import { API_URL } from "./config";
 
 function Layout({ children }) {
   const [currentUser, setCurrentUser] = useState(null);
@@ -8,7 +9,7 @@ function Layout({ children }) {
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (!token) return;
-    fetch("http://localhost:8000/auth/me", {
+    fetch("${API_URL}/auth/me", {
       headers: { Authorization: `Bearer ${token}` }
     })
       .then(res => res.json())

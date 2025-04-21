@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { API_URL } from "./config";
 
 function Dashboard() {
     const [yourPods, setYourPods] = useState([]);
@@ -56,7 +57,7 @@ function Dashboard() {
     }, [recommended, yourPods]);    
 
     useEffect(() => {
-      fetch("http://localhost:8000/pods/refresh-states", {
+      fetch("${API_URL}/pods/refresh-states", {
         method: "POST"
       }).catch(err => console.error("Failed to refresh pod states:", err));
     }, []);    
@@ -64,30 +65,30 @@ function Dashboard() {
     useEffect(() => {
       const token = localStorage.getItem("token");
     
-      fetch("http://localhost:8000/pods/user-full", { headers: { Authorization: `Bearer ${token}` } })
+      fetch("${API_URL}/pods/user-full", { headers: { Authorization: `Bearer ${token}` } })
         .then(res => res.json())
         .then(setYourPods);
     
-      fetch("http://localhost:8000/auth/me", { headers: { Authorization: `Bearer ${token}` } })
+      fetch("${API_URL}/auth/me", { headers: { Authorization: `Bearer ${token}` } })
         .then(res => res.json())
         .then(data => setBio(data.bio || ""));    
   
         setLoadingRecommended(true);
-        fetch("http://localhost:8000/pods/recommended", { headers: { Authorization: `Bearer ${token}` } })
+        fetch("${API_URL}/pods/recommended", { headers: { Authorization: `Bearer ${token}` } })
           .then(res => res.json())
           .then(data => {
             setRecommended(data.filter(p => p.state !== "locked" && p.remaining_slots > 0));
           })
           .finally(() => setLoadingRecommended(false));        
   
-      fetch("http://localhost:8000/pods", { headers: { Authorization: `Bearer ${token}` } })
+      fetch("${API_URL}/pods", { headers: { Authorization: `Bearer ${token}` } })
         .then(res => res.json())
         .then(data => {
           const activeOnly = data.filter(p => p.state === "active");
           setActivePods(activeOnly);
         });      
   
-      fetch("http://localhost:8000/pods/stats", { headers: { Authorization: `Bearer ${token}` } })
+      fetch("${API_URL}/pods/stats", { headers: { Authorization: `Bearer ${token}` } })
         .then(res => res.json())
         .then(setStats);
     }, []);
@@ -118,7 +119,7 @@ function Dashboard() {
       if (filterMedia) params.append("media", filterMedia);
       if (sortOption) params.append("sort", sortOption);
       
-      fetch(`http://localhost:8000/pods/search?${params.toString()}`, {
+      fetch(`${API_URL}/pods/search?${params.toString()}`, {
         headers: { Authorization: `Bearer ${token}` }
       })      
         .then(res => res.json())
@@ -146,7 +147,7 @@ function Dashboard() {
     
     function handleSaveBio() {
       const token = localStorage.getItem("token");
-      fetch("http://localhost:8000/users/me", {
+      fetch("${API_URL}/users/me", {
         method: "PATCH",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -158,7 +159,7 @@ function Dashboard() {
         setBio(data.bio || "");
         setBioSaved(true);
         setLoadingRecommended(true); // <-- Add this line
-        return fetch("http://localhost:8000/pods/recommended", {
+        return fetch("${API_URL}/pods/recommended", {
           headers: { Authorization: `Bearer ${token}` }
         });
       })

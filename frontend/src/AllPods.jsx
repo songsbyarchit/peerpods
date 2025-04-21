@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { createRoot } from "react-dom/client";
+import { API_URL } from "./config";
 
-const API_URL = "http://localhost:8000";
+const API_URL = "${API_URL}";
 
 function AllPodsView() {
   const [pods, setPods] = useState([]);

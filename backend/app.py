@@ -13,7 +13,7 @@ app.include_router(auth_routes.router, prefix="/auth")
 
 origins = os.getenv(
     "CORS_ORIGINS",
-    "http://localhost:5173,http://127.0.0.1:5173,https://<your‑frontend‑url>.onrender.com"
+    "http://localhost:5173,http://127.0.0.1:5173,https://peerpods-frontend.onrender.com"
 ).split(",")
 
 app.add_middleware(

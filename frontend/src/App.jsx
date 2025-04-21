@@ -4,8 +4,9 @@ import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import Login from "./Login";
 import Register from "./Register";
 import PodView from "./PodView";
+import { API_URL } from "./config";
 
-const API_URL = "http://localhost:8000";
+const API_URL = "${API_URL}";
 
 function App() {
   const [currentUser, setCurrentUser] = useState(null); // new
