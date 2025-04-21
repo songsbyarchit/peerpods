@@ -6,7 +6,7 @@
   "scripts": {
     "start": "parcel index.html --port 5173",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "parcel build index.html"
+    "build": "parcel build index.html --no-cache"
   },
   "keywords": [],
   "author": "",
