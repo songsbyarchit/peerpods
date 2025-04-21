@@ -4,9 +4,9 @@ from backend import models
 from backend.database import engine
 from backend.routes import pods, users, messages, auth_routes
 
-models.Base.metadata.create_all(bind=engine)
-
 app = FastAPI()
+
+models.Base.metadata.create_all(bind=engine)
 
 app.include_router(auth_routes.router, prefix="/auth")
 
