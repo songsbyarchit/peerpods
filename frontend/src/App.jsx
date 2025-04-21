@@ -197,7 +197,7 @@ function App() {
 
 
       <section style={{ marginBottom: "2rem" }}>
-        <h2>Lists</h2>
+        <h2>Lists (you're an admin if you see this!)</h2>
         <button onClick={fetchUsers}>Fetch Users</button>{" "}
         <button onClick={fetchPods}>Fetch Pods</button>{" "}
         <button onClick={fetchMessages}>Fetch Messages</button>

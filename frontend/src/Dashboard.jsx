@@ -155,9 +155,10 @@ function Dashboard() {
         },
         body: JSON.stringify({ bio })
       })
+      .then(res => res.json())
       .then((data) => {
         setBio(data.bio || "");
-        setBioSaved(true);
+        setBioSaved(true);      
         setLoadingRecommended(true); // <-- Add this line
         return fetch(`${API_URL}/pods/recommended`, {
           headers: { Authorization: `Bearer ${token}` }
@@ -274,7 +275,7 @@ function Dashboard() {
       )}
 
         <div style={{ marginBottom: "2rem" }}>
-          <h2>Your Bio</h2>
+          <h2>Your Bio (control your algorithm by editing this!)</h2>
           <textarea
             value={bio}
             onChange={(e) => {
@@ -291,7 +292,7 @@ function Dashboard() {
           {bioSaved && <span style={{ marginLeft: "1rem", color: "green" }}>Saved!</span>}
         </div>
 
-        <h2>Your Pods</h2>
+        <h2>Your Pods (pods you've created or are a participant in)</h2>
         {yourPods.length === 0 ? (
           <p>You have no pods. <a href="/create">Create one now</a>.</p>
         ) : (
@@ -374,7 +375,7 @@ function Dashboard() {
         </ul>
         )}
   
-        <h2>Active Pods (Spectator View)</h2>
+        <h2>Active Pods (observe others' conversations as a spectator)</h2>
           <div style={{ display: "flex", flexWrap: "wrap", gap: "1rem" }}>
             {activePods.slice(0, visibleRows * tilesPerRow).map((p) => (
             <a
