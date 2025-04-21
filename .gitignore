@@ -16,7 +16,9 @@ __pycache__/
 .vscode/
 
 #voice note storage
-backend/voice_notes/frontend/.parcel-cache/
-frontend/.parcel-cache/
+backend/voice_notes/frontend/.parcel-cache/*
+frontend/.parcel-cache/*
 *.pyc
 __pycache__/
+dist/
+node_modules/

@@ -1,6 +1,5 @@
 import openai
 import os
-import time
 import json
 from datetime import datetime, timedelta, timezone
 from backend.database import SessionLocal
