@@ -9,10 +9,8 @@ services:
       - .:/app
     ports:
       - "8000:8000"
-    depends_on:
-      - db
     environment:
-      - DATABASE_URL=postgresql://postgres:password@db:5432/peerpods
+      - DATABASE_URL=postgresql://peerpods_user:UvLVAlQkzjYkTlgMTPo64H0qRzcM35V7@dpg-d033ttuuk2gs73f160ag-a.oregon-postgres.render.com/peerpods
 
   frontend:
     build:
@@ -20,16 +18,3 @@ services:
       dockerfile: Dockerfile
     ports:
       - "5173:5173"
-
-  db:
-    image: postgres:14
-    restart: always
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: password
-      POSTGRES_DB: peerpods
-    volumes:
-      - pgdata:/var/lib/postgresql/data
-
-volumes:
-  pgdata:
